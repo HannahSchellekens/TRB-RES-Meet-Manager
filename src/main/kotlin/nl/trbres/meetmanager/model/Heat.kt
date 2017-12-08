@@ -8,7 +8,7 @@ import java.util.*
 data class Heat(
 
         /**
-         * Maps lane numbers to swimmer UUIDs.
+         * Maps lane numbers to swimmers.
          */
-        val lanes: MutableMap<Int, UUID> = HashMap()
+        val lanes: MutableMap<Int, Swimmer> = HashMap()
 )

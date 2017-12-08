@@ -1,11 +1,9 @@
 package nl.trbres.meetmanager.model
 
-import java.util.*
-
 /**
  * @author Ruben Schellekens
  */
-open class Lane(val number: Int, var swimmerId: UUID?) {
+open class Lane(val number: Int, var swimmerId: Swimmer?) {
 
     companion object {
 

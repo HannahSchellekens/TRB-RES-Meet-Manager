@@ -19,6 +19,11 @@ data class Time(var hours: Int, var minutes: Int, var seconds: Int, var hundreth
         hundreths = (System.currentTimeMillis() % 1000 / 10).toInt()
     }
 
+    /**
+     * Converts the timestamp to hunderths of a second.
+     */
+    fun toHundreths() = (((hours * 60L) + minutes) * 60L + seconds) * 100L + hundreths
+
     override fun toString() = if (hours > 0) {
         String.format("%02d:%02d:%02d.%02d", hours, minutes, seconds, hundreths)
     }

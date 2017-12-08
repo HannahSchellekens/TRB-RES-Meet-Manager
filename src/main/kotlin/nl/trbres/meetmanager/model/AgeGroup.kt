@@ -1,8 +1,15 @@
 package nl.trbres.meetmanager.model
 
+import com.fasterxml.jackson.annotation.JsonSubTypes
+import com.fasterxml.jackson.annotation.JsonTypeInfo
+import com.fasterxml.jackson.annotation.JsonTypeInfo.As.WRAPPER_OBJECT
+import com.fasterxml.jackson.annotation.JsonTypeInfo.Id.NAME
+import com.fasterxml.jackson.annotation.JsonTypeName
+
 /**
  * @author Ruben Schellekens
  */
+@JsonTypeName("simple")
 enum class SimpleAgeGroup(
         override val readableName: String,
         override val categoryName: (Category) -> String
@@ -19,6 +26,7 @@ enum class SimpleAgeGroup(
 /**
  * @author Ruben Schellekens
  */
+@JsonTypeName("default")
 enum class DefaultAgeGroup(
 
         override val readableName: String,
@@ -81,6 +89,11 @@ enum class DefaultAgeGroup(
 /**
  * @author Ruben Schellekens
  */
+@JsonTypeInfo(use = NAME, include = WRAPPER_OBJECT, property = "type")
+@JsonSubTypes(
+    JsonSubTypes.Type(value = DefaultAgeGroup::class, name = "default"),
+    JsonSubTypes.Type(value = SimpleAgeGroup::class, name = "default")
+)
 interface AgeGroup {
 
     /**

@@ -1,6 +1,6 @@
 package nl.trbres.meetmanager.model
 
-import java.time.LocalDate
+import nl.trbres.meetmanager.time.Date
 
 /**
  * @author Ruben Schellekens
@@ -15,7 +15,7 @@ data class Meet(
         /**
          * The date of the swim meet.
          */
-        var date: LocalDate,
+        var date: Date,
 
         /**
          * The lane numbers that are in use for the meet.

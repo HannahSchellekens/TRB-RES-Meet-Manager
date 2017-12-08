@@ -33,6 +33,9 @@ dependencies {
 
     // TornadoFX
     compile("no.tornado:tornadofx:1.7.13")
+
+    // Jackson serialization
+    compile("com.fasterxml.jackson.module:jackson-module-kotlin:2.9.0")
 }
 
 configure<JavaPluginConvention> {

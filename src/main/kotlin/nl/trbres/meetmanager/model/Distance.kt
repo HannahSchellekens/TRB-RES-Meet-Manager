@@ -69,4 +69,6 @@ data class Distance(
     init {
         require(times > 0) { "Amount of times must be positive, got $times" }
     }
+
+    override fun toString() = title
 }

@@ -27,3 +27,8 @@ data class Date(var year: Int, var month: Int, var day: Int) {
      */
     override fun toString() = iso8601()
 }
+
+/**
+ * Converts a local date to a [Date].
+ */
+fun LocalDate.toDate() = Date(year, monthValue, dayOfMonth)

@@ -21,6 +21,8 @@ enum class SimpleAgeGroup(
     SENIOREN("Senioren", { it.nameOld });
 
     override val title = readableName
+
+    override fun toString() = title
 }
 
 /**
@@ -84,6 +86,8 @@ enum class DefaultAgeGroup(
 
     override val title = "$readableName ${if (groupNumber == 0) "open" else groupNumber.toString()}"
     override val categoryName = simple.categoryName
+
+    override fun toString() = title
 }
 
 /**

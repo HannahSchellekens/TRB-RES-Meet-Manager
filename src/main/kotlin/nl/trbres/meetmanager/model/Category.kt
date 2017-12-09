@@ -7,5 +7,7 @@ enum class Category(val nameYoung: String, val nameOld: String) {
 
     MALE("Jongens", "Heren"),
     FEMALE("Meisjes", "Dames"),
-    MIX("Gemengd", "Gemengd")
+    MIX("Gemengd", "Gemengd");
+
+    override fun toString() = nameOld
 }

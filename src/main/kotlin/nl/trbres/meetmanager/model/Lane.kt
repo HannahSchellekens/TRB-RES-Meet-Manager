@@ -3,7 +3,7 @@ package nl.trbres.meetmanager.model
 /**
  * @author Ruben Schellekens
  */
-open class Lane(val number: Int, var swimmerId: Swimmer?) {
+open class Lane(val number: Int, var swimmer: Swimmer?) {
 
     companion object {
 
@@ -15,5 +15,7 @@ open class Lane(val number: Int, var swimmerId: Swimmer?) {
      * Whether the lane is empty or not.
      */
     val empty
-        get() = swimmerId == null
+        get() = swimmer == null
+
+    override fun toString() = "$number. $swimmer"
 }

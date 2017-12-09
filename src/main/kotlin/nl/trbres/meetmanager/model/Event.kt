@@ -1,5 +1,7 @@
 package nl.trbres.meetmanager.model
 
+import com.fasterxml.jackson.annotation.JsonIgnore
+
 /**
  * @author Ruben Schellekens
  */
@@ -34,5 +36,8 @@ data class Event(
     /**
      * Checks if all heats in the event have their results filled in.
      */
+    @JsonIgnore
     fun isFinished() = heats.all { it.isFinished() }
+
+    override fun toString() = "${ages.first()[category]} ${ages.joinToString(",")} $distance $stroke"
 }

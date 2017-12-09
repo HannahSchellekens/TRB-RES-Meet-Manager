@@ -1,5 +1,6 @@
 package nl.trbres.meetmanager.model
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import nl.trbres.meetmanager.time.Time
 
 /**
@@ -26,5 +27,6 @@ data class Heat(
     /**
      * Checks if all times are entered.
      */
+    @JsonIgnore
     fun isFinished() = lanes.keys.all { it in results.keys || it in statusses.keys }
 }

@@ -9,5 +9,7 @@ enum class Stroke(val strokeName: String) {
     BACKSTROKE("Rugslag"),
     BREASTSTROKE("Schoolslag"),
     FREESTYLE("Vrije slag"),
-    MEDLEY("Wisselslag")
+    MEDLEY("Wisselslag");
+
+    override fun toString() = strokeName
 }

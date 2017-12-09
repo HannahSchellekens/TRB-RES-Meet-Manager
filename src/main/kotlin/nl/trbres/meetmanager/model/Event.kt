@@ -30,4 +30,9 @@ data class Event(
      * All heats of the event.
      */
     val heats: MutableList<Heat> = ArrayList()
+
+    /**
+     * Checks if all heats in the event have their results filled in.
+     */
+    fun isFinished() = heats.all { it.isFinished() }
 }

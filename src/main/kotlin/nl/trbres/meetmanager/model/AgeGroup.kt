@@ -89,7 +89,7 @@ enum class DefaultAgeGroup(
 /**
  * @author Ruben Schellekens
  */
-@JsonTypeInfo(use = NAME, include = WRAPPER_OBJECT, property = "type")
+@JsonTypeInfo(use = NAME, include = WRAPPER_OBJECT, property = "implementation")
 @JsonSubTypes(
     JsonSubTypes.Type(value = DefaultAgeGroup::class, name = "default"),
     JsonSubTypes.Type(value = SimpleAgeGroup::class, name = "default")

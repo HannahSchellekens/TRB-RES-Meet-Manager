@@ -1,6 +1,9 @@
+import org.gradle.jvm.tasks.Jar
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-version = "1.0-SNAPSHOT"
+val applicationName = "TRB-RES Meet Manager"
+val gitHead = "7903ec2"
+version = "1.0-SNAPSHOT-$gitHead"
 
 buildscript {
     var kotlin_version: String by extra
@@ -8,12 +11,12 @@ buildscript {
 
     repositories {
         mavenCentral()
+        jcenter()
     }
 
     dependencies {
         classpath(kotlinModule("gradle-plugin", kotlin_version))
     }
-
 }
 
 apply {
@@ -40,6 +43,18 @@ dependencies {
 
 configure<JavaPluginConvention> {
     sourceCompatibility = JavaVersion.VERSION_1_8
+}
+
+@Suppress("IMPLICIT_CAST_TO_ANY")
+val fatJar = task("fatJar", type = Jar::class) {
+    baseName = applicationName
+    manifest {
+        attributes["Implementation-Title"] = applicationName
+        attributes["Implementation-Version"] = version
+        attributes["Main-Class"] = "nl.trbres.meetmanager.MeetManagerKt"
+    }
+    from(configurations.runtime.map({ if (it.isDirectory) it else zipTree(it) }))
+    with(tasks["jar"] as CopySpec)
 }
 
 tasks.withType<KotlinCompile> {

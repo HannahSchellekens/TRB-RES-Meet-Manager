@@ -10,6 +10,10 @@
     -fx-background-color: #cbcbcb;
 }
 
+.right-align {
+    -fx-alignment: CENTER-RIGHT;
+}
+
 /* TextField */
 .text-field {
     -fx-border-radius: 0;

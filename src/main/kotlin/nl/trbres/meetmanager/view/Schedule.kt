@@ -1,9 +1,12 @@
 package nl.trbres.meetmanager.view
 
+import javafx.collections.ObservableList
 import javafx.scene.layout.BorderPane
-import nl.trbres.meetmanager.Icons
 import nl.trbres.meetmanager.State
-import nl.trbres.meetmanager.util.fx.icon
+import nl.trbres.meetmanager.model.Heat
+import nl.trbres.meetmanager.model.Swimmer
+import nl.trbres.meetmanager.time.Time
+import nl.trbres.meetmanager.time.TimeConverter
 import tornadofx.*
 
 /**
@@ -24,13 +27,6 @@ open class Schedule(val main: MainView) : BorderPane() {
 
         // Add all events
         center {
-            contextmenu {
-                item("Toevoegen").icon(Icons.add)
-                item("Bewerken")
-                separator()
-                item("Verwijderen").icon(Icons.remove)
-            }
-
             squeezebox {
                 multiselect = false
 
@@ -42,11 +38,37 @@ open class Schedule(val main: MainView) : BorderPane() {
                         squeezebox {
                             multiselect = false
 
-                            for ((heatNo, _) in event.heats.withIndex()) {
+                            for ((heatNo, heat) in event.heats.withIndex()) {
                                 fold("Serie ${heatNo + 1}") {
                                     styleClass += "heat"
-                                    stackpane {
-                                        label("Nothing here")
+
+                                    tableview<ScheduleEntry> {
+                                        // Lane
+                                        column("Baan", ScheduleEntry::lane) {
+                                            isSortable = false
+                                        }
+
+                                        // Swimmer
+                                        column("Zwemmer", ScheduleEntry::name) {
+                                            prefWidthProperty().bind(this@tableview.widthProperty().multiply(0.3))
+                                            isSortable = false
+                                        }
+
+                                        // Club
+                                        column("Vereniging", ScheduleEntry::club) {
+                                            prefWidthProperty().bind(this@tableview.widthProperty().multiply(0.2))
+                                            isSortable = false
+                                        }
+
+                                        // Result
+                                        column("Tijd", ScheduleEntry::time) {
+                                            prefWidthProperty().bind(this@tableview.widthProperty().multiply(0.1))
+                                            isSortable = false
+                                        }.makeEditable(TimeConverter()).setOnEditCommit {
+                                            updateTime(it.newValue, selectedItem ?: return@setOnEditCommit)
+                                        }
+
+                                        items = heat.toScheduleEntries()
                                     }
                                 }
                             }
@@ -56,4 +78,36 @@ open class Schedule(val main: MainView) : BorderPane() {
             }
         }
     }
+
+    /**
+     * Updates the time of the given entry.
+     */
+    private fun updateTime(newTime: Time, entry: ScheduleEntry) {
+        if (entry.name == "<Leeg>") {
+            return
+        }
+        entry.heat.results[entry.lane] = newTime
+    }
+
+    /**
+     * Turns everything in the heat into [ScheduleEntry]'s so they can be represented in a table view.
+     */
+    private fun Heat.toScheduleEntries(): ObservableList<ScheduleEntry> {
+        val list = ArrayList<ScheduleEntry>()
+
+        for (lane in State.meet!!.lanes) {
+            val swimmer = lanes[lane]
+            val time = results[lane] ?: Time(0, 0)
+            list += ScheduleEntry(
+                    lane, swimmer?.name ?: "<Leeg>", swimmer?.club?.name ?: "<Geen>", time, swimmer, this
+            )
+        }
+
+        return list.observable()
+    }
 }
+
+/**
+ * @author Ruben Schellekens
+ */
+data class ScheduleEntry(var lane: Int, var name: String, var club: String, var time: Time, var swimmer: Swimmer?, var heat: Heat)

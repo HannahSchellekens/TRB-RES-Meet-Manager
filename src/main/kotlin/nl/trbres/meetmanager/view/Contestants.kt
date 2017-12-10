@@ -29,7 +29,10 @@ open class Contestants(val main: MainView) : BorderPane() {
                 column("Naam zwemmer", Swimmer::name) {
                     prefWidthProperty().bind(this@tableview.widthProperty().multiply(0.4))
                     isResizable = false
-                }.makeEditable()
+                }.makeEditable().setOnEditCommit {
+                    selectedItem?.name = it.newValue
+                    selectedItem?.nestedUpdate()
+                }
 
                 column("Vereniging", Swimmer::club) {
                     prefWidthProperty().bind(this@tableview.widthProperty().multiply(0.3))

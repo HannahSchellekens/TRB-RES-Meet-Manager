@@ -200,7 +200,7 @@ open class MainView : View() {
      */
     private fun about() {
         val buttonWebsite = ButtonType("Website bezoeken")
-        val buttonLicense = ButtonType("Licensie")
+        val buttonLicense = ButtonType("Licentie")
 
         val alert = Alert(
                 Alert.AlertType.INFORMATION,

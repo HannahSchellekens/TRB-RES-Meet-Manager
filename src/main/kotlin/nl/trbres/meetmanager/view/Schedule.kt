@@ -27,13 +27,15 @@ open class Schedule(val main: MainView) : BorderPane() {
 
                 for ((eventNo, event) in events.withIndex()) {
                     fold("Programma ${eventNo + 1}: $event") {
+                        styleClass += "event"
+
                         // Add all heats
                         squeezebox {
                             multiselect = false
 
                             for ((heatNo, _) in event.heats.withIndex()) {
                                 fold("Serie ${heatNo + 1}") {
-                                    paddingLeft = 4.0
+                                    styleClass += "heat"
                                     stackpane {
                                         label("Nothing here")
                                     }

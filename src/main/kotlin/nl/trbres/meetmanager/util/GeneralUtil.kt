@@ -13,6 +13,26 @@ val APPLICATION_VERSION = MeetManagerApp::class.java.`package`.implementationVer
 val APPLICATION_NAME = MeetManagerApp::class.java.`package`.implementationTitle ?: "TRB-RES Meet Manager"
 
 /**
+ * The github URL of the program.
+ */
+val GITHUB_PAGE = "https://github.com/RubenSchellekens/TRB-RES-Meet-Manager"
+
+/**
+ * The URL where the documentation of the software is located.
+ */
+val DOCUMENTATION_PAGE = "$GITHUB_PAGE/wiki"
+
+/**
+ * The URL pointing to the program's license.
+ */
+val LICENSE = "$GITHUB_PAGE/blob/master/LICENSE"
+
+/**
+ * The URL of the homepage of the software's author.
+ */
+val AUTHOR_HOME = "https://rubenschellekens.github.io"
+
+/**
  * An `Oopsie` type is either:
  * `null` when problems arise (or [OOPS]), or
  * `Unit` when all went fine (or [FINE]).

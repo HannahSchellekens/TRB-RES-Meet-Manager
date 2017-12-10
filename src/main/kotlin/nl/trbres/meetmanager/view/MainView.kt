@@ -1,5 +1,6 @@
 package nl.trbres.meetmanager.view
 
+import javafx.scene.control.Alert
 import javafx.scene.control.ButtonType
 import javafx.scene.control.TabPane
 import javafx.stage.FileChooser
@@ -8,12 +9,11 @@ import nl.trbres.meetmanager.State
 import nl.trbres.meetmanager.model.Meet
 import nl.trbres.meetmanager.util.*
 import tornadofx.*
-import kotlin.system.exitProcess
 
 /**
  * @author Ruben Schellekens
  */
-open class MainView() : View() {
+open class MainView : View() {
 
     lateinit var tabWrapper: TabPane
     lateinit var viewGeneral: General
@@ -43,9 +43,9 @@ open class MainView() : View() {
                     item("Exporteer programma naar PDF").icon(Icons.pdf).action { TODO("Export schedule to PDF") }
                 }
                 menu("Help") {
-                    item("Documentatie").icon(Icons.textFile).action { TODO("Add link to docs") }
-                    item("GitHub pagina").icon(Icons.link).action { TODO("Add link to github") }
-                    item("Over").action { TODO("Add prompt with program info") }
+                    item("Documentatie").icon(Icons.textFile).action { DOCUMENTATION_PAGE.openUrl() }
+                    item("GitHub pagina").icon(Icons.link).action { GITHUB_PAGE.openUrl() }
+                    item("Over").action(::about)
                 }
             }
         }
@@ -190,5 +190,34 @@ open class MainView() : View() {
     /**
      * Exits with exit code 0.
      */
-    private fun exitProgram(): Nothing = exitProcess(0)
+    private fun exitProgram() {
+        safeClose()
+        currentStage?.close() ?: System.exit(1)
+    }
+
+    /**
+     * Shows a dialog with general info about the software.
+     */
+    private fun about() {
+        val buttonWebsite = ButtonType("Website bezoeken")
+        val buttonLicense = ButtonType("Licensie")
+
+        val alert = Alert(
+                Alert.AlertType.INFORMATION,
+                "$APPLICATION_NAME, versie $APPLICATION_VERSION\n ",
+                ButtonType.CLOSE,
+                buttonWebsite,
+                buttonLicense
+        ).apply {
+            title = "Over"
+            headerText = "Gemaakt door Ruben Schellekens\nhttps://rubenschellekens.github.io\nGepubliceerd onder de GPLv3 licentie"
+            initOwner(currentWindow)
+        }
+
+        val result = alert.showAndWait().orElse(null)
+        when (result) {
+            buttonWebsite -> AUTHOR_HOME.openUrl()
+            buttonLicense -> LICENSE.openUrl()
+        }
+    }
 }

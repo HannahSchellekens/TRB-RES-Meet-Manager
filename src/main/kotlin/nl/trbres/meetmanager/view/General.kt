@@ -5,9 +5,9 @@ import javafx.scene.control.TextField
 import javafx.scene.layout.BorderPane
 import nl.trbres.meetmanager.State
 import nl.trbres.meetmanager.time.toDate
-import nl.trbres.meetmanager.util.onUnfocus
+import nl.trbres.meetmanager.util.fx.onUnfocus
+import nl.trbres.meetmanager.util.fx.validate
 import nl.trbres.meetmanager.util.toIntRange
-import nl.trbres.meetmanager.util.validate
 import tornadofx.*
 
 /**

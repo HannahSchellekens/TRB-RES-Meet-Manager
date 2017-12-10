@@ -86,6 +86,16 @@ inline fun <T> T?.whenNonNull(block: (T) -> Unit) {
     }
 }
 
+/**
+ * Returns `true` if the object is `null`.
+ */
+fun Any?.isNull() = this == null
+
+/**
+ * Returns `true` if the object is not `null`.
+ */
+fun Any?.isNotNull() = this != null
+
 fun Any?.print() = print(this)
 fun Any?.println() = println(this)
 fun Any?.printf(format: String) = println(String.format(format, this))

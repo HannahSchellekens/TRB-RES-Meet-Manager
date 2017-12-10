@@ -8,6 +8,8 @@ import nl.trbres.meetmanager.Icons
 import nl.trbres.meetmanager.State
 import nl.trbres.meetmanager.model.Meet
 import nl.trbres.meetmanager.util.*
+import nl.trbres.meetmanager.util.fx.icon
+import nl.trbres.meetmanager.util.fx.openEvent
 import tornadofx.*
 
 /**
@@ -56,21 +58,25 @@ open class MainView : View() {
                     isClosable = false
                     viewGeneral = General(this@MainView)
                     this += viewGeneral
+                    openEvent { viewGeneral.populate() }
                 }
                 tab("Verenigingen") {
                     isClosable = false
                     viewClubs = Clubs(this@MainView)
                     this += viewClubs
+                    openEvent { viewClubs.populate() }
                 }
                 tab("Deelnemers") {
                     isClosable = false
                     viewContestants = Contestants(this@MainView)
                     this += viewContestants
+                    openEvent { viewContestants.populate() }
                 }
                 tab("Programma") {
                     isClosable = false
                     viewSchedule = Schedule(this@MainView)
                     this += viewSchedule
+                    openEvent { viewSchedule.updateProgram() }
                 }
             }
         }

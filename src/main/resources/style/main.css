@@ -16,11 +16,17 @@
     -fx-background-radius: 0;
 }
 
+.text-field:focused {
+    -fx-border-width: 2;
+    -fx-focus-color: #5094D2;
+}
+
 /* DatePicker */
 .date-picker,
 .date-picker > .button {
     -fx-border-radius: 0;
     -fx-background-radius: 0;
+    -fx-focus-color: #5094D2;
 }
 
 /* Buttons */
@@ -47,12 +53,21 @@
 .table-view {
     -fx-border-width: 0;
     -fx-background-insets: 0;
+    -fx-background-color: #cfd8e8;
+    -fx-selection-bar: #70afe6;
+    -fx-selection-bar-non-focused: #80bbf6;
 }
 
 .table-view .column-header,
 .table-view .column-header .filler,
 .table-view .column-header-background .filler {
     -fx-background-color: #cfd8e8;
+}
+
+/* ComboBox */
+.combo-box {
+    -fx-border-radius: 0;
+    -fx-background-radius: 0;
 }
 
 /* Squeezebox */
@@ -157,7 +172,7 @@
 .menu:selected,
 .menu:focused,
 .menu:showing {
-    -fx-background-color: #3875d6;
+    -fx-background-color: #5094d2;
 }
 
 .menu .label {
@@ -183,7 +198,7 @@
 .menu-item:hover,
 .menu-item:selected,
 .menu-item:focused {
-    -fx-background-color: #3875d6;
+    -fx-background-color: #5094D2;
     -fx-fill: white;
 }
 

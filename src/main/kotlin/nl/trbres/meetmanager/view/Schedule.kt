@@ -1,7 +1,9 @@
 package nl.trbres.meetmanager.view
 
 import javafx.scene.layout.BorderPane
+import nl.trbres.meetmanager.Icons
 import nl.trbres.meetmanager.State
+import nl.trbres.meetmanager.util.fx.icon
 import tornadofx.*
 
 /**
@@ -22,6 +24,13 @@ open class Schedule(val main: MainView) : BorderPane() {
 
         // Add all events
         center {
+            contextmenu {
+                item("Toevoegen").icon(Icons.add)
+                item("Bewerken")
+                separator()
+                item("Verwijderen").icon(Icons.remove)
+            }
+
             squeezebox {
                 multiselect = false
 

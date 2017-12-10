@@ -1,10 +1,14 @@
-package nl.trbres.meetmanager.util
+package nl.trbres.meetmanager.util.fx
 
+import javafx.event.EventHandler
 import javafx.scene.Node
 import javafx.scene.control.MenuItem
+import javafx.scene.control.Tab
+import javafx.scene.control.TableColumn
 import javafx.scene.image.Image
 import javafx.scene.image.ImageView
 import javafx.scene.input.KeyCode
+import javafx.util.Callback
 import tornadofx.UIComponent
 import tornadofx.warning
 
@@ -85,6 +89,32 @@ fun <N : Node> N.enterToUnfocus(): N {
     setOnKeyReleased { e ->
         if (e.code == KeyCode.ENTER) {
             parent.requestFocus()
+        }
+    }
+    return this
+}
+
+/**
+ * Makes a certain table column editable with a combobox.
+ *
+ * @param setter
+ *          How the row must be modified given the new value.
+ * @param options
+ *          All the options that must appear in the combo box.
+ */
+fun <S, T : Any?> TableColumn<S, T>.makeEditable(setter: (S, T) -> Unit, options: () -> List<T>) = apply {
+    tableView?.isEditable = true
+    isEditable = true
+    cellFactory = Callback { _ -> ComboBoxEditingCell<S, T>(setter, options) }
+}
+
+/**
+ * Executes the given code when a tab gets opened.
+ */
+inline fun Tab.openEvent(crossinline block: Tab.() -> Unit): Tab {
+    onSelectionChanged = EventHandler {
+        if (isSelected) {
+            block()
         }
     }
     return this

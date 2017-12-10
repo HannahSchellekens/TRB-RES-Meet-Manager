@@ -5,6 +5,7 @@ import javafx.scene.control.TextField
 import nl.trbres.meetmanager.model.Meet
 import nl.trbres.meetmanager.time.toDate
 import nl.trbres.meetmanager.util.*
+import nl.trbres.meetmanager.util.fx.styleClass
 import tornadofx.*
 
 /**

@@ -28,5 +28,5 @@ data class Heat(
      * Checks if all times are entered.
      */
     @JsonIgnore
-    fun isFinished() = lanes.keys.all { it in results.keys || it in statusses.keys }
+    fun isFinished() = lanes.keys.all { it in results.keys || it in statusses.keys } && results.values.none { it == Time(0, 0) }
 }

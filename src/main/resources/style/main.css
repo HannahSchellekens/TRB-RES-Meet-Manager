@@ -49,7 +49,6 @@
 }
 
 .button:pressed {
-    -fx-border-width: 0 0 1 0;
     -fx-background-color: #6fc8ec;
 }
 
@@ -276,6 +275,19 @@
 }
 
 /* Colours */
+.cornflower {
+    -fx-background-color: #cfd8e8;
+    -fx-border-color: #a7b0c0;
+}
+
+.cornflower:hover {
+    -fx-background-color: #dee8f9;
+}
+
+.cornflower:pressed {
+    -fx-background-color: #d3ddee;
+}
+
 .green {
     -fx-background-color: #a5d257;
     -fx-border-color: #69a54a;

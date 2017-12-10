@@ -2,17 +2,25 @@ package nl.trbres.meetmanager.view
 
 import javafx.scene.control.TableView
 import javafx.scene.layout.BorderPane
+import nl.trbres.meetmanager.Icons
 import nl.trbres.meetmanager.State
+import nl.trbres.meetmanager.model.Event
 import nl.trbres.meetmanager.model.Heat
 import nl.trbres.meetmanager.model.Swimmer
 import nl.trbres.meetmanager.time.Time
 import nl.trbres.meetmanager.time.TimeConverter
+import nl.trbres.meetmanager.util.fx.icon
+import nl.trbres.meetmanager.util.fx.styleClass
 import tornadofx.*
 
 /**
  * @author Ruben Schellekens
  */
 open class Schedule(val main: MainView) : BorderPane() {
+
+    private lateinit var swimEvents: SqueezeBox
+    private var selectedEvent: Event? = null
+    private var selectedEventNo: Int? = null
 
     init {
         updateProgram()
@@ -27,7 +35,7 @@ open class Schedule(val main: MainView) : BorderPane() {
 
         // Add all events
         center {
-            squeezebox {
+            swimEvents = squeezebox {
                 multiselect = false
 
                 for ((eventNo, event) in events.withIndex()) {
@@ -77,9 +85,121 @@ open class Schedule(val main: MainView) : BorderPane() {
                                 }
                             }
                         }
+
+                        focusedProperty().addListener { _ ->
+                            selectedEvent = event
+                            selectedEventNo = eventNo + 1
+                        }
                     }
                 }
             }
+        }
+
+        right {
+            vbox {
+                spacing = 2.0
+                paddingTop = 2.0
+                paddingLeft = 2.0
+                paddingRight = 2.0
+
+                button {
+                    icon(Icons.up)
+                    styleClass("cornflower")
+                    tooltip("Programma naar boven verplaatsen")
+                    action(::moveUp)
+                }
+
+                button {
+                    icon(Icons.down)
+                    styleClass("cornflower")
+                    tooltip("Programma naar beneden verplaatsen")
+                    action(::moveDown)
+                }
+
+                button {
+                    icon(Icons.add)
+                    styleClass("cornflower")
+                    tooltip("Programma toevoegen")
+                    action(::addEvent)
+                }
+
+                button {
+                    icon(Icons.textFile)
+                    styleClass("cornflower")
+                    tooltip("Programma bewerken")
+                    action(::editEvent)
+                }
+
+                button {
+                    icon(Icons.remove)
+                    styleClass("cornflower")
+                    tooltip("Geselecteerde programma verwijderen")
+                    action(::removeEvent)
+                }
+            }
+        }
+    }
+
+    /**
+     * Move the selected event 1 place up.
+     */
+    private fun moveUp() {
+        val meet = State.meet ?: return
+        val event = selectedEvent ?: return
+        val number = selectedEventNo ?: return
+        if (number <= 1) {
+            return
+        }
+
+        val above = meet.events[number - 2]
+        meet.events[number - 2] = event
+        meet.events[number - 1] = above
+        updateProgram()
+    }
+
+    /**
+     * Move the selected event 1 place down.
+     */
+    private fun moveDown() {
+        val meet = State.meet ?: return
+        val event = selectedEvent ?: return
+        val number = selectedEventNo ?: return
+        if (number >= meet.events.size) {
+            return
+        }
+
+        val below = meet.events[number]
+        meet.events[number] = event
+        meet.events[number - 1] = below
+        updateProgram()
+    }
+
+    /**
+     * Adds a new event to the schedule.
+     */
+    private fun addEvent() {
+
+    }
+
+    /**
+     * Edits the selected event, does nothing when no event is selected.
+     */
+    private fun editEvent() {
+
+    }
+
+    /**
+     * Removes the selected event from the schedule.
+     */
+    private fun removeEvent() {
+        val event = selectedEvent ?: return
+        confirm(event.toString(),
+                "Weet je zeker dat je programma $selectedEventNo wilt verwijderen?",
+                owner = main.currentWindow) {
+            State.meet?.events?.remove(event)
+            updateProgram()
+            selectedEvent = null
+            selectedEventNo = null
         }
     }
 

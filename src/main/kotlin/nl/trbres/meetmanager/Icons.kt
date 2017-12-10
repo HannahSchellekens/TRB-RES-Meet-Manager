@@ -18,4 +18,6 @@ object Icons {
     @JvmField val textFile = Image("/icons/file_txt.png")
     @JvmField val add = Image("/icons/add.png")
     @JvmField val remove = Image("/icons/remove.png")
+    @JvmField val up = Image("/icons/up.png")
+    @JvmField val down = Image("/icons/down.png")
 }

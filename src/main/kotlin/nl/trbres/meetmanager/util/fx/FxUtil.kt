@@ -2,6 +2,7 @@ package nl.trbres.meetmanager.util.fx
 
 import javafx.event.EventHandler
 import javafx.scene.Node
+import javafx.scene.control.Button
 import javafx.scene.control.MenuItem
 import javafx.scene.control.Tab
 import javafx.scene.control.TableColumn
@@ -16,6 +17,14 @@ import tornadofx.warning
  * Adds the icon as graphic to the node.
  */
 fun MenuItem.icon(icon: Image): MenuItem {
+    graphic = ImageView(icon)
+    return this
+}
+
+/**
+ * Adds the icon as graphic to the node.
+ */
+fun Button.icon(icon: Image): Button{
     graphic = ImageView(icon)
     return this
 }

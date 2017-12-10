@@ -23,6 +23,11 @@ data class Date(var year: Int, var month: Int, var day: Int) {
     fun iso8601() = String.format("%04d-%02d-%02d", year, month, day)
 
     /**
+     * Converts the date to a [LocalDate].
+     */
+    fun toLocalDate() = LocalDate.of(year, month, day)!!
+
+    /**
      * See [iso8601].
      */
     override fun toString() = iso8601()

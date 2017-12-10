@@ -1,6 +1,7 @@
 package nl.trbres.meetmanager
 
 import nl.trbres.meetmanager.model.Meet
+import java.io.File
 
 /**
  * @author Ruben Schellekens
@@ -8,4 +9,5 @@ import nl.trbres.meetmanager.model.Meet
 object State {
 
     var meet: Meet? = null
+    var saveFile: File? = null
 }

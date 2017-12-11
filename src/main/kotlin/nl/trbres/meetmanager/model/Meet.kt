@@ -23,6 +23,11 @@ data class Meet(
         var lanes: IntRange,
 
         /**
+         * The name of the location where the meet is being held.
+         */
+        var location: String,
+
+        /**
          * All the events of the meet.
          */
         val events: MutableList<Event> = ArrayList(),

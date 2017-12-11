@@ -10,22 +10,22 @@ data class Event(
         /**
          * The distance that will be swum.
          */
-        val distance: Distance,
+        var distance: Distance,
 
         /**
          * The stroke that will be swum.
          */
-        val stroke: Stroke,
+        var stroke: Stroke,
 
         /**
          * Who participate in the event.
          */
-        val category: Category,
+        var category: Category,
 
         /**
          * What age groups are allowed in the event.
          */
-        val ages: MutableList<AgeGroup>
+        var ages: MutableList<AgeGroup>
 ) {
 
     /**

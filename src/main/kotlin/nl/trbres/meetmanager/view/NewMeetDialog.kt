@@ -4,7 +4,10 @@ import javafx.scene.control.DatePicker
 import javafx.scene.control.TextField
 import nl.trbres.meetmanager.model.Meet
 import nl.trbres.meetmanager.time.toDate
-import nl.trbres.meetmanager.util.*
+import nl.trbres.meetmanager.util.FINE
+import nl.trbres.meetmanager.util.OOPS
+import nl.trbres.meetmanager.util.Oopsie
+import nl.trbres.meetmanager.util.Reference
 import nl.trbres.meetmanager.util.fx.styleClass
 import tornadofx.*
 
@@ -19,6 +22,7 @@ class NewMeetDialog : Fragment() {
     private val meet = params["meet"] as Reference<Meet>
 
     private lateinit var txtName: TextField
+    private lateinit var txtLocation: TextField
     private lateinit var dateDate: DatePicker
     private lateinit var txtLanes: TextField
 
@@ -31,6 +35,9 @@ class NewMeetDialog : Fragment() {
                 fieldset("Wedstrijdinformatie") {
                     field("Wedstrijdnaam") {
                         txtName = textfield { useMaxWidth = true }
+                    }
+                    field("Locatie") {
+                        txtLocation = textfield { useMaxWidth = true }
                     }
                     field("Datum") {
                         dateDate = datepicker()
@@ -56,6 +63,11 @@ class NewMeetDialog : Fragment() {
     private fun validate(): Oopsie {
         if (txtName.text.isNullOrBlank()) {
             warning("Er is geen wedstrijdnaam opgegeven!", owner = currentWindow, title = "Foute invoer")
+            return OOPS
+        }
+
+        if (txtLocation.text.isNullOrBlank()) {
+            warning("Er is geen locatienaam opgegeven!", owner = currentWindow, title = "Foute invoer")
             return OOPS
         }
 
@@ -92,7 +104,7 @@ class NewMeetDialog : Fragment() {
 
         val numbers = txtLanes.text.split("-")
         val laneRange = numbers[0].toInt()..numbers[1].toInt()
-        meet.value = Meet(txtName.text, dateDate.value.toDate(), laneRange)
+        meet.value = Meet(txtName.text, dateDate.value.toDate(), laneRange, txtLocation.text)
 
         currentStage?.close()
     }

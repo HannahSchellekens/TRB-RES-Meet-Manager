@@ -16,6 +16,7 @@ import tornadofx.*
 open class General(val main: MainView) : BorderPane() {
 
     lateinit var txtName: TextField
+    lateinit var txtLocation: TextField
     lateinit var dateDate: DatePicker
     lateinit var txtLanes: TextField
 
@@ -29,6 +30,14 @@ open class General(val main: MainView) : BorderPane() {
                                 "Text mag niet leeg zijn",
                                 { State.meet?.name = text; main.updateTitle() },
                                 { text = State.meet?.name ?: "" }
+                        )
+                    }
+                    field("Locatie") {
+                        txtLocation = textfield().validate(
+                                { !text.isNullOrBlank() },
+                                "Locatienaam mag niet leeg zijn",
+                                { State.meet?.location = text },
+                                { text = State.meet?.location ?: "" }
                         )
                     }
                     field("Datum") {
@@ -60,6 +69,7 @@ open class General(val main: MainView) : BorderPane() {
     fun populate() {
         val meet = State.meet ?: return
         txtName.text = meet.name
+        txtLocation.text = meet.location
         dateDate.value = meet.date.toLocalDate()
         txtLanes.text = "${meet.lanes.first}-${meet.lanes.endInclusive}"
     }

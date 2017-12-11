@@ -9,3 +9,8 @@ fun <K, V> Map<K, V>.getKey(value: V): K? {
     }
     return entries.first { it.value == value }.key
 }
+
+/**
+ * Makes a range of valid indices.
+ */
+fun <T> List<T>.indexRange() = 0 until size

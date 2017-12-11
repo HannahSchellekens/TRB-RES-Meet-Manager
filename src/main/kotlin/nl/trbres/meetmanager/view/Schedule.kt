@@ -1,6 +1,8 @@
 package nl.trbres.meetmanager.view
 
+import javafx.geometry.Pos
 import javafx.scene.control.TableView
+import javafx.scene.control.TitledPane
 import javafx.scene.layout.BorderPane
 import nl.trbres.meetmanager.Icons
 import nl.trbres.meetmanager.State
@@ -11,6 +13,7 @@ import nl.trbres.meetmanager.time.Time
 import nl.trbres.meetmanager.time.TimeConverter
 import nl.trbres.meetmanager.util.fx.icon
 import nl.trbres.meetmanager.util.fx.styleClass
+import nl.trbres.meetmanager.util.indexRange
 import tornadofx.*
 
 /**
@@ -21,6 +24,10 @@ open class Schedule(val main: MainView) : BorderPane() {
     private lateinit var swimEvents: SqueezeBox
     private var selectedEvent: Event? = null
     private var selectedEventNo: Int? = null
+    private var selectedHeat: Heat? = null
+    private var selectedHeatNo: Int? = null
+    private var eventPanes = ArrayList<TitledPane>()
+    private var heatPanes = ArrayList<TitledPane>()
 
     init {
         updateProgram()
@@ -31,6 +38,9 @@ open class Schedule(val main: MainView) : BorderPane() {
         val meet = State.meet ?: return
         val events = meet.events
 
+        eventPanes.clear()
+        heatPanes.clear()
+
         clear()
 
         // Add all events
@@ -40,6 +50,7 @@ open class Schedule(val main: MainView) : BorderPane() {
 
                 for ((eventNo, event) in events.withIndex()) {
                     fold("Programma ${eventNo + 1}: $event") {
+                        eventPanes.add(this)
                         styleClass += "event"
 
                         // Add all heats
@@ -47,8 +58,9 @@ open class Schedule(val main: MainView) : BorderPane() {
                             multiselect = false
 
                             for ((heatNo, heat) in event.heats.withIndex()) {
-                                fold("Serie ${heatNo + 1}") {
+                                fold("Serie ${heatNo + 1}") heatFold@ {
                                     styleClass += "heat"
+                                    heatPanes.add(this@heatFold)
 
                                     tableview<ScheduleEntry> {
                                         // Lane
@@ -82,6 +94,11 @@ open class Schedule(val main: MainView) : BorderPane() {
                                             replaceSwimmer(eventNo + 1, heatNo + 1)
                                         }
                                     }
+
+                                    focusedProperty().addListener { _ ->
+                                        selectedHeat = heat
+                                        selectedHeatNo = heatNo + 1
+                                    }
                                 }
                             }
                         }
@@ -102,40 +119,154 @@ open class Schedule(val main: MainView) : BorderPane() {
                 paddingLeft = 2.0
                 paddingRight = 2.0
 
+                label("Prog.") {
+                    alignment = Pos.CENTER
+                    prefHeight = 25.0
+                }
+
                 button {
                     icon(Icons.up)
                     styleClass("cornflower")
                     tooltip("Programma naar boven verplaatsen")
-                    action(::moveUp)
+                    action(::eventMoveUp)
                 }
-
                 button {
                     icon(Icons.down)
                     styleClass("cornflower")
                     tooltip("Programma naar beneden verplaatsen")
-                    action(::moveDown)
+                    action(::eventMoveDown)
                 }
-
                 button {
                     icon(Icons.add)
                     styleClass("cornflower")
                     tooltip("Programma toevoegen")
                     action(::addEvent)
                 }
-
                 button {
                     icon(Icons.textFile)
                     styleClass("cornflower")
                     tooltip("Programma bewerken")
                     action(::editEvent)
                 }
-
                 button {
                     icon(Icons.remove)
                     styleClass("cornflower")
                     tooltip("Geselecteerde programma verwijderen")
                     action(::removeEvent)
                 }
+
+                label("Series") {
+                    alignment = Pos.CENTER
+                    prefHeight = 25.0
+                }
+
+                button {
+                    icon(Icons.up)
+                    styleClass("cornflower")
+                    tooltip("Serie naar boven verplaatsen")
+                    action(::heatMoveUp)
+                }
+                button {
+                    icon(Icons.down)
+                    styleClass("cornflower")
+                    tooltip("Serie naar beneden verplaatsen")
+                    action(::heatMoveDown)
+                }
+                button {
+                    icon(Icons.add)
+                    styleClass("cornflower")
+                    tooltip("Serie toevoegen")
+                    action(::addHeat)
+                }
+                button {
+                    icon(Icons.remove)
+                    styleClass("cornflower")
+                    tooltip("Serie verwijderen")
+                    action(::removeHeat)
+                }
+            }
+        }
+    }
+
+    /**
+     * Expands the currently selected event and heat.
+     */
+    private fun expandCurrent(heatDiff: Int = 0, eventDiff: Int = 0) {
+        runLater {
+            val eventNumber = selectedEventNo ?: return@runLater
+            val index = eventNumber - 1 + eventDiff
+            if (index in eventPanes.indexRange()) {
+                eventPanes[index].isExpanded = true
+            }
+        }
+
+        runLater {
+            val heatNumber = selectedHeatNo ?: return@runLater
+            val index = heatNumber - 2 + heatDiff
+            if (index in heatPanes.indexRange()) {
+                heatPanes[index].isExpanded = true
+            }
+        }
+    }
+
+    /**
+     * Move the selected heat 1 place up.
+     */
+    private fun heatMoveUp() {
+        val event = selectedEvent ?: return
+        val heat = selectedHeat ?: return
+        val number = selectedHeatNo ?: return
+        if (number <= 1) {
+            return
+        }
+
+        val above = event.heats[number - 2]
+        event.heats[number - 2] = heat
+        event.heats[number - 1] = above
+
+        updateProgram()
+        expandCurrent()
+    }
+
+    /**
+     * Move the selected heat 1 place down.
+     */
+    private fun heatMoveDown() {
+        val event = selectedEvent ?: return
+        val heat = selectedHeat ?: return
+        val number = selectedHeatNo ?: return
+        if (number >= event.heats.size) {
+            return
+        }
+
+        val below = event.heats[number]
+        event.heats[number] = heat
+        event.heats[number - 1] = below
+
+        updateProgram()
+        expandCurrent()
+    }
+
+    /**
+     * Adds an empty heat to the currently selected event.
+     */
+    private fun addHeat() {
+        selectedEvent?.heats?.add(Heat())
+        updateProgram()
+        expandCurrent()
+    }
+
+    /**
+     * Removes the selected heat.
+     */
+    private fun removeHeat() {
+        val heat = selectedHeat ?: return
+        confirm("Weet je zeker dat je programma $selectedEventNo, serie $selectedHeatNo wilt verwijderen?",
+                owner = main.currentWindow) {
+            selectedEvent?.heats?.remove(heat)
+            updateProgram()
+            if (selectedEvent?.heats?.isNotEmpty() == true) {
+                expandCurrent()
             }
         }
     }
@@ -143,7 +274,7 @@ open class Schedule(val main: MainView) : BorderPane() {
     /**
      * Move the selected event 1 place up.
      */
-    private fun moveUp() {
+    private fun eventMoveUp() {
         val meet = State.meet ?: return
         val event = selectedEvent ?: return
         val number = selectedEventNo ?: return
@@ -154,13 +285,14 @@ open class Schedule(val main: MainView) : BorderPane() {
         val above = meet.events[number - 2]
         meet.events[number - 2] = event
         meet.events[number - 1] = above
+
         updateProgram()
     }
 
     /**
      * Move the selected event 1 place down.
      */
-    private fun moveDown() {
+    private fun eventMoveDown() {
         val meet = State.meet ?: return
         val event = selectedEvent ?: return
         val number = selectedEventNo ?: return
@@ -171,6 +303,7 @@ open class Schedule(val main: MainView) : BorderPane() {
         val below = meet.events[number]
         meet.events[number] = event
         meet.events[number - 1] = below
+
         updateProgram()
     }
 
@@ -178,14 +311,22 @@ open class Schedule(val main: MainView) : BorderPane() {
      * Adds a new event to the schedule.
      */
     private fun addEvent() {
-
+        EventDialog(main.currentWindow).showAndWait().ifPresent {
+            State.meet?.events?.add(it)
+            updateProgram()
+        }
     }
 
     /**
      * Edits the selected event, does nothing when no event is selected.
      */
     private fun editEvent() {
-
+        val event = selectedEvent ?: return
+        val eventNumber = selectedEventNo ?: return
+        EventDialog(main.currentWindow, event).showAndWait().ifPresent {
+            State.meet?.events!![eventNumber - 1] = it
+            updateProgram()
+        }
     }
 
     /**

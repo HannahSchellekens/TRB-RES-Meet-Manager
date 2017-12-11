@@ -15,3 +15,11 @@ fun String.toIntRange(): IntRange {
  * Opens the webbrowser to open the given url.
  */
 fun String.openUrl() = Desktop.getDesktop().browse(URI(this))
+
+/**
+ * Checks whether the string contents represent a nonnegative integer.
+ */
+fun String.isNaturalNumber(): Boolean {
+    val range = '0'..'9'
+    return toCharArray().all { it in range }
+}

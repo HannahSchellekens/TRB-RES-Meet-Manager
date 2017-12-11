@@ -20,4 +20,5 @@ object Icons {
     @JvmField val remove = Image("/icons/remove.png")
     @JvmField val up = Image("/icons/up.png")
     @JvmField val down = Image("/icons/down.png")
+    @JvmField val download = Image("/icons/download.png")
 }

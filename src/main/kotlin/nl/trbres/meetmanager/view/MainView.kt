@@ -2,10 +2,12 @@ package nl.trbres.meetmanager.view
 
 import javafx.scene.control.Alert
 import javafx.scene.control.ButtonType
+import javafx.scene.control.Menu
 import javafx.scene.control.TabPane
 import javafx.stage.FileChooser
 import nl.trbres.meetmanager.Icons
 import nl.trbres.meetmanager.State
+import nl.trbres.meetmanager.import.SwimtrackImporter
 import nl.trbres.meetmanager.model.Meet
 import nl.trbres.meetmanager.util.*
 import nl.trbres.meetmanager.util.fx.icon
@@ -22,6 +24,7 @@ open class MainView : View() {
     lateinit var viewClubs: Clubs
     lateinit var viewContestants: Contestants
     lateinit var viewSchedule: Schedule
+    lateinit var menuImport: Menu
 
     override val root = borderpane {
         prefWidth = 800.0
@@ -43,6 +46,10 @@ open class MainView : View() {
                 menu("Wedstrijd") {
                     item("Maak programma").icon(Icons.report).action { TODO("Create schedule") }
                     item("Exporteer programma naar PDF").icon(Icons.pdf).action { TODO("Export schedule to PDF") }
+                }
+                menuImport = menu("Importeren") {
+                    item("Swimkick importeren").icon(Icons.download).action(::importSwimtrack)
+                    isDisable = true
                 }
                 menu("Help") {
                     item("Documentatie").icon(Icons.textFile).action { DOCUMENTATION_PAGE.openUrl() }
@@ -89,11 +96,25 @@ open class MainView : View() {
     }
 
     /**
+     * Imports swimtrack.
+     */
+    fun importSwimtrack() {
+        val meet = State.meet ?: return
+        ImportSwimtrackDialog(currentWindow).showAndWait().ifPresent {
+            val newSwimmers = SwimtrackImporter(it, meet).import()
+            meet.swimmers.addAll(newSwimmers)
+            updateFromState()
+            information("${newSwimmers.size} zwemmers zijn toegevoegd!", owner = currentWindow, title = "Succes!")
+        }
+    }
+
+    /**
      * Updates all UI elements to line up with the global meet state.
      */
     fun updateFromState() {
         // (un)lock controls
         tabWrapper.isVisible = State.meet != null
+        menuImport.isDisable = State.meet == null
 
         // Update contents.
         updateTitle()

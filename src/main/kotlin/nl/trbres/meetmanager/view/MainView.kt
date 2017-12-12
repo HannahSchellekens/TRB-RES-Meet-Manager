@@ -1,5 +1,6 @@
 package nl.trbres.meetmanager.view
 
+import javafx.scene.Cursor
 import javafx.scene.control.Alert
 import javafx.scene.control.ButtonType
 import javafx.scene.control.Menu
@@ -7,6 +8,8 @@ import javafx.scene.control.TabPane
 import javafx.stage.FileChooser
 import nl.trbres.meetmanager.Icons
 import nl.trbres.meetmanager.State
+import nl.trbres.meetmanager.UserSettings
+import nl.trbres.meetmanager.UserSettings.Key.lastDirectory
 import nl.trbres.meetmanager.import.SwimtrackImporter
 import nl.trbres.meetmanager.model.Meet
 import nl.trbres.meetmanager.util.*
@@ -179,6 +182,7 @@ open class MainView : View() {
             return
         }
 
+        fakeLoadCursor()
         usefulTry("Kon het wedstrijd bestand niet opslaan naar ${file.name}") { meet serializeTo file }
     }
 
@@ -194,8 +198,12 @@ open class MainView : View() {
         val file = FileChooser().apply {
             title = "Wedstrijdbestand opslaan..."
             extensionFilters += FileChooser.ExtensionFilter("Wedstrijden", "*.meet")
+            UserSettings[lastDirectory].whenNonNull {
+                initialDirectory = it.file()
+            }
         }.showSaveDialog(currentStage) ?: return
         State.saveFile = file
+        UserSettings[lastDirectory] = file.parentFile.absolutePath
 
         usefulTry("Kon het wedstrijdbestand niet opslaan naar ${file.name}") { meet serializeTo file }
     }
@@ -207,7 +215,11 @@ open class MainView : View() {
         val file = FileChooser().apply {
             title = "Wedstrijdbestand openen..."
             extensionFilters += FileChooser.ExtensionFilter("Wedstrijden", "*.meet")
+            UserSettings[lastDirectory].whenNonNull {
+                initialDirectory = it.file()
+            }
         }.showOpenDialog(currentWindow) ?: return
+        UserSettings[lastDirectory] = file.parentFile.absolutePath
 
         State.meet = usefulTry("Kon het wedstrijdbestand niet inladen") { file.deserialize() }
         State.saveFile = file
@@ -245,6 +257,19 @@ open class MainView : View() {
         when (result) {
             buttonWebsite -> AUTHOR_HOME.openUrl()
             buttonLicense -> LICENSE.openUrl()
+        }
+    }
+
+    /**
+     * Turn the cursor in a loading cursor for a short while for visual feedback.
+     */
+    private fun fakeLoadCursor() {
+        currentStage?.scene?.cursor = Cursor.WAIT
+        runAsync {
+            Thread.sleep(350)
+            runLater {
+                currentStage?.scene?.cursor = Cursor.DEFAULT
+            }
         }
     }
 }

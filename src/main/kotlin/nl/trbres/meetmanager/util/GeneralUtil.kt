@@ -1,6 +1,7 @@
 package nl.trbres.meetmanager.util
 
 import nl.trbres.meetmanager.MeetManagerApp
+import java.io.File
 
 /**
  * The current program version number.
@@ -96,6 +97,7 @@ fun Any?.isNull() = this == null
  */
 fun Any?.isNotNull() = this != null
 
+fun String.file() = File(this)
 fun Any?.print() = print(this)
 fun Any?.println() = println(this)
 fun Any?.printf(format: String) = println(String.format(format, this))

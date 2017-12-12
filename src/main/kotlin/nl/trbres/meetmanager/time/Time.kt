@@ -6,7 +6,7 @@ import java.time.LocalTime
 /**
  * @author Ruben Schellekens
  */
-data class Time(var hours: Int, var minutes: Int, var seconds: Int, var hundreths: Int) {
+data class Time(var hours: Int, var minutes: Int, var seconds: Int, var hundreths: Int) : Comparable<Time> {
 
     constructor(minutes: Int, seconds: Int, hundreths: Int) : this(0, minutes, seconds, hundreths)
 
@@ -24,6 +24,8 @@ data class Time(var hours: Int, var minutes: Int, var seconds: Int, var hundreth
      * Converts the timestamp to hunderths of a second.
      */
     fun toHundreths() = (((hours * 60L) + minutes) * 60L + seconds) * 100L + hundreths
+
+    override fun compareTo(other: Time) = toHundreths().compareTo(other.toHundreths())
 
     override fun toString() = if (hours > 0) {
         String.format("%02d:%02d:%02d.%02d", hours, minutes, seconds, hundreths)

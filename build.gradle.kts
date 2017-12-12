@@ -2,7 +2,7 @@ import org.gradle.jvm.tasks.Jar
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 val applicationName = "TRB-RES Meet Manager"
-val gitHead = "ea36bfe"
+val gitHead = "c4c88fe"
 version = "1.0-SNAPSHOT-$gitHead"
 
 buildscript {

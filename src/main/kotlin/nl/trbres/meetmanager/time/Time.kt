@@ -18,12 +18,22 @@ data class Time(var hours: Int, var minutes: Int, var seconds: Int, var hundreth
 
     constructor(seconds: Int, hundreths: Int) : this(0, 0, seconds, hundreths)
 
+    constructor(hundreths: Int) : this(0, 0, 0, hundreths)
+
+    constructor(hundreths: Long) : this(0, 0, 0, hundreths.toInt())
+
     constructor() : this(0, 0, 0, 0) {
         val now = LocalTime.now()
         hours = now.hour
         minutes = now.minute
         seconds = now.second
         hundreths = (System.currentTimeMillis() % 1000 / 10).toInt()
+    }
+
+    init {
+        reduceHunderths()
+        reduceSeconds()
+        reduceMinutes()
     }
 
     /**
@@ -36,6 +46,36 @@ data class Time(var hours: Int, var minutes: Int, var seconds: Int, var hundreth
      */
     @JsonIgnore
     fun isZero() = hours == 0 && minutes == 0 && seconds == 0 && hundreths == 0
+
+    private fun reduceHunderths() {
+        if (hundreths > 99) {
+            seconds += (hundreths / 100)
+            hundreths %= 100
+        }
+    }
+
+    private fun reduceSeconds() {
+        if (seconds > 59) {
+            minutes += (seconds / 60)
+            seconds %= 60
+        }
+    }
+
+    private fun reduceMinutes() {
+        if (minutes > 59) {
+            hours += (minutes / 60)
+            minutes %= 60
+        }
+    }
+
+    operator fun times(factor: Float) = Time((toHundreths() * factor).toInt())
+
+    operator fun plus(other: Time) = Time(
+            hours + other.hours,
+            minutes + other.minutes,
+            seconds + other.seconds,
+            hundreths + other.hundreths
+    )
 
     override fun compareTo(other: Time) = toHundreths().compareTo(other.toHundreths())
 

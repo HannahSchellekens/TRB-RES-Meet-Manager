@@ -1,5 +1,7 @@
 package nl.trbres.meetmanager
 
+import nl.trbres.meetmanager.util.APP_DATA_HOME
+import nl.trbres.meetmanager.util.createAppData
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileWriter
@@ -13,17 +15,14 @@ object UserSettings {
     object Key {
 
         val lastDirectory = "last-directory"
+        val lastExportDirectory = "last-export-directory"
     }
 
-    private val settingsPath = System.getProperty("user.home") + "/.trbmeet"
-    private val filePath = "$settingsPath/user.settings"
+    private val filePath = "$APP_DATA_HOME/user.settings"
     private val properties = Properties()
 
     init {
-        val settingsDir = File(settingsPath)
-        if (!settingsDir.exists()) {
-            settingsDir.mkdir()
-        }
+        createAppData()
 
         val propertiesFile = File(filePath)
         if (!propertiesFile.exists()) {

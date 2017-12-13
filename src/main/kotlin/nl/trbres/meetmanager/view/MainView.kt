@@ -31,7 +31,7 @@ open class MainView : View() {
 
     override val root = borderpane {
         prefWidth = 800.0
-        prefHeight = 600.0
+        prefHeight = 700.0
         styleClass += "background"
 
         top {
@@ -45,10 +45,6 @@ open class MainView : View() {
                     item("Opslaan als...", "Ctrl+Shift+S").action(::saveAs)
                     separator()
                     item("Afsluiten").icon(Icons.exit).action(::exitProgram)
-                }
-                menu("Wedstrijd") {
-                    item("Maak programma").icon(Icons.report).action { TODO("Create schedule") }
-                    item("Exporteer programma naar PDF").icon(Icons.pdf).action { TODO("Export schedule to PDF") }
                 }
                 menuImport = menu("Importeren") {
                     item("Swimkick importeren").icon(Icons.download).action(::importSwimtrack)

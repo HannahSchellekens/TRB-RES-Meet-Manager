@@ -39,6 +39,9 @@ dependencies {
 
     // Jackson serialization
     compile("com.fasterxml.jackson.module:jackson-module-kotlin:2.9.0")
+
+    // OpenPDF
+    compile("com.github.librepdf:openpdf:1.0.5")
 }
 
 configure<JavaPluginConvention> {

@@ -34,6 +34,21 @@ val LICENSE = "$GITHUB_PAGE/blob/master/LICENSE"
 val AUTHOR_HOME = "https://rubenschellekens.github.io"
 
 /**
+ * Folder where all the application data will be stored.
+ */
+val APP_DATA_HOME = System.getProperty("user.home") + "/.trbmeet"
+
+/**
+ * Creates the [APP_DATA_HOME] folder if it doesn't yet exist.
+ */
+fun createAppData() {
+    val dir = File(APP_DATA_HOME)
+    if (!dir.exists()) {
+        dir.mkdir()
+    }
+}
+
+/**
  * An `Oopsie` type is either:
  * `null` when problems arise (or [OOPS]), or
  * `Unit` when all went fine (or [FINE]).

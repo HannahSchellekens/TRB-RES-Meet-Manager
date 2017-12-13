@@ -1,6 +1,7 @@
 package nl.trbres.meetmanager.model
 
 import com.fasterxml.jackson.annotation.JsonIgnore
+import nl.trbres.meetmanager.time.Time
 
 /**
  * @author Ruben Schellekens
@@ -39,5 +40,22 @@ data class Event(
     @JsonIgnore
     fun isFinished() = heats.all { it.isFinished() }
 
+    /**
+     * Collects all the swim results from the event, i.e. the swimmers with their swum times/statuses.
+     *
+     * The list has the result in order.
+     */
+    fun swimResults() = heats.flatMap { it.swimResults() }.sorted()
+
     override fun toString() = "${ages.first()[category]} ${ages.joinToString(",")} $distance $stroke"
+}
+
+/**
+ * @author Ruben Schellekens
+ */
+data class SwimResult(val swimmer: Swimmer, val result: Time, val status: SpecialResult?) : Comparable<SwimResult> {
+
+    override fun compareTo(other: SwimResult): Int {
+        return result.compareTo(other.result)
+    }
 }

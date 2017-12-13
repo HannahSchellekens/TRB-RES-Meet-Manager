@@ -6,6 +6,7 @@ import javafx.scene.control.TitledPane
 import javafx.scene.layout.BorderPane
 import nl.trbres.meetmanager.Icons
 import nl.trbres.meetmanager.State
+import nl.trbres.meetmanager.export.EventResultPrinter
 import nl.trbres.meetmanager.model.Event
 import nl.trbres.meetmanager.model.Heat
 import nl.trbres.meetmanager.model.Swimmer
@@ -125,6 +126,12 @@ open class Schedule(val main: MainView) : BorderPane() {
                 }
 
                 button {
+                    icon(Icons.print)
+                    styleClass("cornflower")
+                    tooltip("Uitslag printen")
+                    action(::eventPrintResults)
+                }
+                button {
                     icon(Icons.up)
                     styleClass("cornflower")
                     tooltip("Programma naar boven verplaatsen")
@@ -186,6 +193,15 @@ open class Schedule(val main: MainView) : BorderPane() {
                 }
             }
         }
+    }
+
+    /**
+     * Print the results of the selected event.
+     */
+    private fun eventPrintResults() {
+        val event = selectedEvent ?: return
+        val number = selectedEventNo ?: 0
+        EventResultPrinter.printResults(event, number, main.currentWindow)
     }
 
     /**

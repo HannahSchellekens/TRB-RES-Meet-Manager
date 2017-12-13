@@ -1,5 +1,6 @@
 package nl.trbres.meetmanager.time
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import javafx.util.StringConverter
 import java.time.LocalTime
 
@@ -7,6 +8,11 @@ import java.time.LocalTime
  * @author Ruben Schellekens
  */
 data class Time(var hours: Int, var minutes: Int, var seconds: Int, var hundreths: Int) : Comparable<Time> {
+
+    companion object {
+
+        val INVALID = Time(Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE)
+    }
 
     constructor(minutes: Int, seconds: Int, hundreths: Int) : this(0, minutes, seconds, hundreths)
 
@@ -25,16 +31,25 @@ data class Time(var hours: Int, var minutes: Int, var seconds: Int, var hundreth
      */
     fun toHundreths() = (((hours * 60L) + minutes) * 60L + seconds) * 100L + hundreths
 
+    /**
+     * Checks whether the time equals zero.
+     */
+    @JsonIgnore
+    fun isZero() = hours == 0 && minutes == 0 && seconds == 0 && hundreths == 0
+
     override fun compareTo(other: Time) = toHundreths().compareTo(other.toHundreths())
 
-    override fun toString() = if (hours > 0) {
-        String.format("%02d:%02d:%02d.%02d", hours, minutes, seconds, hundreths)
+    override fun toString() = if (this == INVALID) {
+        "INVALID"
+    }
+    else if (hours > 0) {
+        String.format("%2d:%02d:%02d.%02d", hours, minutes, seconds, hundreths)
     }
     else if (minutes > 0) {
-        String.format("%02d:%02d.%02d", minutes, seconds, hundreths)
+        String.format("%d:%02d.%02d", minutes, seconds, hundreths)
     }
     else {
-        String.format("%02d.%02d", seconds, hundreths)
+        String.format("%2d.%02d", seconds, hundreths)
     }
 }
 

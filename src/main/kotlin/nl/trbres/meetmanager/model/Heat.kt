@@ -29,4 +29,23 @@ data class Heat(
      */
     @JsonIgnore
     fun isFinished() = lanes.keys.all { it in results.keys || it in statusses.keys } && results.values.none { it == Time(0, 0) }
+
+    /**
+     * Collects all the swim results from the heat, i.e. the swimmers with their swum times/statuses.
+     */
+    fun swimResults() = lanes.keys.mapNotNull {
+        val swimmer = lanes[it] ?: return@mapNotNull null
+        var time = results[it]
+        var status = statusses[it]
+
+        if (swimmer.name == "<Leeg>") {
+            return@mapNotNull null
+        }
+        if (time == null || time.isZero()) {
+            status = SpecialResult(SpecialResultType.DID_NOT_START)
+            time = Time.INVALID
+        }
+
+        SwimResult(swimmer, time, status)
+    }
 }

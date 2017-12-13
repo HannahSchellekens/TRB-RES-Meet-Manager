@@ -412,6 +412,7 @@ open class Schedule(val main: MainView) : BorderPane() {
             return
         }
         entry.heat.results[entry.lane] = newTime
+        entry.time = newTime
     }
 
     /**

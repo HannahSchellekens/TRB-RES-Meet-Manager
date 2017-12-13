@@ -84,6 +84,8 @@ object EventResultPrinter {
                 }
             }
         }
+
+        pdfFile.open()
     }
 
     /**

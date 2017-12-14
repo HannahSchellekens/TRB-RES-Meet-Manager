@@ -15,7 +15,6 @@ import nl.trbres.meetmanager.time.Time
 import nl.trbres.meetmanager.util.*
 import java.io.File
 
-
 /**
  * @author Ruben Schellekens
  */

@@ -30,7 +30,7 @@ open class MainView : View() {
     lateinit var menuImport: Menu
 
     override val root = borderpane {
-        prefWidth = 800.0
+        prefWidth = 900.0
         prefHeight = 700.0
         styleClass += "background"
 

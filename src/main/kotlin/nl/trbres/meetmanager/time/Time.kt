@@ -11,7 +11,7 @@ data class Time(var hours: Int, var minutes: Int, var seconds: Int, var hundreth
 
     companion object {
 
-        val INVALID = Time(Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE)
+        val INVALID = Time(0, 0)
     }
 
     constructor(minutes: Int, seconds: Int, hundreths: Int) : this(0, minutes, seconds, hundreths)
@@ -77,10 +77,14 @@ data class Time(var hours: Int, var minutes: Int, var seconds: Int, var hundreth
             hundreths + other.hundreths
     )
 
-    override fun compareTo(other: Time) = toHundreths().compareTo(other.toHundreths())
+    override fun compareTo(other: Time): Int {
+        val hundreths = toHundreths()
+        val comparisonValue = if (hundreths == 0L) Integer.MAX_VALUE else hundreths.toInt()
+        return comparisonValue.compareTo(other.toHundreths())
+    }
 
     override fun toString() = if (this == INVALID) {
-        "INVALID"
+        ""
     }
     else if (hours > 0) {
         String.format("%2d:%02d:%02d.%02d", hours, minutes, seconds, hundreths)

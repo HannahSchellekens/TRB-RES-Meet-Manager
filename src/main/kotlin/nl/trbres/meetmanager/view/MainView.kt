@@ -104,6 +104,7 @@ open class MainView : View() {
             title = "Einduitslag genereren"
             headerText = "Geef de programmnummers op waarvan je de einduitslag wilt genereren."
             contentText = "Programmanummers gescheiden door komma's"
+            initOwner(currentWindow)
         }
         dialog.showAndWait().ifPresent {
             val numbers = it.replace(" ", "")

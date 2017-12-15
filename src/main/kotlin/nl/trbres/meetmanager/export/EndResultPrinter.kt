@@ -166,8 +166,8 @@ object EndResultPrinter {
      */
     private fun List<CollectedResult>.resultRanks(events: List<Event>) = indexRange().map { rankindex ->
         val result = this[rankindex]
-        events.mapIndexed { index, _ ->
-            index to ((rankindex + 1).toString() + ".")
+        events.mapIndexed { index, event ->
+            index to ((event.swimResults().indexOfFirst { it.swimmer.id == result.swimmer.id } + 1).toString() + ".")
         }.toMap()
     }
 

@@ -33,7 +33,7 @@ data class Heat(
     /**
      * Collects all the swim results from the heat, i.e. the swimmers with their swum times/statuses.
      */
-    fun swimResults() = lanes.keys.mapNotNull {
+    fun swimResults(timeFactor: Float) = lanes.keys.mapNotNull {
         val swimmer = lanes[it] ?: return@mapNotNull null
         var time = results[it]
         var status = statusses[it]
@@ -46,6 +46,6 @@ data class Heat(
             time = Time.INVALID
         }
 
-        SwimResult(swimmer, time, status)
+        SwimResult(swimmer, time * timeFactor, status)
     }
 }

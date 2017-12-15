@@ -1,7 +1,10 @@
 package nl.trbres.meetmanager.view
 
 import javafx.scene.Cursor
-import javafx.scene.control.*
+import javafx.scene.control.Alert
+import javafx.scene.control.ButtonType
+import javafx.scene.control.Menu
+import javafx.scene.control.TabPane
 import javafx.stage.FileChooser
 import nl.trbres.meetmanager.Icons
 import nl.trbres.meetmanager.State
@@ -100,14 +103,10 @@ open class MainView : View() {
      */
     fun endResults() {
         val meet = State.meet ?: return
-        val dialog = TextInputDialog().apply {
-            title = "Einduitslag genereren"
-            headerText = "Geef de programmnummers op waarvan je de einduitslag wilt genereren."
-            contentText = "Programmanummers gescheiden door komma's"
-            initOwner(currentWindow)
-        }
+        val dialog = EndResultDialog(currentWindow)
         dialog.showAndWait().ifPresent {
-            val numbers = it.replace(" ", "")
+            val text = it.events
+            val numbers = text.replace(" ", "")
                     .split(",")
                     .filter { it.isNaturalNumber() }
                     .map { it.toInt() }
@@ -117,7 +116,7 @@ open class MainView : View() {
             }
 
             val events = numbers.map { meet.events[it - 1] }
-            EndResultPrinter.printResults(events, numbers, currentWindow)
+            EndResultPrinter.printResults(events, numbers, it.convertTo, currentWindow)
         }
     }
 

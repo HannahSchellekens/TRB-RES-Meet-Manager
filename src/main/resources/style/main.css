@@ -52,6 +52,12 @@
     -fx-background-color: #6fc8ec;
 }
 
+/* Check Box */
+.check-box .box {
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+}
+
 /* Table View */
 .table-view {
     -fx-border-width: 0;

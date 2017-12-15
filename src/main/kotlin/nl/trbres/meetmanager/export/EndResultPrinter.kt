@@ -25,7 +25,7 @@ object EndResultPrinter {
      * The user gets prompted with a dialog to save the pdf.
      */
     @JvmStatic
-    fun printResults(events: List<Event>, eventNumbers: List<Int>, owner: Window? = null) {
+    fun printResults(events: List<Event>, eventNumbers: List<Int>, convertTo: Int?, owner: Window? = null) {
         val meet = State.meet ?: error("No meet selected")
         val pdfFile = promptSaveLocation(eventNumbers, owner = owner) ?: return
         DEFAULT_FONT = Fonts.robotoRegular
@@ -59,7 +59,7 @@ object EndResultPrinter {
                 spacing(4f)
 
                 // Result table.
-                val endResults = meet.collectEvents(events)
+                val endResults = meet.collectEvents(events, convertTo)
 
                 val ranks = endResults.ranks()
                 val names = endResults.names()

@@ -44,14 +44,20 @@ data class Meet(
         val swimmers: MutableList<Swimmer> = ArrayList()
 ) {
 
-    fun collectEvents(events: List<Event>): List<CollectedResult> {
+    fun collectEvents(events: List<Event>, convertTo: Int?): List<CollectedResult> {
         val collected = ArrayList<CollectedResult>()
-        val eventResults = events.map { it to it.swimResults() }.toMap()
-        val swimmers = eventResults.values.flatMap { it }.map { it.swimmer }.distinct()
+        val eventResults = events.map { it to it.swimResults(convertTo) }.toMap()
+        val swimmers = eventResults.values
+                .flatMap { it }
+                .map { it.swimmer }
+                .distinct()
 
         for (swimmer in swimmers) {
-            val results = eventResults.entries.map { (key, value) -> key to value.find { it.swimmer == swimmer } }.toMap()
-            val total = results.values.filterNotNull().map { it.result }.reduce { a, b -> a + b }
+            val results = eventResults.entries
+                    .map { (key, value) -> key to value.find { it.swimmer == swimmer } }.toMap()
+            val total = results.values.filterNotNull()
+                    .map { it.result }
+                    .reduce { a, b -> a + b }
             collected.add(CollectedResult(swimmer, events, results, total))
         }
 

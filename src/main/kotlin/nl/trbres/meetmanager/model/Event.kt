@@ -45,7 +45,10 @@ data class Event(
      *
      * The list has the result in order.
      */
-    fun swimResults() = heats.flatMap { it.swimResults() }.sorted()
+    fun swimResults(convertTo: Int? = null) = heats.flatMap {
+        val factor = if (convertTo == null) 1f else distance.metres.toFloat() / convertTo.toFloat()
+        it.swimResults(factor)
+    }.sorted()
 
     override fun toString() = "${ages.first()[category]} ${ages.joinToString(",")} $distance $stroke"
 }

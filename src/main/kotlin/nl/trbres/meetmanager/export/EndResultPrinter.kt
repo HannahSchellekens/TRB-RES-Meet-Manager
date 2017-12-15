@@ -8,6 +8,7 @@ import javafx.stage.FileChooser
 import javafx.stage.Window
 import nl.trbres.meetmanager.State
 import nl.trbres.meetmanager.UserSettings
+import nl.trbres.meetmanager.model.Category
 import nl.trbres.meetmanager.model.CollectedResult
 import nl.trbres.meetmanager.model.Event
 import nl.trbres.meetmanager.util.*
@@ -49,7 +50,7 @@ object EndResultPrinter {
                     cell(newParagraph("Einduitslag")) {
                         horizontalAlignment = Rectangle.ALIGN_CENTER
                     }
-                    cell(newParagraph("Junioren")) {
+                    cell(newParagraph(category(events) + ", " + events.flatMap { it.ages }.distinct().joinToString(", "))) {
                         horizontalAlignment = Rectangle.ALIGN_RIGHT
                     }
                 }
@@ -64,39 +65,35 @@ object EndResultPrinter {
                 val names = endResults.names()
                 val clubs = endResults.clubs()
 
-                val school = listOf("34.42", "32.78")
-                val schoolRank = listOf("2.", "1.")
-                val rug = listOf("29.57", "31.00")
-                val rugRank = listOf("1.", "2.")
-                val vrij = listOf("25.26", "25.48")
-                val vrijRank = listOf("1.", "2.")
-                val totaal = listOf("1:29.25", "1:29.26")
+                val resultTimes = endResults.resultsTimes(events)
+                val resultRanks = endResults.resultRanks(events)
+                val totals = endResults.totals()
 
-                table(11) {
-                    widths(35, 180, 170, 104, 30, 104, 30, 104, 30, 104)
+                val n = events.size
+                val width = timeColumnWidth(n)
+                val columns = (1..n).flatMap { listOf(width, 3.37f) }.toFloatArray() + width
+
+                table(3 + 2 * n + 1) {
+                    widths(*(floatArrayOf(3.93f, 18f, 18f) + columns))
 
                     cell(newParagraph("rang", Fonts.robotoSmall), Element.ALIGN_RIGHT)
                     cell(newParagraph("naam", Fonts.robotoSmall))
                     cell(newParagraph("vereniging", Fonts.robotoSmall))
-                    cell(newParagraph("50m schoolslag", Fonts.robotoSmall), Element.ALIGN_RIGHT)
-                    cell(newParagraph("", Fonts.robotoSmall))
-                    cell(newParagraph("50m rugslag", Fonts.robotoSmall), Element.ALIGN_RIGHT)
-                    cell(newParagraph("", Fonts.robotoSmall))
-                    cell(newParagraph("50m vrije slag", Fonts.robotoSmall), Element.ALIGN_RIGHT)
-                    cell(newParagraph("", Fonts.robotoSmall))
+                    for (i in 0 until n) {
+                        cell(newParagraph("${events[i].distance.metres}m ${events[i].stroke.strokeName.toLowerCase()}", Fonts.robotoSmall), Element.ALIGN_RIGHT)
+                        cell(newParagraph("", Fonts.robotoSmall))
+                    }
                     cell(newParagraph("totaal", Fonts.robotoSmall), Element.ALIGN_RIGHT)
 
-                    for (i in 0 until names.size) {
-                        cell(newParagraph(ranks[i]), Element.ALIGN_RIGHT)
-                        cell(newParagraph(names[i]))
-                        cell(newParagraph(clubs[i]))
-                        cell(newParagraph(school[i], Fonts.robotoBold), Element.ALIGN_RIGHT)
-                        cell(newParagraph(schoolRank[i]))
-                        cell(newParagraph(rug[i], Fonts.robotoBold), Element.ALIGN_RIGHT)
-                        cell(newParagraph(rugRank[i]))
-                        cell(newParagraph(vrij[i], Fonts.robotoBold), Element.ALIGN_RIGHT)
-                        cell(newParagraph(vrijRank[i]))
-                        cell(newParagraph(totaal[i], Fonts.robotoBold), Element.ALIGN_RIGHT)
+                    for (swimmerIndex in 0 until names.size) {
+                        cell(newParagraph(ranks[swimmerIndex]), Element.ALIGN_RIGHT)
+                        cell(newParagraph(names[swimmerIndex]))
+                        cell(newParagraph(clubs[swimmerIndex]))
+                        for (eventIndex in 0 until n) {
+                            cell(newParagraph(resultTimes[swimmerIndex][eventIndex]!!, Fonts.robotoBold), Element.ALIGN_RIGHT)
+                            cell(newParagraph(resultRanks[swimmerIndex][eventIndex]!!))
+                        }
+                        cell(newParagraph(totals[swimmerIndex], Fonts.robotoBold), Element.ALIGN_RIGHT)
                     }
                 }
             }
@@ -106,24 +103,73 @@ object EndResultPrinter {
     }
 
     /**
+     * Generates the category name.
+     */
+    private fun category(events: List<Event>): String {
+        val base = events.first().category
+        if (base == Category.MIX) {
+            return events.first().ages.first()[base]
+        }
+        for (i in 1 until events.size) {
+            val cat = events[i].category
+            when (cat) {
+                Category.MIX -> return events[i].ages.first()[cat]
+                else -> {
+                    if (cat != base) {
+                        return events[i].ages.first()[cat]
+                    }
+                }
+            }
+        }
+        return events.first().ages.first()[base]
+    }
+
+    /**
+     * The width of a result column's time.
+     */
+    private fun timeColumnWidth(columns: Int): Float {
+        return (60.07f - columns * 3.37f) / (columns + 1f)
+    }
+
+    /**
      * Generates all rank numbers/statusses in order.
      */
-    private fun List<CollectedResult>.ranks() = emptyList<String>()
+    private fun List<CollectedResult>.ranks() = mapIndexed { index, _ -> ((index + 1).toString() + ".") }
 
     /**
      * Generates all the names that should be put on the event list (in order).
      */
-    private fun List<CollectedResult>.names() = emptyList<String>()
+    private fun List<CollectedResult>.names() = map { it.swimmer.name }
 
     /**
      * Generates all club names in order.
      */
-    private fun List<CollectedResult>.clubs() = emptyList<String>()
+    private fun List<CollectedResult>.clubs() = map { it.swimmer.club?.name ?: "" }
 
     /**
-     * Generates all results in order.
+     * Generates all total times in order.
      */
-    private fun List<CollectedResult>.results() = emptyList<String>()
+    private fun List<CollectedResult>.totals() = map { it.total.toString() }
+
+    /**
+     * Generates a list with maps that map event indices (in the events list) numbers to results.
+     */
+    private fun List<CollectedResult>.resultsTimes(events: List<Event>) = indexRange().map {
+        val result = this[it]
+        events.mapIndexed { index, event ->
+            index to (result.results[event]?.result?.toString() ?: "")
+        }.toMap()
+    }
+
+    /**
+     * Generates a list with maps that map event indices (in the events list) numbers to ranks.
+     */
+    private fun List<CollectedResult>.resultRanks(events: List<Event>) = indexRange().map { rankindex ->
+        val result = this[rankindex]
+        events.mapIndexed { index, _ ->
+            index to ((rankindex + 1).toString() + ".")
+        }.toMap()
+    }
 
     /**
      * Shows a [FileChooser] to pick a saving location.
@@ -131,7 +177,7 @@ object EndResultPrinter {
     private fun promptSaveLocation(numbers: List<Int>, owner: Window? = null): File? {
         val result = FileChooser().apply {
             title = "Uitslag opslaan..."
-            initialFileName = "EndResultList_%02d.pdf".format(numbers.joinToString("-"))
+            initialFileName = "EndResultList_%s.pdf".format(numbers.joinToString("-"))
             extensionFilters += FileChooser.ExtensionFilter("PDF Bestanden", "*.pdf")
             UserSettings[UserSettings.Key.lastExportDirectory].whenNonNull {
                 initialDirectory = it.file()

@@ -1,15 +1,13 @@
 package nl.trbres.meetmanager.view
 
 import javafx.scene.Cursor
-import javafx.scene.control.Alert
-import javafx.scene.control.ButtonType
-import javafx.scene.control.Menu
-import javafx.scene.control.TabPane
+import javafx.scene.control.*
 import javafx.stage.FileChooser
 import nl.trbres.meetmanager.Icons
 import nl.trbres.meetmanager.State
 import nl.trbres.meetmanager.UserSettings
 import nl.trbres.meetmanager.UserSettings.Key.lastDirectory
+import nl.trbres.meetmanager.export.EndResultPrinter
 import nl.trbres.meetmanager.import.SwimtrackImporter
 import nl.trbres.meetmanager.model.Meet
 import nl.trbres.meetmanager.util.*
@@ -45,6 +43,9 @@ open class MainView : View() {
                     item("Opslaan als...", "Ctrl+Shift+S").action(::saveAs)
                     separator()
                     item("Afsluiten").icon(Icons.exit).action(::exitProgram)
+                }
+                menu("Wedstrijd") {
+                    item("Einduitslag genereren").icon(Icons.report).action(::endResults)
                 }
                 menuImport = menu("Importeren") {
                     item("Swimkick importeren").icon(Icons.download).action(::importSwimtrack)
@@ -92,6 +93,31 @@ open class MainView : View() {
 
     init {
         currentStage?.setOnCloseRequest { safeClose() }
+    }
+
+    /**
+     * Generate the end results.
+     */
+    fun endResults() {
+        val meet = State.meet ?: return
+        val dialog = TextInputDialog().apply {
+            title = "Einduitslag genereren"
+            headerText = "Geef de programmnummers op waarvan je de einduitslag wilt genereren."
+            contentText = "Programmanummers gescheiden door komma's"
+        }
+        dialog.showAndWait().ifPresent {
+            val numbers = it.replace(" ", "")
+                    .split(",")
+                    .filter { it.isNaturalNumber() }
+                    .map { it.toInt() }
+                    .filter { it - 1 < meet.events.size }
+            if (numbers.isEmpty()) {
+                return@ifPresent
+            }
+
+            val events = numbers.map { meet.events[it - 1] }
+            EndResultPrinter.printResults(events, numbers, currentWindow)
+        }
     }
 
     /**

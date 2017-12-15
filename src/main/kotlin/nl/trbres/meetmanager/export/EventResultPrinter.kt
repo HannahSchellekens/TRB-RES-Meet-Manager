@@ -67,7 +67,7 @@ object EventResultPrinter {
                 val results = event.results()
 
                 table(4) {
-                    widths(3, 21, 19, 10)
+                    widths(3, 22, 18, 10)
 
                     cell(newParagraph("rang", Fonts.robotoSmall), Element.ALIGN_RIGHT)
                     cell(newParagraph("naam", Fonts.robotoSmall))

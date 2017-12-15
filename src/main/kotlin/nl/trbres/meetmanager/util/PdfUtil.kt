@@ -139,3 +139,8 @@ fun PdfPTable.cell(phrase: Phrase, alignment: Int = Element.ALIGN_LEFT,
  * See [PdfPTable.setWidths].
  */
 fun PdfPTable.widths(vararg widths: Int) = setWidths(widths)
+
+/**
+ * See [PdfPTable.setWidths].
+ */
+fun PdfPTable.widths(vararg widthPercentages: Float) = setWidths(widthPercentages)

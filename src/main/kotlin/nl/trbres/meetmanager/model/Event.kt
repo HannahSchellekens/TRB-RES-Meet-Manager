@@ -46,7 +46,7 @@ data class Event(
      * The list has the result in order.
      */
     fun swimResults(convertTo: Int? = null) = heats.flatMap {
-        val factor = if (convertTo == null) 1f else distance.metres.toFloat() / convertTo.toFloat()
+        val factor = if (convertTo == null) 1f else convertTo.toFloat() / distance.metres.toFloat()
         it.swimResults(factor)
     }.sorted()
 

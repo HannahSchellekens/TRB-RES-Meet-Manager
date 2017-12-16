@@ -90,7 +90,7 @@ object EndResultPrinter {
                         cell(newParagraph(names[swimmerIndex]))
                         cell(newParagraph(clubs[swimmerIndex]))
                         for (eventIndex in 0 until n) {
-                            cell(newParagraph(resultTimes[swimmerIndex][eventIndex]!!, Fonts.robotoBold), Element.ALIGN_RIGHT)
+                            cell(newParagraph(resultTimes[swimmerIndex][eventIndex]!!), Element.ALIGN_RIGHT)
                             cell(newParagraph(resultRanks[swimmerIndex][eventIndex]!!))
                         }
                         cell(newParagraph(totals[swimmerIndex], Fonts.robotoBold), Element.ALIGN_RIGHT)

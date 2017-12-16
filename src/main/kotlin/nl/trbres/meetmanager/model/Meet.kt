@@ -76,12 +76,6 @@ class CollectedResult(
 ) : Comparable<CollectedResult> {
 
     override fun compareTo(other: CollectedResult): Int {
-        val comparisonValue = if (results.none {
-            val value = it.value ?: return@none true
-            value.result.isZero()
-        }) {
-            Time(9999, 9999, 9999, 9999)
-        } else total
-        return comparisonValue.compareTo(other.total)
+        return total.compareTo(other.total)
     }
 }

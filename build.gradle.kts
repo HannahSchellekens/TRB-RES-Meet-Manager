@@ -2,12 +2,12 @@ import org.gradle.jvm.tasks.Jar
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 val applicationName = "TRB-RES Meet Manager"
-val gitHead = "c4c88fe"
+val gitHead = "31a28d6"
 version = "1.0-SNAPSHOT-$gitHead"
 
 buildscript {
     var kotlin_version: String by extra
-    kotlin_version = "1.2.0"
+    kotlin_version = "1.2.10"
 
     repositories {
         mavenCentral()

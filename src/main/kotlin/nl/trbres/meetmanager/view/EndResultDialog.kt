@@ -81,7 +81,14 @@ open class EndResultDialog(ownerWindow: Window?) : Dialog<EndResultDialogResult>
      */
     private fun validate(okButton: Node) {
         val eventsCorrect = txtEvents.text.matches(Regex("\\d+(,\\d+)*"))
-        val conversionCorrect = txtConversion.text.isNaturalNumber() && txtConversion.text.toInt() > 0 && txtConversion.text.toInt() % 25 == 0
+
+        val conversionCorrect = try {
+            txtConversion.text.isNaturalNumber() && txtConversion.text.toInt() > 0 && txtConversion.text.toInt() % 25 == 0
+        }
+        catch (e: Exception) {
+            false
+        }
+
         okButton.isDisable = !eventsCorrect || (cboxConvert.isSelected && !conversionCorrect)
     }
 }

@@ -84,7 +84,7 @@ data class Time(var hours: Int, var minutes: Int, var seconds: Int, var hundreth
     }
 
     override fun toString() = if (this == INVALID) {
-        "N/A"
+        "NT"
     }
     else if (hours > 0) {
         String.format("%2d:%02d:%02d.%02d", hours, minutes, seconds, hundreths)

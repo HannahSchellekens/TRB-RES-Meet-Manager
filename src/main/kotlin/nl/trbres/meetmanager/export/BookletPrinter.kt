@@ -44,7 +44,7 @@ object BookletPrinter {
             }
         }
 
-        //pdfFile.open()
+        pdfFile.open()
     }
 
     private fun Document.printEvent(event: Event, eventNumber: Int) {

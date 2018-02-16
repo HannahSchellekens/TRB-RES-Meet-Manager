@@ -14,8 +14,9 @@ object UserSettings {
 
     object Key {
 
-        val lastDirectory = "last-directory"
-        val lastExportDirectory = "last-export-directory"
+        const val lastDirectory = "last-directory"
+        const val lastExportDirectory = "last-export-directory"
+        const val lastScheduleDirectory = "last-schedule-directory"
     }
 
     private val filePath = "$APP_DATA_HOME/user.settings"

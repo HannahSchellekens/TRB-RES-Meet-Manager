@@ -55,6 +55,18 @@ fun Document.paragraph(text: String = "", font: Font? = DEFAULT_FONT, leading: F
 }
 
 /**
+ * Adds a paragraph to the paragraph.
+ */
+fun Paragraph.paragraph(text: String = "", font: Font? = DEFAULT_FONT, leading: Float? = DEFAULT_LEADING,
+                       alignment: Int = Paragraph.ALIGN_LEFT, mutations: Paragraph.() -> Unit = {}): Paragraph {
+    val paragraph = if (leading == null) Paragraph(text, font) else Paragraph(leading, text, font)
+    paragraph.alignment = alignment
+    paragraph.mutations()
+    add(paragraph);
+    return paragraph
+}
+
+/**
  * Creates a new paragraph.
  */
 fun newParagraph(text: String = "", font: Font? = DEFAULT_FONT, leading: Float? = DEFAULT_LEADING,
@@ -78,9 +90,32 @@ fun Document.paragraph(chunk: Chunk, leading: Float? = DEFAULT_LEADING, alignmen
 }
 
 /**
+ * Adds a paragraph to the paragraph.
+ */
+fun Paragraph.paragraph(chunk: Chunk, leading: Float? = DEFAULT_LEADING, alignment: Int = Paragraph.ALIGN_LEFT,
+                       mutations: Paragraph.() -> Unit = {}): Paragraph {
+    val paragraph = if (leading == null) Paragraph(chunk) else Paragraph(leading, chunk)
+    paragraph.alignment = alignment
+    paragraph.mutations()
+    add(paragraph);
+    return paragraph
+}
+
+/**
  * Adds a paragraph to the document.
  */
 fun Document.paragraph(phrase: Phrase, alignment: Int = Paragraph.ALIGN_LEFT, mutations: Paragraph.() -> Unit = {}): Paragraph {
+    val paragraph = Paragraph(phrase)
+    paragraph.alignment = alignment
+    paragraph.mutations()
+    add(paragraph);
+    return paragraph
+}
+
+/**
+ * Adds a paragraph to the paragraph.
+ */
+fun Paragraph.paragraph(phrase: Phrase, alignment: Int = Paragraph.ALIGN_LEFT, mutations: Paragraph.() -> Unit = {}): Paragraph {
     val paragraph = Paragraph(phrase)
     paragraph.alignment = alignment
     paragraph.mutations()
@@ -100,9 +135,30 @@ fun Document.separator(spaceBefore: Float = 8f, font: Font? = DEFAULT_FONT, muta
 }
 
 /**
+ * Adds a line separator to the paragraph.
+ */
+fun Paragraph.separator(spaceBefore: Float = 8f, mutations: LineSeparator.() -> Unit = {}): LineSeparator {
+    paragraph(" ", font, spaceBefore)
+    val separator = LineSeparator()
+    separator.mutations()
+    add(separator)
+    return separator
+}
+
+/**
  * Adds some spacing to the document.
  */
 fun Document.spacing(spacing: Float = 8f, font: Font? = DEFAULT_FONT, mutatations: Paragraph.() -> Unit = {}): Paragraph {
+    val dummyParagraph = paragraph(" ", font, spacing)
+    dummyParagraph.mutatations()
+    add(dummyParagraph)
+    return dummyParagraph
+}
+
+/**
+ * Adds some spacing to the paragraph.
+ */
+fun Paragraph.spacing(spacing: Float = 8f, font: Font? = DEFAULT_FONT, mutatations: Paragraph.() -> Unit = {}): Paragraph {
     val dummyParagraph = paragraph(" ", font, spacing)
     dummyParagraph.mutatations()
     add(dummyParagraph)
@@ -118,6 +174,29 @@ fun Document.table(columns: Int, width: Float = 100f, mutations: PdfPTable.() ->
     table.mutations()
     add(table)
     return table
+}
+
+/**
+ * Adds a PdfPTable to a table.
+ */
+fun PdfPTable.table(columns: Int, width: Float = 100f, mutations: PdfPTable.() -> Unit = {}): PdfPTable {
+    val table = PdfPTable(columns)
+    table.widthPercentage = width
+    table.mutations()
+    addCell(table)
+    return table
+}
+
+/**
+ * Adds a line separator to the table.
+ */
+fun PdfPTable.separator(spaceBefore: Float = 8f, mutations: LineSeparator.() -> Unit = {}): LineSeparator {
+    val separator = LineSeparator()
+    separator.mutations()
+    cell(Phrase(Chunk(separator))) {
+        setSpacingBefore(spaceBefore)
+    }
+    return separator
 }
 
 /**

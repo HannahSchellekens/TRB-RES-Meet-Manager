@@ -1,17 +1,13 @@
 package nl.trbres.meetmanager.export
 
-import com.lowagie.text.*
-import com.lowagie.text.pdf.ColumnText
-import com.lowagie.text.pdf.PdfPageEventHelper
-import com.lowagie.text.pdf.PdfWriter
-import com.lowagie.text.pdf.draw.LineSeparator
+import com.lowagie.text.Element
+import com.lowagie.text.Paragraph
+import com.lowagie.text.Rectangle
 import javafx.stage.FileChooser
 import javafx.stage.Window
 import nl.trbres.meetmanager.State
 import nl.trbres.meetmanager.UserSettings
 import nl.trbres.meetmanager.model.Event
-import nl.trbres.meetmanager.time.Date
-import nl.trbres.meetmanager.time.Time
 import nl.trbres.meetmanager.util.*
 import java.io.File
 
@@ -35,7 +31,7 @@ object EventResultPrinter {
         document(pdfFile) { writer ->
             setMargins(64f, 64f, 40f, 40f)
 
-            writer.pageEvent = ResultListFooter
+            writer.pageEvent = PdfFooter
 
             write {
                 // Title
@@ -126,36 +122,5 @@ object EventResultPrinter {
 
         UserSettings[UserSettings.Key.lastExportDirectory] = result.parent
         return result
-    }
-
-    /**
-     * @author Ruben Schellekens
-     */
-    object ResultListFooter : PdfPageEventHelper() {
-
-        override fun onEndPage(writer: PdfWriter?, document: Document?) {
-            document ?: return
-            val cb = writer?.directContent ?: return
-            val club = Phrase("TRB-RES", Fonts.robotoSmall)
-            val now = Time()
-            val date = Date()
-            val timestamp = Phrase("$date, %02du%02d".format(now.hours, now.minutes), Fonts.robotoSmall)
-            val separator = LineSeparator()
-            separator.drawLine(cb,
-                    document.leftMargin(),
-                    document.right(),
-                    document.bottom() + 8
-            )
-            ColumnText.showTextAligned(cb, Element.ALIGN_LEFT,
-                    club,
-                    document.leftMargin(),
-                    document.bottom() - 4, 0f
-            )
-            ColumnText.showTextAligned(cb, Element.ALIGN_RIGHT,
-                    timestamp,
-                    document.right(),
-                    document.bottom() - 4, 0f
-            )
-        }
     }
 }

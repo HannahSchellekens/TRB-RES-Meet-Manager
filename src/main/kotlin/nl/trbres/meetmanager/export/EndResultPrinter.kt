@@ -35,7 +35,7 @@ object EndResultPrinter {
             setMargins(64f, 64f, 40f, 40f)
             pageSize = PageSize.A4.rotate()
 
-            writer.pageEvent = EventResultPrinter.ResultListFooter
+            writer.pageEvent = PdfFooter
 
             write {
                 // Title

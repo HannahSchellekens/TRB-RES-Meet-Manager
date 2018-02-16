@@ -10,6 +10,7 @@ import nl.trbres.meetmanager.Icons
 import nl.trbres.meetmanager.State
 import nl.trbres.meetmanager.UserSettings
 import nl.trbres.meetmanager.UserSettings.Key.lastDirectory
+import nl.trbres.meetmanager.export.BookletPrinter
 import nl.trbres.meetmanager.export.EndResultPrinter
 import nl.trbres.meetmanager.import.SwimtrackImporter
 import nl.trbres.meetmanager.model.Meet
@@ -49,6 +50,7 @@ open class MainView : View() {
                 }
                 menu("Wedstrijd") {
                     item("Einduitslag genereren").icon(Icons.report).action(::endResults)
+                    item("Programmaboekje genereren").icon(Icons.pdf).action(::printBooklet)
                 }
                 menuImport = menu("Importeren") {
                     item("Swimkick importeren").icon(Icons.download).action(::importSwimtrack)
@@ -96,6 +98,14 @@ open class MainView : View() {
 
     init {
         currentStage?.setOnCloseRequest { safeClose() }
+    }
+
+    /**
+     * Generates a booklet containing all events/heats.
+     */
+    fun printBooklet() {
+        State.meet ?: return
+        BookletPrinter.printBooklet(currentWindow)
     }
 
     /**

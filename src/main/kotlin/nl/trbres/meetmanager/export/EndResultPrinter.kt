@@ -28,7 +28,7 @@ object EndResultPrinter {
     fun printResults(events: List<Event>, eventNumbers: List<Int>, convertTo: Int?, owner: Window? = null) {
         val meet = State.meet ?: error("No meet selected")
         val pdfFile = promptSaveLocation(eventNumbers, owner = owner) ?: return
-        DEFAULT_FONT = Fonts.robotoRegular
+        DEFAULT_FONT = Fonts.regular
 
         // Make document.
         document(pdfFile) { writer ->
@@ -76,14 +76,14 @@ object EndResultPrinter {
                 table(3 + 2 * n + 1) {
                     widths(*(floatArrayOf(3.93f, 18f, 18f) + columns))
 
-                    cell(newParagraph("rang", Fonts.robotoSmall), Element.ALIGN_RIGHT)
-                    cell(newParagraph("naam", Fonts.robotoSmall))
-                    cell(newParagraph("vereniging", Fonts.robotoSmall))
+                    cell(newParagraph("rang", Fonts.small), Element.ALIGN_RIGHT)
+                    cell(newParagraph("naam", Fonts.small))
+                    cell(newParagraph("vereniging", Fonts.small))
                     for (i in 0 until n) {
-                        cell(newParagraph("${events[i].distance.metres}m ${events[i].stroke.strokeName.toLowerCase()}", Fonts.robotoSmall), Element.ALIGN_RIGHT)
-                        cell(newParagraph("", Fonts.robotoSmall))
+                        cell(newParagraph("${events[i].distance.metres}m ${events[i].stroke.strokeName.toLowerCase()}", Fonts.small), Element.ALIGN_RIGHT)
+                        cell(newParagraph("", Fonts.small))
                     }
-                    cell(newParagraph("totaal", Fonts.robotoSmall), Element.ALIGN_RIGHT)
+                    cell(newParagraph("totaal", Fonts.small), Element.ALIGN_RIGHT)
 
                     for (swimmerIndex in 0 until names.size) {
                         cell(newParagraph(ranks[swimmerIndex]), Element.ALIGN_RIGHT)
@@ -93,7 +93,7 @@ object EndResultPrinter {
                             cell(newParagraph(resultTimes[swimmerIndex][eventIndex]!!), Element.ALIGN_RIGHT)
                             cell(newParagraph(resultRanks[swimmerIndex][eventIndex]!!))
                         }
-                        cell(newParagraph(totals[swimmerIndex], Fonts.robotoBold), Element.ALIGN_RIGHT)
+                        cell(newParagraph(totals[swimmerIndex], Fonts.bold), Element.ALIGN_RIGHT)
                     }
                 }
             }

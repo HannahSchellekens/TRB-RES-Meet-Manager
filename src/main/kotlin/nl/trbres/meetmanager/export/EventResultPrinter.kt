@@ -25,7 +25,7 @@ object EventResultPrinter {
     fun printResults(event: Event, eventNumber: Int, owner: Window? = null) {
         val meet = State.meet ?: error("No meet selected")
         val pdfFile = promptSaveLocation(eventNumber, owner) ?: return
-        DEFAULT_FONT = Fonts.robotoRegular
+        DEFAULT_FONT = Fonts.regular
 
         // Make document.
         document(pdfFile) { writer ->
@@ -65,16 +65,16 @@ object EventResultPrinter {
                 table(4) {
                     widths(3, 22, 18, 10)
 
-                    cell(newParagraph("rang", Fonts.robotoSmall), Element.ALIGN_RIGHT)
-                    cell(newParagraph("naam", Fonts.robotoSmall))
-                    cell(newParagraph("vereniging", Fonts.robotoSmall))
-                    cell(newParagraph("eindtijd", Fonts.robotoSmall), Element.ALIGN_RIGHT)
+                    cell(newParagraph("rang", Fonts.small), Element.ALIGN_RIGHT)
+                    cell(newParagraph("naam", Fonts.small))
+                    cell(newParagraph("vereniging", Fonts.small))
+                    cell(newParagraph("eindtijd", Fonts.small), Element.ALIGN_RIGHT)
 
                     for (i in 0 until names.size) {
                         cell(newParagraph(ranks[i]), Element.ALIGN_RIGHT)
                         cell(newParagraph(names[i]))
                         cell(newParagraph(clubs[i]))
-                        cell(newParagraph(results[i], Fonts.robotoBold), Element.ALIGN_RIGHT)
+                        cell(newParagraph(results[i], Fonts.bold), Element.ALIGN_RIGHT)
                     }
                 }
             }

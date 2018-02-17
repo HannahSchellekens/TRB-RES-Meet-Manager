@@ -8,7 +8,6 @@ import com.lowagie.text.pdf.PdfPageEventHelper
 import com.lowagie.text.pdf.PdfWriter
 import com.lowagie.text.pdf.draw.LineSeparator
 import nl.trbres.meetmanager.State
-import nl.trbres.meetmanager.time.Date
 
 /**
  * @author Ruben Schellekens
@@ -19,9 +18,8 @@ object PdfHeader : PdfPageEventHelper() {
         val meet = State.meet ?: return
         document ?: return
         val cb = writer?.directContent ?: return
-        val meetName = Phrase(meet.name, Fonts.robotoSmall)
-        val date = Date()
-        val placeDate = Phrase("${meet.location}, $date", Fonts.robotoSmall)
+        val meetName = Phrase("${meet.name}, ${meet.location}", Fonts.small)
+        val placeDate = Phrase("Pagina ${writer.currentPageNumber}", Fonts.small)
         ColumnText.showTextAligned(cb, Element.ALIGN_LEFT,
                 meetName,
                 document.leftMargin(),

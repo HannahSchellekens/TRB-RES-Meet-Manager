@@ -13,6 +13,7 @@ import nl.trbres.meetmanager.UserSettings.Key.lastDirectory
 import nl.trbres.meetmanager.export.BookletPrinter
 import nl.trbres.meetmanager.export.EndResultPrinter
 import nl.trbres.meetmanager.import.SwimtrackImporter
+import nl.trbres.meetmanager.model.Club
 import nl.trbres.meetmanager.model.Meet
 import nl.trbres.meetmanager.util.*
 import nl.trbres.meetmanager.util.fx.icon
@@ -50,7 +51,9 @@ open class MainView : View() {
                 }
                 menu("Wedstrijd") {
                     item("Einduitslag genereren").icon(Icons.report).action(::endResults)
+                    separator()
                     item("Programmaboekje genereren").icon(Icons.pdf).action(::printBooklet)
+                    item("Gepersonaliseerd programma genereren").icon(Icons.pdf).action(::printPersonalisedBooklet)
                 }
                 menuImport = menu("Importeren") {
                     item("Swimkick importeren").icon(Icons.download).action(::importSwimtrack)
@@ -105,7 +108,26 @@ open class MainView : View() {
      */
     fun printBooklet() {
         State.meet ?: return
-        BookletPrinter.printBooklet(currentWindow)
+        BookletPrinter.printBooklet(currentWindow, highlight = null)
+    }
+
+    /**
+     * Generates a booklet where one club is highlighted.
+     */
+    fun printPersonalisedBooklet() {
+        State.meet ?: return
+
+        val dialog = ChooseClubDialog(currentWindow)
+        dialog.showAndWait().ifPresent {
+            BookletPrinter.printBooklet(currentWindow, highlight = it)
+        }
+    }
+
+    /**
+     * Show a prompt asking the user for a club.
+     */
+    private fun promptClub(): Club? {
+        TODO("Implement")
     }
 
     /**

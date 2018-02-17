@@ -9,6 +9,7 @@ import javafx.stage.FileChooser
 import javafx.stage.Window
 import nl.trbres.meetmanager.State
 import nl.trbres.meetmanager.UserSettings
+import nl.trbres.meetmanager.model.Club
 import nl.trbres.meetmanager.model.Event
 import nl.trbres.meetmanager.model.Heat
 import nl.trbres.meetmanager.util.*
@@ -25,10 +26,10 @@ object BookletPrinter {
      * The user gets prompted with a dialog to save the pdf.
      */
     @JvmStatic
-    fun printBooklet(owner: Window? = null) {
+    fun printBooklet(owner: Window? = null, highlight: Club? = null) {
         val meet = State.meet ?: error("No meet selected")
-        val pdfFile = promptSaveLocation(owner) ?: return
-        DEFAULT_FONT = Fonts.robotoRegular
+        val pdfFile = promptSaveLocation(owner, highlight) ?: return
+        DEFAULT_FONT = Fonts.regular
 
         // Make document.
         document(pdfFile) { writer ->
@@ -39,7 +40,7 @@ object BookletPrinter {
             write {
                 // Print events
                 for ((i, event) in meet.events.withIndex()) {
-                    printEvent(event, i + 1)
+                    printEvent(highlight, event, i + 1)
                 }
             }
         }
@@ -47,7 +48,7 @@ object BookletPrinter {
         pdfFile.open()
     }
 
-    private fun Document.printEvent(event: Event, eventNumber: Int) {
+    private fun Document.printEvent(highlight: Club?, event: Event, eventNumber: Int) {
         val heats = event.heats
 
         table(1) {
@@ -55,7 +56,7 @@ object BookletPrinter {
 
             addCell(printEventHeader(event, eventNumber))
             addCell("")
-            addCell(printHeat(heats[0], 1, event.heats.size))
+            addCell(printHeat(highlight, heats[0], 1, event.heats.size))
 
             setSpacingAfter(1f)
             keepTogether = true
@@ -64,7 +65,7 @@ object BookletPrinter {
         for (i in 1 until heats.size) {
             table(1) {
                 defaultCell.borderWidth = 0f
-                addCell(printHeat(heats[i], i + 1, event.heats.size))
+                addCell(printHeat(highlight, heats[i], i + 1, event.heats.size))
             }
         }
     }
@@ -89,19 +90,24 @@ object BookletPrinter {
         }
     }
 
-    private fun printHeat(heat: Heat, heatNumber: Int, heatAmount: Int) = PdfPTable(1).apply {
+    private fun printHeat(highlight: Club?, heat: Heat, heatNumber: Int, heatAmount: Int) = PdfPTable(1).apply {
         defaultCell.borderWidth = 0f
 
-        cell(newParagraph("Serie %d van %d".format(heatNumber, heatAmount), Fonts.robotoRegularUnderline))
+        cell(newParagraph("Serie %d van %d".format(heatNumber, heatAmount), Fonts.underline))
 
         table(5) {
             widths(.041f, .306f, .306f, .185f, .162f)
 
             for ((lane, swimmer) in heat.lanes) {
-                cell(newParagraph(lane.toString()), Element.ALIGN_RIGHT)
-                cell(newParagraph(swimmer.name))
-                cell(newParagraph(swimmer.club?.name ?: ""))
-                cell(newParagraph(swimmer.age.readableName))
+                val font = if (swimmer.club == highlight && highlight != null) {
+                    Fonts.boldItalic
+                }
+                else Fonts.regular
+
+                cell(newParagraph(lane.toString(), font), Element.ALIGN_RIGHT)
+                cell(newParagraph(swimmer.name, font))
+                cell(newParagraph(swimmer.club?.name ?: "", font))
+                cell(newParagraph(swimmer.age.readableName, font))
                 cell(newParagraph("_____________"))
             }
         }
@@ -113,10 +119,17 @@ object BookletPrinter {
     /**
      * Shows a [FileChooser] to pick a saving location.
      */
-    private fun promptSaveLocation(owner: Window? = null): File? {
+    private fun promptSaveLocation(owner: Window? = null, highlight: Club?): File? {
+        val clubSuffix = if (highlight != null) {
+            "_" + highlight.name
+                    .replace(" ", "")
+                    .replace(Regex("[^A-Za-z()\\-0-9&]"), "-")
+        }
+        else ""
+
         val result = FileChooser().apply {
             title = "Programmaboekje opslaan..."
-            initialFileName = "Schedule_${State.meet!!.name}.pdf"
+            initialFileName = "Schedule_${State.meet!!.name}$clubSuffix.pdf"
             extensionFilters += FileChooser.ExtensionFilter("PDF Bestanden", "*.pdf")
             UserSettings[UserSettings.Key.lastScheduleDirectory].whenNonNull {
                 initialDirectory = it.file()

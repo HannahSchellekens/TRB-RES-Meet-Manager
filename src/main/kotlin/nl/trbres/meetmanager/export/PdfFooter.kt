@@ -18,10 +18,10 @@ object PdfFooter : PdfPageEventHelper() {
     override fun onEndPage(writer: PdfWriter?, document: Document?) {
         document ?: return
         val cb = writer?.directContent ?: return
-        val club = Phrase("TRB-RES", Fonts.robotoSmall)
+        val club = Phrase("TRB-RES", Fonts.small)
         val now = Time()
         val date = Date()
-        val timestamp = Phrase("$date, %02du%02d".format(now.hours, now.minutes), Fonts.robotoSmall)
+        val timestamp = Phrase("$date, %02du%02d".format(now.hours, now.minutes), Fonts.small)
         val separator = LineSeparator()
         separator.drawLine(cb,
                 document.leftMargin(),

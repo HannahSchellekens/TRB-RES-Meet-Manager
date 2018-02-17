@@ -12,7 +12,7 @@ import nl.trbres.meetmanager.State
 /**
  * @author Ruben Schellekens
  */
-object PdfHeader : PdfPageEventHelper() {
+object PdfBookletHeader : PdfPageEventHelper() {
 
     override fun onStartPage(writer: PdfWriter?, document: Document?) {
         val meet = State.meet ?: return

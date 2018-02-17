@@ -35,7 +35,7 @@ object BookletPrinter {
         document(pdfFile) { writer ->
             setMargins(64f, 64f, 50f, 64f)
 
-            writer.pageEvent = PdfHeaderAndFooter
+            writer.pageEvent = PdfBookletHeaderAndFooter
 
             write {
                 // Print events
@@ -127,9 +127,13 @@ object BookletPrinter {
         }
         else ""
 
+        val meetName = State.meet!!.name
+                .replace(" ", "")
+                .replace(Regex("[^A-Za-z()\\-0-9&]"), "-")
+
         val result = FileChooser().apply {
             title = "Programmaboekje opslaan..."
-            initialFileName = "Schedule_${State.meet!!.name}$clubSuffix.pdf"
+            initialFileName = "Schedule_$meetName$clubSuffix.pdf"
             extensionFilters += FileChooser.ExtensionFilter("PDF Bestanden", "*.pdf")
             UserSettings[UserSettings.Key.lastScheduleDirectory].whenNonNull {
                 initialDirectory = it.file()

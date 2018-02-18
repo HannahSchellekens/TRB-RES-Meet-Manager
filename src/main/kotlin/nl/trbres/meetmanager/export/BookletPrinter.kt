@@ -55,8 +55,11 @@ object BookletPrinter {
             defaultCell.borderWidth = 0f
 
             addCell(printEventHeader(event, eventNumber))
-            addCell("")
-            addCell(printHeat(highlight, heats[0], 1, event.heats.size))
+
+            if (heats.isNotEmpty()) {
+                addCell("")
+                addCell(printHeat(highlight, heats[0], 1, event.heats.size))
+            }
 
             setSpacingAfter(1f)
             keepTogether = true

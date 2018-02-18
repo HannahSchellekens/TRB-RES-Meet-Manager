@@ -7,6 +7,7 @@ import javafx.scene.control.Dialog
 import javafx.scene.control.TextField
 import javafx.stage.Window
 import javafx.util.Callback
+import nl.trbres.meetmanager.State
 import nl.trbres.meetmanager.model.*
 import nl.trbres.meetmanager.util.isNaturalNumber
 import nl.trbres.meetmanager.util.isNull
@@ -76,7 +77,7 @@ open class EventDialog(ownerWindow: Window?, var editEvent: Event? = null) : Dia
                 }
                 field("Leeftijdscategorie") {
                     cboxAgeGroup = combobox {
-                        items = SimpleAgeGroup.values().toList().observable()
+                        items = State.meet!!.ageSet.ages.toList().observable()
                         validation(okButton)
                     }
                 }

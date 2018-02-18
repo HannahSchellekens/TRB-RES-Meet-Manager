@@ -29,6 +29,11 @@ data class Meet(
         var location: String,
 
         /**
+         * The collection of age groups.
+         */
+        var ageSet: AgeSet = AgeSet.SIMPLE,
+
+        /**
          * All the events of the meet.
          */
         val events: MutableList<Event> = ArrayList(),

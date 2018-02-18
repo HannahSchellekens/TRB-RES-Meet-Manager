@@ -8,7 +8,10 @@ import javafx.scene.control.TextField
 import javafx.stage.Window
 import javafx.util.Callback
 import nl.trbres.meetmanager.State
-import nl.trbres.meetmanager.model.*
+import nl.trbres.meetmanager.model.AgeGroup
+import nl.trbres.meetmanager.model.Category
+import nl.trbres.meetmanager.model.Club
+import nl.trbres.meetmanager.model.Swimmer
 import nl.trbres.meetmanager.util.isNull
 import tornadofx.*
 
@@ -54,7 +57,7 @@ open class NewSwimmerDialog(ownerWindow: Window?) : Dialog<Swimmer>() {
                 }
                 field("Leeftijdscategorie") {
                     cboxAgeGroup = combobox {
-                        items = SimpleAgeGroup.values().toList().observable()
+                        items = State.meet!!.ageSet.ages.toList().observable()
                         selectionModel.selectedItemProperty().addListener { _ -> validate(okButton) }
                     }
                 }

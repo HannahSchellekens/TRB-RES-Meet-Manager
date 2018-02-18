@@ -5,7 +5,6 @@ import javafx.scene.layout.BorderPane
 import nl.trbres.meetmanager.Icons
 import nl.trbres.meetmanager.State
 import nl.trbres.meetmanager.model.Category
-import nl.trbres.meetmanager.model.Club
 import nl.trbres.meetmanager.model.SimpleAgeGroup
 import nl.trbres.meetmanager.model.Swimmer
 import nl.trbres.meetmanager.util.fx.icon
@@ -45,7 +44,7 @@ open class Contestants(val main: MainView) : BorderPane() {
                     prefWidthProperty().bind(this@tableview.widthProperty().multiply(0.15))
                     isResizable = false
                 }.makeEditable({ swimmer, ageGroup -> swimmer.age = ageGroup; swimmer.nestedUpdate() }) {
-                    SimpleAgeGroup.values().toList()
+                    State.meet?.ageSet?.ages?.toList() ?: SimpleAgeGroup.values().toList()
                 }
 
                 column("M/V", Swimmer::category) {
@@ -60,8 +59,6 @@ open class Contestants(val main: MainView) : BorderPane() {
                     separator()
                     item("Verwijderen").icon(Icons.remove).action(::deleteSwimmer)
                 }
-
-                items.add(Swimmer("Ruben Schellekens", SimpleAgeGroup.SENIOREN, Category.MALE, Club("TRB-RES")))
             }
         }
 

@@ -7,6 +7,40 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo.Id.NAME
 import com.fasterxml.jackson.annotation.JsonTypeName
 
 /**
+ * @author Ruben SChellekens
+ */
+enum class AgeSet(
+
+        /**
+         * The readable name of the age set.
+         */
+        val readableName: String,
+
+        /**
+         * All the available age groups in this age set.
+         */
+        val ages: Array<out AgeGroup>
+) {
+
+    /**
+     * [SimpleAgeGroup].
+     */
+    SIMPLE("Minioren/Junioren/Jeugd/Senioren", SimpleAgeGroup.values()),
+
+    /**
+     * [PrimarySchoolGroup].
+     */
+    PRIMARY_SCHOOL("Basisschool", PrimarySchoolGroup.values()),
+
+    /**
+     * [DefaultAgeGroup].
+     */
+    COMPETITIVE("Wedstrijdzwemmen", DefaultAgeGroup.values());
+
+    override fun toString() = readableName
+}
+
+/**
  * @author Ruben Schellekens
  */
 @JsonTypeName("simple")
@@ -21,6 +55,33 @@ enum class SimpleAgeGroup(
     SENIOREN("Senioren", { it.nameOld });
 
     override val title = readableName
+    override val id = name
+
+    override fun toString() = title
+}
+
+/**
+ * @author Ruben Schellekens
+ */
+@JsonTypeName("school")
+enum class PrimarySchoolGroup(
+        override val readableName: String,
+        override val categoryName: (Category) -> String
+) : AgeGroup {
+
+    GROEP_4("Groep 4", { it.nameYoung }),
+    GROEP_5("Groep 5", { it.nameYoung }),
+    GROEP_6("Groep 6", { it.nameYoung }),
+    GROEP_7("Groep 7", { it.nameYoung }),
+    GROEP_8("Groep 8", { it.nameYoung }),
+    GROEP_4_WZ("Groep 4 Wz", { it.nameYoung }),
+    GROEP_5_WZ("Groep 5 Wz", { it.nameYoung }),
+    GROEP_6_WZ("Groep 6 Wz", { it.nameYoung }),
+    GROEP_7_WZ("Groep 7 Wz", { it.nameYoung }),
+    GROEP_8_WZ("Groep 8 Wz", { it.nameYoung });
+
+    override val title = readableName
+    override val id = name
 
     override fun toString() = title
 }
@@ -40,12 +101,12 @@ enum class DefaultAgeGroup(
          *
          * E.g. `6` for `Minioren 6`.
          */
-        val groupNumber: Int,
+        groupNumber: Int,
 
         /**
          * On what simple age group the default age group is based.
          */
-        val simple: SimpleAgeGroup
+        simple: SimpleAgeGroup
 
 ) : AgeGroup {
 
@@ -86,6 +147,7 @@ enum class DefaultAgeGroup(
 
     override val title = "$readableName ${if (groupNumber == 0) "open" else groupNumber.toString()}"
     override val categoryName = simple.categoryName
+    override val id = name
 
     override fun toString() = title
 }
@@ -95,8 +157,9 @@ enum class DefaultAgeGroup(
  */
 @JsonTypeInfo(use = NAME, include = WRAPPER_OBJECT, property = "implementation")
 @JsonSubTypes(
-    JsonSubTypes.Type(value = DefaultAgeGroup::class, name = "default"),
-    JsonSubTypes.Type(value = SimpleAgeGroup::class, name = "default")
+        JsonSubTypes.Type(value = DefaultAgeGroup::class, name = "default"),
+        JsonSubTypes.Type(value = SimpleAgeGroup::class, name = "simple"),
+        JsonSubTypes.Type(value = PrimarySchoolGroup::class, name = "school")
 )
 interface AgeGroup {
 
@@ -116,6 +179,11 @@ interface AgeGroup {
      * E.g. `Minioren 2`, `Senioren`.
      */
     val title: String
+
+    /**
+     * The unique id of the group.
+     */
+    val id: String
 
     /**
      * See [categoryName].

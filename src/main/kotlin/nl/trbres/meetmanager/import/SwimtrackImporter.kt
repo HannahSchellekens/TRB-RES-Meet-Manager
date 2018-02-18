@@ -1,6 +1,9 @@
 package nl.trbres.meetmanager.import
 
-import nl.trbres.meetmanager.model.*
+import nl.trbres.meetmanager.model.Category
+import nl.trbres.meetmanager.model.Club
+import nl.trbres.meetmanager.model.Meet
+import nl.trbres.meetmanager.model.Swimmer
 
 /**
  * @author Ruben Schellekens
@@ -29,7 +32,7 @@ open class SwimtrackImporter(val input: String, val meet: Meet) {
                 val category = if (entry[0] == "m") Category.MALE else Category.FEMALE
                 val name = entry[1]
                 val ageGroup = try {
-                    SimpleAgeGroup.valueOf(entry[2])
+                    meet.ageSet.ages.find { it.id == entry[2] } ?: return@mapNotNull null
                 }
                 catch (e: IllegalArgumentException) {
                     return@mapNotNull null

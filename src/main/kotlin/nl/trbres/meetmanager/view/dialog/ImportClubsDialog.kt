@@ -1,4 +1,4 @@
-package nl.trbres.meetmanager.view
+package nl.trbres.meetmanager.view.dialog
 
 import javafx.scene.Node
 import javafx.scene.control.ButtonType
@@ -11,24 +11,14 @@ import tornadofx.*
 /**
  * @author Ruben Schellekens
  */
-open class ImportSwimtrackDialog(ownerWindow: Window?) : Dialog<String>() {
+open class ImportClubsDialog(ownerWindow: Window?) : Dialog<Set<String>>() {
 
     private lateinit var txtaContent: TextArea
 
     init {
-        title = "Swimtrack importeren"
+        title = "Verenigingen importeren"
         headerText = "Voer meerdere nieuwe zwemmers toe door een set spreadsheet cellen\nin de textbox te plakken."
-        contentText = """Formaat (per zwemmer een nieuwe regel, [dit is een cel]):
-            |[m/v] [Naam zwemmer 1] [MINIOREN/JUNIOREN/JEUGD/SENIOREN] [Clubnaam]
-            |[m/v] [Naam zwemmer 2] [MINIOREN/JUNIOREN/JEUGD/SENIOREN] [Clubnaam]
-            |...
-            |
-            |Voorbeeld:
-            |m	Henk-Jan Vissers	JUNIOREN	TRB-RES
-            |v	Ellie de Jong		SENIOREN	TRB-RES
-            |
-            |Let op dat er een club met de gegeven naam geregistreerd moet zijn voordat
-            |de clubs succesvol kunnen worden toegewezen.
+        contentText = """Plaats iedere vereniging op een nieuwe regel.
             |
             |""".trimMargin()
         dialogPane.minWidth = 350.0
@@ -42,7 +32,9 @@ open class ImportSwimtrackDialog(ownerWindow: Window?) : Dialog<String>() {
             if (it != ButtonType.OK) {
                 return@Callback null
             }
-            return@Callback txtaContent.text
+            return@Callback txtaContent.text.split("\n").asSequence()
+                    .filter { it.isNotBlank() }
+                    .toSet()
         }
 
         dialogPane.content = borderpane {

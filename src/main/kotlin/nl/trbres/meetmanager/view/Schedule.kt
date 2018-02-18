@@ -15,6 +15,8 @@ import nl.trbres.meetmanager.time.TimeConverter
 import nl.trbres.meetmanager.util.fx.icon
 import nl.trbres.meetmanager.util.fx.styleClass
 import nl.trbres.meetmanager.util.indexRange
+import nl.trbres.meetmanager.view.dialog.ChooseSwimmerDialog
+import nl.trbres.meetmanager.view.dialog.EventDialog
 import tornadofx.*
 
 /**

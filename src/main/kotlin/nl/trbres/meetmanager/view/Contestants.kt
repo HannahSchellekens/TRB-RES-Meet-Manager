@@ -11,6 +11,7 @@ import nl.trbres.meetmanager.util.fx.icon
 import nl.trbres.meetmanager.util.fx.makeEditable
 import nl.trbres.meetmanager.util.nestedDelete
 import nl.trbres.meetmanager.util.nestedUpdate
+import nl.trbres.meetmanager.view.dialog.NewSwimmerDialog
 import tornadofx.*
 
 /**

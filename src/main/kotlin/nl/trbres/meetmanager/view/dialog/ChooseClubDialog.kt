@@ -1,4 +1,4 @@
-package nl.trbres.meetmanager.view
+package nl.trbres.meetmanager.view.dialog
 
 import javafx.scene.Node
 import javafx.scene.control.ButtonType

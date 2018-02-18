@@ -18,6 +18,7 @@ import nl.trbres.meetmanager.model.Meet
 import nl.trbres.meetmanager.util.*
 import nl.trbres.meetmanager.util.fx.icon
 import nl.trbres.meetmanager.util.fx.openEvent
+import nl.trbres.meetmanager.view.dialog.*
 import tornadofx.*
 
 /**
@@ -56,7 +57,8 @@ open class MainView : View() {
                     item("Gepersonaliseerd programma genereren").icon(Icons.pdf).action(::printPersonalisedBooklet)
                 }
                 menuImport = menu("Importeren") {
-                    item("Swimkick importeren").icon(Icons.download).action(::importSwimtrack)
+                    item("Verenigingen importeren").icon(Icons.download).action(::importClubs)
+                    item("Zwemmers importeren").icon(Icons.download).action(::importSwimmers)
                     isDisable = true
                 }
                 menu("Help") {
@@ -153,15 +155,33 @@ open class MainView : View() {
     }
 
     /**
-     * Imports swimtrack.
+     * Imports swimmers from a given (user inputted) list.
      */
-    fun importSwimtrack() {
+    fun importSwimmers() {
         val meet = State.meet ?: return
-        ImportSwimtrackDialog(currentWindow).showAndWait().ifPresent {
+        ImportSwimmersDialog(currentWindow).showAndWait().ifPresent {
             val newSwimmers = SwimtrackImporter(it, meet).import()
             meet.swimmers.addAll(newSwimmers)
             updateFromState()
             information("${newSwimmers.size} zwemmers zijn toegevoegd!", owner = currentWindow, title = "Succes!")
+        }
+    }
+
+    /**
+     * Imports clubs from a given (user inputted) list.
+     */
+    fun importClubs() {
+        val meet = State.meet ?: return
+        ImportClubsDialog(currentWindow).showAndWait().ifPresent {
+            val clubs = meet.clubs.asSequence().map { it.name }.toHashSet()
+            var added = 0
+            it.forEach {
+                if (it in clubs) return@forEach
+                meet.clubs += Club(it)
+                added++
+            }
+            updateFromState()
+            information("$added verenigingen zijn toegevoegd!", owner = currentWindow, title = "Succes!")
         }
     }
 

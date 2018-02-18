@@ -101,6 +101,8 @@ object BookletPrinter {
         table(5) {
             widths(.041f, .306f, .306f, .185f, .162f)
 
+            defaultCell.paddingBottom = 0f
+
             for ((lane, swimmer) in heat.lanes) {
                 val font = if (swimmer.club == highlight && highlight != null) {
                     Fonts.boldItalic

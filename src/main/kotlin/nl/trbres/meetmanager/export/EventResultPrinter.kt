@@ -60,20 +60,23 @@ object EventResultPrinter {
                 val ranks = event.ranks()
                 val names = event.names()
                 val clubs = event.clubs()
+                val ages = event.ages()
                 val results = event.results()
 
-                table(4) {
-                    widths(3, 22, 18, 10)
+                table(5) {
+                    widths(3, 20, 20, 10, 6)
 
                     cell(newParagraph("rang", Fonts.small), Element.ALIGN_RIGHT)
                     cell(newParagraph("naam", Fonts.small))
                     cell(newParagraph("vereniging", Fonts.small))
+                    cell(newParagraph("leeftijd", Fonts.small))
                     cell(newParagraph("eindtijd", Fonts.small), Element.ALIGN_RIGHT)
 
                     for (i in 0 until names.size) {
                         cell(newParagraph(ranks[i]), Element.ALIGN_RIGHT)
                         cell(newParagraph(names[i]))
                         cell(newParagraph(clubs[i]))
+                        cell(newParagraph(ages[i]))
                         cell(newParagraph(results[i], Fonts.bold), Element.ALIGN_RIGHT)
                     }
                 }
@@ -99,6 +102,11 @@ object EventResultPrinter {
      * Generates all club names in order.
      */
     private fun Event.clubs() = swimResults().map { it.swimmer.club?.name ?: "" }
+
+    /**
+     * Generates all ages in order.
+     */
+    private fun Event.ages() = swimResults().map { it.swimmer.age.readableName }
 
     /**
      * Generates all results in order.

@@ -35,6 +35,12 @@ data class Event(
     val heats: MutableList<Heat> = ArrayList()
 
     /**
+     * `true` if the event is a relay, `false` if it is an individual event.
+     */
+    val isRelay: Boolean
+        get() = distance.times > 1
+
+    /**
      * Checks if all heats in the event have their results filled in.
      */
     @JsonIgnore

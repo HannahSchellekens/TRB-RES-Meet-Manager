@@ -18,15 +18,15 @@ import java.util.*
  */
 open class ChooseSwimmerDialog(
         ownerWindow: Window?,
-        private val relay: Boolean = false,
-        customMessage: String = "Kies een zwemmer."
+        private val relay: Boolean? = false,
+        customMessage: String = "Kies een ${if (relay == false) "zwemmer" else "estaffette"}."
 ) : Dialog<ChooseSwimmerDialogResult>() {
 
     private lateinit var txtSearch: TextField
     private lateinit var tvwSwimmers: TableView<Swimmer>
 
     init {
-        title = "Selecteer zwemmer"
+        title = "Selecteer ${if (relay == false) "zwemmer" else "estaffette"}"
         headerText = customMessage
         dialogPane.minWidth = 500.0
         initOwner(ownerWindow)
@@ -54,7 +54,7 @@ open class ChooseSwimmerDialog(
 
             center {
                 tvwSwimmers = tableview {
-                    column("Naam zwemmer", Swimmer::name) {
+                    column("Naam ${if (relay == false) "estaffette" else "zwemmer"}", Swimmer::name) {
                         prefWidthProperty().bind(this@tableview.widthProperty().multiply(0.4))
                         isResizable = false
                     }
@@ -118,7 +118,11 @@ open class ChooseSwimmerDialog(
      */
     private fun allSwimmers(): List<Swimmer> {
         val meet = State.meet ?: return emptyList()
-        return meet.swimmers.filter { (it is Relay) == relay }
+
+        return if (relay == null) {
+            meet.swimmers.toList()
+        }
+        else meet.swimmers.filter { (it is Relay) == relay }
     }
 }
 

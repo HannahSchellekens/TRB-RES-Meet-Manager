@@ -49,7 +49,7 @@ open class ChooseClubDialog(
             center {
                 tvwClubs = tableview {
                     column("Vereniging", Club::name) {
-                        prefWidthProperty().bind(this@tableview.widthProperty().multiply(0.3))
+                        prefWidthProperty().bind(this@tableview.widthProperty().multiply(1))
                         isResizable = false
                     }
 

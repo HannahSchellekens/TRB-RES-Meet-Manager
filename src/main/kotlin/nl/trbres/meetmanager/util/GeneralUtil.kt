@@ -90,6 +90,12 @@ inline fun <T> usefulTry(message: String, codeBlock: () -> T): T {
 }
 
 /**
+ * The amount of integers in the IntRange.
+ */
+val IntRange.size
+    get() = endInclusive - start + 1
+
+/**
  * Executes code when the given object is null.
  */
 inline fun <T> T?.whenNull(block: () -> Unit) = this ?: block()

@@ -51,6 +51,7 @@ open class MainView : View() {
                     item("Afsluiten").icon(Icons.exit).action(::exitProgram)
                 }
                 menu("Wedstrijd") {
+                    item("Zwemmers verdelen").action(::distributeSwimmers)
                     item("Einduitslag genereren").icon(Icons.report).action(::endResults)
                     separator()
                     item("Programmaboekje genereren").icon(Icons.pdf).action(::printBooklet)
@@ -130,6 +131,17 @@ open class MainView : View() {
      */
     private fun promptClub(): Club? {
         TODO("Implement")
+    }
+
+    /**
+     * Distributes all swimmers over the matching events.
+     */
+    fun distributeSwimmers() {
+        val meet = State.meet ?: return
+        meet.distributor.distribute()
+        updateFromState()
+
+        information("De zwemmers zijn verdeeld!", title = "Succes!", owner = currentWindow)
     }
 
     /**

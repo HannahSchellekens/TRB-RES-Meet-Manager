@@ -2,6 +2,7 @@ package nl.trbres.meetmanager.util
 
 import nl.trbres.meetmanager.State
 import nl.trbres.meetmanager.model.Club
+import nl.trbres.meetmanager.model.Relay
 import nl.trbres.meetmanager.model.Swimmer
 
 /**
@@ -54,6 +55,13 @@ fun Swimmer.nestedDelete() {
                 heat.results.remove(lane)
                 heat.statusses.remove(lane)
             }
+    meet.events
+            .flatMap { it.heats }
+            .flatMap { it.lanes.values }
+            .mapNotNull { it as? Relay }
+            .forEach { relay ->
+                relay.members.remove(this@nestedDelete)
+            }
 }
 
 /**
@@ -64,11 +72,16 @@ fun Swimmer.nestedUpdate() {
     meet.events
             .flatMap { it.heats }
             .flatMap { it.lanes.values }
-            .filter { it.id == this@nestedUpdate.id }
+            .filter { it.id == this@nestedUpdate.id && it !== this@nestedUpdate}
             .forEach {
                 it.name = this@nestedUpdate.name
                 it.age = this@nestedUpdate.age
                 it.category = this@nestedUpdate.category
                 it.club = this@nestedUpdate.club
+
+                if (it is Relay && this@nestedUpdate is Relay) {
+                    it.members.clear()
+                    it.members.addAll(this@nestedUpdate.members)
+                }
             }
 }

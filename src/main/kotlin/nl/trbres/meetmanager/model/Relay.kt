@@ -1,11 +1,13 @@
 package nl.trbres.meetmanager.model
 
+import com.fasterxml.jackson.annotation.JsonTypeName
 import java.util.*
 import kotlin.collections.ArrayList
 
 /**
  * @author Ruben Schellekens
  */
+@JsonTypeName("relay")
 open class Relay(name: String, age: AgeGroup, category: Category, club: Club?, id: UUID = UUID.randomUUID())
     : Swimmer(name, age, category, club, id) {
 

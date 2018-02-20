@@ -1,9 +1,6 @@
 package nl.trbres.meetmanager.util
 
-import nl.trbres.meetmanager.model.Event
-import nl.trbres.meetmanager.model.Heat
-import nl.trbres.meetmanager.model.Meet
-import nl.trbres.meetmanager.model.Swimmer
+import nl.trbres.meetmanager.model.*
 import kotlin.math.max
 
 /**
@@ -35,7 +32,7 @@ open class Distributor(private val meet: Meet) {
         // Initialise
         val swimmers = meet.swimmers
         val availableLanes = laneOrder()
-        val events = meet.events.filter { it.distance.times == 1 }
+        val events = meet.events
         val mapping = HashMap<Event, MutableList<Swimmer>>()
         for (event in events) {
             mapping[event] = ArrayList()
@@ -45,7 +42,9 @@ open class Distributor(private val meet: Meet) {
         for (event in events) {
             swimmers.asSequence()
                     .filter { swimmer ->
-                        swimmer.category == event.category && event.ages.any { swimmer.age.isJointCategory(it) }
+                        swimmer.category == event.category &&
+                                event.ages.any { swimmer.age.isJointCategory(it) } &&
+                                swimmer is Relay == event.isRelay()
                     }
                     .forEach { mapping[event]!!.add(it) }
         }

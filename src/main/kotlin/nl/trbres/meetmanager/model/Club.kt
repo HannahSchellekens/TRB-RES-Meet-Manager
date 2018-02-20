@@ -22,5 +22,5 @@ data class Club(var name: String, val id: UUID = UUID.randomUUID()) {
      */
     fun mapToClub() = if (this == NO_CLUB) null else this
 
-    override fun toString() = name
+    override fun toString() = if (isNoClub()) "" else name
 }

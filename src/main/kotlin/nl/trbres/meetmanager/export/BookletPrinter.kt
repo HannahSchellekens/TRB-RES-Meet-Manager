@@ -12,6 +12,7 @@ import nl.trbres.meetmanager.UserSettings
 import nl.trbres.meetmanager.model.Club
 import nl.trbres.meetmanager.model.Event
 import nl.trbres.meetmanager.model.Heat
+import nl.trbres.meetmanager.model.Relay
 import nl.trbres.meetmanager.util.*
 import java.io.File
 
@@ -103,7 +104,7 @@ object BookletPrinter {
 
             defaultCell.paddingBottom = 0f
 
-            for ((lane, swimmer) in heat.lanes) {
+            for ((lane, swimmer) in heat.lanes.toSortedMap()) {
                 val font = if (swimmer.club == highlight && highlight != null) {
                     Fonts.boldItalic
                 }
@@ -111,9 +112,18 @@ object BookletPrinter {
 
                 cell(newParagraph(lane.toString(), font), Element.ALIGN_RIGHT)
                 cell(newParagraph(swimmer.name, font))
-                cell(newParagraph(swimmer.club?.name ?: "", font))
+                cell(newParagraph(swimmer.club?.toString() ?: "", font))
                 cell(newParagraph(swimmer.age.readableName, font))
                 cell(newParagraph("_____________"))
+
+                // When relay team, print members.
+                if (swimmer is Relay) {
+                    cell(newParagraph(""))
+                    cell(newParagraph(swimmer.members.joinToString(", ") { it.name }, Fonts.small)) {
+                        paddingLeft = 12f
+                        colspan = 4
+                    }
+                }
             }
         }
 

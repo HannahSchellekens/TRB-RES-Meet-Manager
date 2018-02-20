@@ -370,8 +370,8 @@ open class Schedule(val main: MainView) : BorderPane() {
         val index = items.indexOf(current)
         val dialog = ChooseSwimmerDialog(
                 main.currentWindow,
-                relay = selectedEvent?.isRelay,
-                customMessage = "Kies een ${if (selectedEvent?.isRelay == false) "zwemmer" else "estaffette"} voor Programma $eventNumber, Serie $heatNumber, Baan ${current.lane}"
+                relay = selectedEvent?.isRelay(),
+                customMessage = "Kies een ${if (selectedEvent?.isRelay() == false) "zwemmer" else "estaffette"} voor Programma $eventNumber, Serie $heatNumber, Baan ${current.lane}"
         )
 
         dialog.showAndWait().ifPresent {

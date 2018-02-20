@@ -59,6 +59,7 @@ open class Contestants(val main: MainView) : BorderPane() {
 
                 contextmenu {
                     item("Estaffette toevoegen").icon(Icons.add).action(::addRelay)
+                    item("Estaffette bewerken").action(::editRelay)
                     item("Zwemmer toevoegen").icon(Icons.add).action(::addSwimmer)
                     separator()
                     item("Verwijderen").icon(Icons.remove).action(::deleteSwimmer)
@@ -89,11 +90,30 @@ open class Contestants(val main: MainView) : BorderPane() {
      * Prompts the user for a new relay and adds it to the tableview and data model.
      */
     private fun addRelay() {
-        NewRelayDialog(main.currentWindow).showAndWait().ifPresent {
+        NewSwimmerDialog(main.currentWindow).showAndWait().ifPresent {
             val meet = State.meet ?: return@ifPresent
             val relay = Relay(it.name, it.age, it.category, it.club)
             meet.swimmers.add(relay)
             tvwContestants.items.add(it)
+        }
+    }
+
+    /**
+     * Shows a dialog that lets the user edit the relay.
+     */
+    private fun editRelay() {
+        val selected = tvwContestants.selectedItem as? Relay ?: return
+        NewRelayDialog(main.currentWindow).apply {
+            fillInfo(selected)
+        }.showAndWait().ifPresent {
+            val result = it as Relay
+            selected.name = result.name
+            selected.club = result.club
+            selected.id = result.id
+            selected.age = result.age
+            selected.members.clear()
+            selected.members.addAll(result.members)
+            selected.nestedUpdate()
         }
     }
 
@@ -106,4 +126,5 @@ open class Contestants(val main: MainView) : BorderPane() {
         tvwContestants.items.remove(selected)
         selected.nestedDelete()
     }
+
 }

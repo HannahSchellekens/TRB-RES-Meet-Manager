@@ -27,10 +27,8 @@ open class NewRelayDialog(currentWindow: Window? = null) : NewSwimmerDialog(curr
         // Modify original form.
         cboxCategory.items = (cboxCategory.items + Category.MIX).observable()
         cboxClub.selectionModel.selectedItemProperty().addListener { _ ->
-            if (txtName.text.isNullOrBlank()) {
-                val club = cboxClub.selectedItem ?: return@addListener
-                txtName.text = "${club.name} ${club.nextClubNumber() ?: 1}"
-            }
+            val club = cboxClub.selectedItem ?: return@addListener
+            txtName.text = "${club.name} ${club.nextClubNumber() ?: 1}"
         }
 
         // Add new elements
@@ -62,6 +60,17 @@ open class NewRelayDialog(currentWindow: Window? = null) : NewSwimmerDialog(curr
                 members.addAll(listSwimmers.items)
             }
         }
+    }
+
+    /**
+     * Fills all the fields with the info of the given Relay object.
+     */
+    fun fillInfo(relay: Relay) {
+        cboxCategory.selectionModel.select(relay.category)
+        cboxClub.selectionModel.select(relay.club)
+        cboxAgeGroup.selectionModel.select(relay.age)
+        listSwimmers.items = relay.members.observable()
+        txtName.text = relay.name
     }
 
     /**

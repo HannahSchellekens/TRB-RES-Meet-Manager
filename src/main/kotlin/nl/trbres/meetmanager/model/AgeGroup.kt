@@ -57,6 +57,11 @@ enum class SimpleAgeGroup(
     override val title = readableName
     override val id = name
 
+    override fun isJointCategory(other: AgeGroup) = when (other) {
+        is DefaultAgeGroup -> other.simple == this
+        else -> false
+    }
+
     override fun toString() = title
 }
 
@@ -83,6 +88,20 @@ enum class PrimarySchoolGroup(
     override val title = readableName
     override val id = name
 
+    override fun isJointCategory(other: AgeGroup) = other == this || when (this) {
+        GROEP_4 -> other == GROEP_4_WZ
+        GROEP_5 -> other == GROEP_5_WZ
+        GROEP_6 -> other == GROEP_6_WZ
+        GROEP_7 -> other == GROEP_7_WZ
+        GROEP_8 -> other == GROEP_8_WZ
+        GROEP_4_WZ -> other == GROEP_4
+        GROEP_5_WZ -> other == GROEP_5
+        GROEP_6_WZ -> other == GROEP_6
+        GROEP_7_WZ -> other == GROEP_7
+        GROEP_8_WZ -> other == GROEP_8
+        else -> false
+    }
+
     override fun toString() = title
 }
 
@@ -101,12 +120,12 @@ enum class DefaultAgeGroup(
          *
          * E.g. `6` for `Minioren 6`.
          */
-        groupNumber: Int,
+        val groupNumber: Int,
 
         /**
          * On what simple age group the default age group is based.
          */
-        simple: SimpleAgeGroup
+        val simple: SimpleAgeGroup
 
 ) : AgeGroup {
 
@@ -149,6 +168,8 @@ enum class DefaultAgeGroup(
     override val categoryName = simple.categoryName
     override val id = name
 
+    override fun isJointCategory(other: AgeGroup) = simple == other
+
     override fun toString() = title
 }
 
@@ -189,5 +210,10 @@ interface AgeGroup {
      * See [categoryName].
      */
     operator fun get(category: Category) = categoryName(category)
+
+    /**
+     * `true` if both age groups are seen the same, `false` otherwise.
+     */
+    fun isJointCategory(other: AgeGroup): Boolean
 }
 

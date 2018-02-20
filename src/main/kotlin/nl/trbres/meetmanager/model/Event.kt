@@ -51,10 +51,17 @@ data class Event(
      *
      * The list has the result in order.
      */
-    fun swimResults(convertTo: Int? = null) = heats.flatMap {
-        val factor = if (convertTo == null) 1f else convertTo.toFloat() / distance.metres.toFloat()
-        it.swimResults(factor)
-    }.sorted()
+    fun swimResults(convertTo: Int? = null): List<SwimResult> {
+        val results = heats.flatMap {
+            val factor = if (convertTo == null) 1f else convertTo.toFloat() / distance.metres.toFloat()
+            it.swimResults(factor)
+        }
+
+        val regular = results.asSequence().filter { it.status == null }.sorted().toList()
+        val didNotFinish = results.asSequence().filter { it.status != null }.sortedBy { it.swimmer.name }.toList()
+
+        return regular + didNotFinish
+    }
 
     override fun toString() = "${ages.first()[category]} ${ages.joinToString(",")}, $distance $stroke"
 }

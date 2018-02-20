@@ -66,7 +66,24 @@ data class Meet(
             collected.add(CollectedResult(swimmer, events, results, total))
         }
 
-        return collected.sorted()
+        // Rank people with more distances higher.
+        val maxDistances = collected.asSequence()
+                .map { it.results.values.count { it != null && it.status == null } }
+                .max() ?: 0
+
+        val classes = arrayOfNulls<MutableList<CollectedResult>>(maxDistances + 1)
+        for (i in classes.indices) {
+            classes[i] = collected.asSequence()
+                    .filter { it.results.values.count { it != null && it.status == null } == i }
+                    .toMutableList()
+        }
+        classes.forEach { it!!.sort() }
+
+        val result = ArrayList<CollectedResult>()
+        for (i in classes.indices.reversed()) {
+            result.addAll(classes[i]!!)
+        }
+        return result
     }
 }
 

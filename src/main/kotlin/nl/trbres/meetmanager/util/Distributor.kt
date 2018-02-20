@@ -13,7 +13,7 @@ open class Distributor(private val meet: Meet) {
 
     private fun laneOrder(): List<Int> {
         val lanes = meet.lanes
-        val middleLane = lanes.start + lanes.size / 2
+        val middleLane = (lanes.start + lanes.size) / 2
         val left = (middleLane downTo lanes.start).toList()
         val right = ((middleLane + 1)..lanes.endInclusive).toList()
 

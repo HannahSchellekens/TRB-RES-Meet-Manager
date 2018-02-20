@@ -370,7 +370,7 @@ open class Schedule(val main: MainView) : BorderPane() {
         val index = items.indexOf(current)
         val dialog = ChooseSwimmerDialog(
                 main.currentWindow,
-                "Kies een zwemmer voor Programma $eventNumber, Serie $heatNumber, Baan ${current.lane}"
+                customMessage = "Kies een zwemmer voor Programma $eventNumber, Serie $heatNumber, Baan ${current.lane}"
         )
 
         dialog.showAndWait().ifPresent {

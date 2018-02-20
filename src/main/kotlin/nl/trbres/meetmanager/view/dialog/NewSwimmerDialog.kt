@@ -12,22 +12,26 @@ import nl.trbres.meetmanager.model.AgeGroup
 import nl.trbres.meetmanager.model.Category
 import nl.trbres.meetmanager.model.Club
 import nl.trbres.meetmanager.model.Swimmer
+import nl.trbres.meetmanager.util.firstUpper
 import nl.trbres.meetmanager.util.isNull
 import tornadofx.*
 
 /**
  * @author Ruben Schellekens
  */
-open class NewSwimmerDialog(ownerWindow: Window?) : Dialog<Swimmer>() {
+open class NewSwimmerDialog(protected val ownerWindow: Window?) : Dialog<Swimmer>() {
 
-    private lateinit var txtName: TextField
-    private lateinit var cboxAgeGroup: ComboBox<AgeGroup>
-    private lateinit var cboxCategory: ComboBox<Category>
-    private lateinit var cboxClub: ComboBox<Club>
+    protected lateinit var txtName: TextField
+    protected lateinit var cboxAgeGroup: ComboBox<AgeGroup>
+    protected lateinit var cboxCategory: ComboBox<Category>
+    protected lateinit var cboxClub: ComboBox<Club>
+    protected lateinit var fieldset: Fieldset
+
+    protected open val swimmerText: String = "zwemmer"
 
     init {
-        title = "Nieuwe zwemmer"
-        headerText = "Nieuwe zwemmer toevoegen"
+        title = "${swimmerText.firstUpper()} toevoegen"
+        headerText = "${swimmerText.firstUpper()} toevoegen"
         dialogPane.minWidth = 350.0
         initOwner(ownerWindow)
 
@@ -49,8 +53,8 @@ open class NewSwimmerDialog(ownerWindow: Window?) : Dialog<Swimmer>() {
         }
 
         dialogPane.content = form {
-            fieldset {
-                field("Naam zwemmer") {
+            fieldset = fieldset {
+                field("Naam $swimmerText") {
                     txtName = textfield {
                         textProperty().addListener { _ -> validate(okButton) }
                     }

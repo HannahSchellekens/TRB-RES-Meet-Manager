@@ -5,12 +5,14 @@ import javafx.scene.layout.BorderPane
 import nl.trbres.meetmanager.Icons
 import nl.trbres.meetmanager.State
 import nl.trbres.meetmanager.model.Category
+import nl.trbres.meetmanager.model.Relay
 import nl.trbres.meetmanager.model.SimpleAgeGroup
 import nl.trbres.meetmanager.model.Swimmer
 import nl.trbres.meetmanager.util.fx.icon
 import nl.trbres.meetmanager.util.fx.makeEditable
 import nl.trbres.meetmanager.util.nestedDelete
 import nl.trbres.meetmanager.util.nestedUpdate
+import nl.trbres.meetmanager.view.dialog.NewRelayDialog
 import nl.trbres.meetmanager.view.dialog.NewSwimmerDialog
 import tornadofx.*
 
@@ -56,7 +58,8 @@ open class Contestants(val main: MainView) : BorderPane() {
                 }
 
                 contextmenu {
-                    item("Toevoegen").icon(Icons.add).action(::addSwimmer)
+                    item("Estaffette toevoegen").icon(Icons.add).action(::addRelay)
+                    item("Zwemmer toevoegen").icon(Icons.add).action(::addSwimmer)
                     separator()
                     item("Verwijderen").icon(Icons.remove).action(::deleteSwimmer)
                 }
@@ -78,6 +81,18 @@ open class Contestants(val main: MainView) : BorderPane() {
     private fun addSwimmer() {
         NewSwimmerDialog(main.currentWindow).showAndWait().ifPresent {
             State.meet?.swimmers?.add(it) ?: return@ifPresent
+            tvwContestants.items.add(it)
+        }
+    }
+
+    /**
+     * Prompts the user for a new relay and adds it to the tableview and data model.
+     */
+    private fun addRelay() {
+        NewRelayDialog(main.currentWindow).showAndWait().ifPresent {
+            val meet = State.meet ?: return@ifPresent
+            val relay = Relay(it.name, it.age, it.category, it.club)
+            meet.swimmers.add(relay)
             tvwContestants.items.add(it)
         }
     }

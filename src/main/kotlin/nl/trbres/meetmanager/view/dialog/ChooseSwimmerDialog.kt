@@ -8,6 +8,7 @@ import javafx.scene.control.TextField
 import javafx.stage.Window
 import javafx.util.Callback
 import nl.trbres.meetmanager.State
+import nl.trbres.meetmanager.model.Relay
 import nl.trbres.meetmanager.model.Swimmer
 import tornadofx.*
 import java.util.*
@@ -17,6 +18,7 @@ import java.util.*
  */
 open class ChooseSwimmerDialog(
         ownerWindow: Window?,
+        private val relay: Boolean = false,
         customMessage: String = "Kies een zwemmer."
 ) : Dialog<ChooseSwimmerDialogResult>() {
 
@@ -70,7 +72,7 @@ open class ChooseSwimmerDialog(
                     }
 
                     onSelectionChange { validate(okButton) }
-                    items = (State.meet?.swimmers ?: emptyList<Swimmer>()).observable()
+                    items = allSwimmers().observable()
 
                     onDoubleClick {
                         if (validate(okButton)) {
@@ -91,10 +93,11 @@ open class ChooseSwimmerDialog(
      * Updates search.
      */
     private fun search() {
-        val swimmers = ArrayList(State.meet?.swimmers ?: emptyList())
+        val swimmers = ArrayList(allSwimmers())
         if (!txtSearch.text.isNullOrBlank()) {
             swimmers.removeIf {
-                !it.name.toLowerCase().contains(txtSearch.text.toLowerCase())
+                val query = txtSearch.text.toLowerCase()
+                !it.name.toLowerCase().contains(query) && !(it.club?.name?.toLowerCase()?.contains(query) ?: false)
             }
         }
         tvwSwimmers.items = swimmers.observable()
@@ -108,6 +111,14 @@ open class ChooseSwimmerDialog(
     private fun validate(okButton: Node): Boolean {
         okButton.isDisable = tvwSwimmers.selectedItem == null
         return !okButton.isDisable
+    }
+
+    /**
+     * Picks all selectable swimmers.
+     */
+    private fun allSwimmers(): List<Swimmer> {
+        val meet = State.meet ?: return emptyList()
+        return meet.swimmers.filter { (it is Relay) == relay }
     }
 }
 

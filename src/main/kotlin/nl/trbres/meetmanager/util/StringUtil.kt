@@ -23,3 +23,12 @@ fun String.isNaturalNumber(): Boolean {
     val range = '0'..'9'
     return toCharArray().all { it in range }
 }
+
+/**
+ * Capitalises the first character of a string.
+ */
+fun String.firstUpper(): String {
+    if (this == "") return ""
+    val first = substring(0, 1)
+    return first.toUpperCase() + substring(1)
+}

@@ -7,14 +7,13 @@ import javafx.scene.layout.BorderPane
 import nl.trbres.meetmanager.Icons
 import nl.trbres.meetmanager.State
 import nl.trbres.meetmanager.export.EventResultPrinter
-import nl.trbres.meetmanager.model.Event
-import nl.trbres.meetmanager.model.Heat
-import nl.trbres.meetmanager.model.Swimmer
+import nl.trbres.meetmanager.model.*
 import nl.trbres.meetmanager.time.Time
 import nl.trbres.meetmanager.time.TimeConverter
 import nl.trbres.meetmanager.util.fx.icon
 import nl.trbres.meetmanager.util.fx.styleClass
 import nl.trbres.meetmanager.util.indexRange
+import nl.trbres.meetmanager.view.dialog.ChooseDisqualificationCodeDialog
 import nl.trbres.meetmanager.view.dialog.ChooseSwimmerDialog
 import nl.trbres.meetmanager.view.dialog.EventDialog
 import tornadofx.*
@@ -89,6 +88,16 @@ open class Schedule(val main: MainView) : BorderPane() {
                                             isSortable = false
                                         }.makeEditable(TimeConverter()).setOnEditCommit {
                                             updateTime(it.newValue, selectedItem ?: return@setOnEditCommit)
+                                        }
+
+                                        // Diskwalificatie
+                                        column("Diskwalificatie", ScheduleEntry::disqualification) {
+                                            prefWidthProperty().bind(this@tableview.widthProperty().multiply(0.1))
+                                            isSortable = false
+                                        }
+
+                                        contextmenu {
+                                            item("Diskwalificatie").action { replaceDisqualification() }
                                         }
 
                                         items.addAll(heat.toScheduleEntries())
@@ -363,6 +372,37 @@ open class Schedule(val main: MainView) : BorderPane() {
     }
 
     /**
+     * Adds/Replaces the disqualification from the selected entry.
+     */
+    private fun TableView<ScheduleEntry>.replaceDisqualification() {
+        val current = selectedItem ?: return
+        val dialog = ChooseDisqualificationCodeDialog(main.currentWindow).showAndWait()
+
+        // Add
+        if (dialog.isPresent) {
+            current.disqualification = Disqualification(dialog.get(), current.swimmer?.id)
+        }
+        // Remove
+        else current.disqualification = null
+
+        // Update heat.
+        val heat = current.heat
+        val lane = current.lane
+        val dis = current.disqualification
+
+        if (dis == null) {
+            heat.disqualifications.remove(lane)
+            heat.statusses.remove(lane)
+        }
+        else {
+            heat.disqualifications[lane] = dis
+            heat.statusses[lane] = SpecialResult(SpecialResultType.DISQUALIFIED)
+        }
+
+        refresh()
+    }
+
+    /**
      * Asks the user for a swimmer to replace the selected swimmer with.
      */
     private fun TableView<ScheduleEntry>.replaceSwimmer(eventNumber: Int, heatNumber: Int) {
@@ -385,7 +425,7 @@ open class Schedule(val main: MainView) : BorderPane() {
                     results.remove(current.lane)
                     statusses.remove(current.lane)
                 }
-                items[index] = ScheduleEntry(current.lane, "<Leeg>", "", Time(0, 0), null, current.heat)
+                items[index] = ScheduleEntry(current.lane, "<Leeg>", "", Time(0, 0), null, current.heat, null)
                 return@ifPresent
             }
 
@@ -403,7 +443,7 @@ open class Schedule(val main: MainView) : BorderPane() {
                 results.remove(current.lane)
                 statusses.remove(current.lane)
             }
-            items[index] = ScheduleEntry(current.lane, swimmer.name, swimmer.club?.name ?: "", Time(0, 0), swimmer, current.heat)
+            items[index] = ScheduleEntry(current.lane, swimmer.name, swimmer.club?.name ?: "", Time(0, 0), swimmer, current.heat, null)
         }
     }
 
@@ -427,8 +467,9 @@ open class Schedule(val main: MainView) : BorderPane() {
         for (lane in State.meet!!.lanes) {
             val swimmer = lanes[lane]
             val time = results[lane] ?: Time(0, 0)
+            val dis = disqualifications[lane]
             list += ScheduleEntry(
-                    lane, swimmer?.name ?: "<Leeg>", swimmer?.club?.name ?: "", time, swimmer, this
+                    lane, swimmer?.name ?: "<Leeg>", swimmer?.club?.name ?: "", time, swimmer, this, dis
             )
         }
 
@@ -439,4 +480,12 @@ open class Schedule(val main: MainView) : BorderPane() {
 /**
  * @author Ruben Schellekens
  */
-data class ScheduleEntry(var lane: Int, var name: String, var club: String, var time: Time, var swimmer: Swimmer?, var heat: Heat)
+data class ScheduleEntry(
+        var lane: Int,
+        var name: String,
+        var club: String,
+        var time: Time,
+        var swimmer: Swimmer?,
+        var heat: Heat,
+        var disqualification: Disqualification?
+)

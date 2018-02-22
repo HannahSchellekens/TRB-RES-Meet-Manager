@@ -115,7 +115,7 @@ class NewMeetDialog : Fragment() {
 
         val numbers = txtLanes.text.split("-")
         val laneRange = numbers[0].toInt()..numbers[1].toInt()
-        meet.value = Meet(txtName.text, dateDate.value.toDate(), laneRange, txtLocation.text, cboxAgeSet.selectedItem!!)
+        meet.value = Meet(txtName.text, dateDate.value.toDate(), laneRange, txtLocation.text, ageSet = cboxAgeSet.selectedItem!!)
 
         currentStage?.close()
     }

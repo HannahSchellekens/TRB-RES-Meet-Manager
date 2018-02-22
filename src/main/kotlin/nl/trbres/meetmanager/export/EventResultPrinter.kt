@@ -8,6 +8,7 @@ import javafx.stage.Window
 import nl.trbres.meetmanager.State
 import nl.trbres.meetmanager.UserSettings
 import nl.trbres.meetmanager.model.Event
+import nl.trbres.meetmanager.model.SwimResult
 import nl.trbres.meetmanager.util.*
 import java.io.File
 
@@ -57,11 +58,13 @@ object EventResultPrinter {
                 spacing(4f)
 
                 // Result table.
-                val ranks = event.ranks()
-                val names = event.names()
-                val clubs = event.clubs()
-                val ages = event.ages()
-                val results = event.results()
+                val swimResults: List<SwimResult> = event.swimResults()
+                val ranks = swimResults.ranks()
+                val names = swimResults.names()
+                val clubs = swimResults.clubs()
+                val ages = swimResults.ages()
+                val results = swimResults.results()
+                val messages = swimResults.messages()
 
                 table(5) {
                     widths(3, 20, 20, 10, 6)
@@ -78,6 +81,13 @@ object EventResultPrinter {
                         cell(newParagraph(clubs[i]))
                         cell(newParagraph(ages[i]))
                         cell(newParagraph(results[i], Fonts.bold), Element.ALIGN_RIGHT)
+
+                        // Special message?
+                        val message = messages[i]
+                        if (message != null) {
+                            cell(newParagraph(""))
+                            cell(newParagraph(message, Fonts.italic)) { colspan = 4 }
+                        }
                     }
                 }
             }
@@ -89,30 +99,40 @@ object EventResultPrinter {
     /**
      * Generates all rank numbers/statusses in order.
      */
-    private fun Event.ranks() = swimResults().mapIndexed { i, result ->
+    private fun List<SwimResult>.ranks() = mapIndexed { i, result ->
         result.status?.type?.abbreviation ?: "${i + 1}."
     }
 
     /**
      * Generates all the names that should be put on the event list (in order).
      */
-    private fun Event.names() = swimResults().map { it.swimmer.name }
+    private fun List<SwimResult>.names() = map { it.swimmer.name }
 
     /**
      * Generates all club names in order.
      */
-    private fun Event.clubs() = swimResults().map { it.swimmer.club?.name ?: "" }
+    private fun List<SwimResult>.clubs() = map { it.swimmer.club?.name ?: "" }
 
     /**
      * Generates all ages in order.
      */
-    private fun Event.ages() = swimResults().map { it.swimmer.age.readableName }
+    private fun List<SwimResult>.ages() = map { it.swimmer.age.readableName }
 
     /**
      * Generates all results in order.
      */
-    private fun Event.results() = swimResults().map {
-        if (it.status != null) "" else it.result.toString()
+    private fun List<SwimResult>.results() = map {
+        if (it.result.isZero()) "" else it.result.toString()
+    }
+
+    /**
+     * Generates all special messages of the results in order.
+     */
+    private fun List<SwimResult>.messages(): List<String?> = map {
+        if (it.disqualification != null) {
+            it.disqualification.fullMessage()
+        }
+        else null
     }
 
     /**

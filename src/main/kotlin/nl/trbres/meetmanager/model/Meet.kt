@@ -29,6 +29,11 @@ data class Meet(
         var location: String,
 
         /**
+         * The amount of hundredths somebody gets as penalty for getting a disqualification.
+         */
+        var penalty: Int = 0,
+
+        /**
          * The collection of age groups.
          */
         var ageSet: AgeSet = AgeSet.SIMPLE,

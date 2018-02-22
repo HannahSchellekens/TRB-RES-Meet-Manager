@@ -19,6 +19,7 @@ open class General(val main: MainView) : BorderPane() {
     lateinit var txtLocation: TextField
     lateinit var dateDate: DatePicker
     lateinit var txtLanes: TextField
+    lateinit var txtPenalty: TextField
 
     init {
         center {
@@ -46,9 +47,10 @@ open class General(val main: MainView) : BorderPane() {
                         }
                     }
                     field("Banen in gebruik (\"x-y\")") {
+                        val validation = Regex("\\d+-\\d+")
                         txtLanes = textfield().validate(
                                 {
-                                    if (!text.matches(Regex("\\d+-\\d+"))) {
+                                    if (!text.matches(validation)) {
                                         return@validate false
                                     }
                                     val numbers = text.split("-")
@@ -57,6 +59,17 @@ open class General(val main: MainView) : BorderPane() {
                                 "De gebruikte banen hebben een verkeerd formaat.\nVerwacht: 'n-m' waar n & m baannummers zijn (n <= m).\nVoorbeeld: 1-8 voor banen 1 t/m 8.",
                                 { State.meet?.lanes = text.toIntRange() },
                                 { val range = State.meet?.lanes ?: return@validate; text = "${range.start}-${range.endInclusive}" }
+                        )
+                    }
+                    field("Straf voor diskwalificatie (seconden)") {
+                        val validation = Regex("\\d*[.]?\\d\\d?")
+                        txtPenalty = textfield().validate(
+                                {
+                                        return@validate text.matches(validation)
+                                },
+                                "Invoer is een ongeldig aantal seconden (hondersten scheiden met een punt).",
+                                { State.meet?.penalty = (text.toFloat() * 100).toInt() },
+                                { text = State.meet?.penalty?.toString() ?: "" }
                         )
                     }
                 }
@@ -72,5 +85,6 @@ open class General(val main: MainView) : BorderPane() {
         txtLocation.text = meet.location
         dateDate.value = meet.date.toLocalDate()
         txtLanes.text = "${meet.lanes.first}-${meet.lanes.endInclusive}"
+        txtPenalty.text = "%.2f".format(meet.penalty.toFloat() / 100f)
     }
 }

@@ -57,10 +57,24 @@ data class Event(
             it.swimResults(factor)
         }
 
-        val regular = results.asSequence().filter { it.status == null }.sorted().toList()
-        val didNotFinish = results.asSequence().filter { it.status != null }.sortedBy { it.swimmer.name }.toList()
+        val regular = results.asSequence()
+                .filter { it.status == null }
+                .sorted()
+                .toList()
+        val disqualified = results.asSequence()
+                .filter { it.status?.type == SpecialResultType.DISQUALIFIED }
+                .sortedBy { it.result }
+                .toList()
+        val didNotStart = results.asSequence()
+                .filter { it.status?.type == SpecialResultType.DID_NOT_START }
+                .sortedBy { it.swimmer.name }
+                .toList()
+        val didNotStartWithoutCancellation = results.asSequence()
+                .filter { it.status?.type == SpecialResultType.DID_NOT_START_WITHOUT_CANCELLATION }
+                .sortedBy { it.swimmer.name }
+                .toList()
 
-        return regular + didNotFinish
+        return regular + disqualified + didNotStart + didNotStartWithoutCancellation
     }
 
     override fun toString() = "${ages.first()[category]} ${ages.joinToString(",")}, $distance $stroke"
@@ -69,7 +83,12 @@ data class Event(
 /**
  * @author Ruben Schellekens
  */
-data class SwimResult(val swimmer: Swimmer, val result: Time, val status: SpecialResult?) : Comparable<SwimResult> {
+data class SwimResult(
+        val swimmer: Swimmer,
+        val result: Time,
+        val status: SpecialResult?,
+        val disqualification: Disqualification?
+) : Comparable<SwimResult> {
 
     override fun compareTo(other: SwimResult): Int {
         return result.compareTo(other.result)

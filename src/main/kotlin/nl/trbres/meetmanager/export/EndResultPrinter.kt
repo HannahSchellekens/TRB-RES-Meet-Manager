@@ -75,7 +75,7 @@ object EndResultPrinter {
 
                 table(3 + 2 * n + 1) {
                     widths(*(floatArrayOf(3.93f, 18f, 18f) + columns))
-                    val leading = 0.85f
+                    val leading = 0.875f
 
                     cell(newParagraph("rang", Fonts.small), Element.ALIGN_RIGHT)
                     cell(newParagraph("naam", Fonts.small))

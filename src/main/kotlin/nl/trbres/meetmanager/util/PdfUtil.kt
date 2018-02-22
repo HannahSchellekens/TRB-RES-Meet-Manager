@@ -43,6 +43,13 @@ fun Document.write(mutations: Document.() -> Unit) {
 }
 
 /**
+ * Set the orientation of the document to landscape.
+ */
+fun Document.landscape() {
+    pageSize = PageSize.A4.rotate()
+}
+
+/**
  * Adds a paragraph to the document.
  */
 fun Document.paragraph(text: String = "", font: Font? = DEFAULT_FONT, leading: Float? = DEFAULT_LEADING,
@@ -203,11 +210,15 @@ fun PdfPTable.separator(spaceBefore: Float = 8f, mutations: LineSeparator.() -> 
  * Adds a PdfPCell to a PdfPTable.
  */
 fun PdfPTable.cell(phrase: Phrase, alignment: Int = Element.ALIGN_LEFT,
-                   border: Int = Rectangle.NO_BORDER, mutations: PdfPCell.() -> Unit = {}): PdfPCell {
+                   border: Int = Rectangle.NO_BORDER, fixedHeight: Float? = null,
+                   mutations: PdfPCell.() -> Unit = {}): PdfPCell {
     val cell = PdfPCell(phrase)
     cell.border = border
     cell.horizontalAlignment = alignment
     cell.paddingRight = 6f
+    if (fixedHeight != null) {
+        cell.fixedHeight = fixedHeight
+    }
     cell.mutations()
     addCell(cell)
     return cell

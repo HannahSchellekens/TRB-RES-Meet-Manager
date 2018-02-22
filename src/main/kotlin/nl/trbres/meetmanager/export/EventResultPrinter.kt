@@ -68,7 +68,7 @@ object EventResultPrinter {
 
                 table(5) {
                     widths(3, 20, 20, 10, 6)
-                    val leading = 0.85f
+                    val leading = 0.875f
 
                     cell(newParagraph("rang", Fonts.small), Element.ALIGN_RIGHT)
                     cell(newParagraph("naam", Fonts.small))

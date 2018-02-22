@@ -12,6 +12,7 @@ import nl.trbres.meetmanager.UserSettings
 import nl.trbres.meetmanager.UserSettings.Key.lastDirectory
 import nl.trbres.meetmanager.export.BookletPrinter
 import nl.trbres.meetmanager.export.EndResultPrinter
+import nl.trbres.meetmanager.export.ResultCardPrinter
 import nl.trbres.meetmanager.import.SwimtrackImporter
 import nl.trbres.meetmanager.model.Club
 import nl.trbres.meetmanager.model.Meet
@@ -56,6 +57,7 @@ open class MainView : View() {
                     separator()
                     item("Programmaboekje genereren").icon(Icons.pdf).action(::printBooklet)
                     item("Gepersonaliseerd programma genereren").icon(Icons.pdf).action(::printPersonalisedBooklet)
+                    item("Tijdwaarnemingskaartjes genereren").icon(Icons.pdf).action(::printResultCards)
                 }
                 menuImport = menu("Importeren") {
                     item("Verenigingen importeren").icon(Icons.download).action(::importClubs)
@@ -124,6 +126,14 @@ open class MainView : View() {
         dialog.showAndWait().ifPresent {
             BookletPrinter.printBooklet(currentWindow, highlight = it)
         }
+    }
+
+    /**
+     * Generates a PDF of all result cards.
+     */
+    fun printResultCards() {
+        State.meet ?: return
+        ResultCardPrinter.printCards(currentWindow)
     }
 
     /**

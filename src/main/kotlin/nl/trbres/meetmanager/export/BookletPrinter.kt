@@ -34,7 +34,7 @@ object BookletPrinter {
 
         // Make document.
         document(pdfFile) { writer ->
-            setMargins(64f, 64f, 50f, 64f)
+            setMargins(64f, 64f, 50f, 50f)
 
             writer.pageEvent = PdfBookletHeaderAndFooter
 
@@ -101,6 +101,7 @@ object BookletPrinter {
 
         table(5) {
             widths(.041f, .306f, .306f, .185f, .162f)
+            val leading = 0.875f
 
             defaultCell.paddingBottom = 0f
 
@@ -110,24 +111,37 @@ object BookletPrinter {
                 }
                 else Fonts.regular
 
-                cell(newParagraph(lane.toString(), font), Element.ALIGN_RIGHT)
-                cell(newParagraph(swimmer.name, font))
-                cell(newParagraph(swimmer.club?.toString() ?: "", font))
-                cell(newParagraph(swimmer.age.readableName, font))
-                cell(newParagraph("_____________"))
+                cell(newParagraph(lane.toString(), font), Element.ALIGN_RIGHT) {
+                    setLeading(0f, leading)
+                }
+                cell(newParagraph(swimmer.name, font)) {
+                    setLeading(0f, leading)
+                }
+                cell(newParagraph(swimmer.club?.toString() ?: "", font)) {
+                    setLeading(0f, leading)
+                }
+                cell(newParagraph(swimmer.age.readableName, font)) {
+                    setLeading(0f, leading)
+                }
+                cell(newParagraph("_____________")) {
+                    setLeading(0f, leading)
+                }
 
                 // When relay team, print members.
                 if (swimmer is Relay) {
-                    cell(newParagraph(""))
+                    cell(newParagraph("")) {
+                        setLeading(0f, leading)
+                    }
                     cell(newParagraph(swimmer.members.joinToString(", ") { it.name }, Fonts.small)) {
                         paddingLeft = 12f
                         colspan = 4
+                        setLeading(0f, leading)
                     }
                 }
             }
         }
 
-        setSpacingAfter(if (heatNumber == heatAmount) 8f else 2f)
+        setSpacingAfter(if (heatNumber == heatAmount) 6f else 0f)
         keepTogether = true
     }
 

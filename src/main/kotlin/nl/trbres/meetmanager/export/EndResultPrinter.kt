@@ -75,6 +75,7 @@ object EndResultPrinter {
 
                 table(3 + 2 * n + 1) {
                     widths(*(floatArrayOf(3.93f, 18f, 18f) + columns))
+                    val leading = 0.85f
 
                     cell(newParagraph("rang", Fonts.small), Element.ALIGN_RIGHT)
                     cell(newParagraph("naam", Fonts.small))
@@ -86,14 +87,26 @@ object EndResultPrinter {
                     cell(newParagraph("totaal", Fonts.small), Element.ALIGN_RIGHT)
 
                     for (swimmerIndex in 0 until names.size) {
-                        cell(newParagraph(ranks[swimmerIndex]), Element.ALIGN_RIGHT)
-                        cell(newParagraph(names[swimmerIndex]))
-                        cell(newParagraph(clubs[swimmerIndex]))
-                        for (eventIndex in 0 until n) {
-                            cell(newParagraph(resultTimes[swimmerIndex][eventIndex]!!), Element.ALIGN_RIGHT)
-                            cell(newParagraph(resultRanks[swimmerIndex][eventIndex]!!))
+                        cell(newParagraph(ranks[swimmerIndex]), Element.ALIGN_RIGHT) {
+                            setLeading(1f, leading)
                         }
-                        cell(newParagraph(totals[swimmerIndex], Fonts.bold), Element.ALIGN_RIGHT)
+                        cell(newParagraph(names[swimmerIndex])) {
+                            setLeading(1f, leading)
+                        }
+                        cell(newParagraph(clubs[swimmerIndex])) {
+                            setLeading(1f, leading)
+                        }
+                        for (eventIndex in 0 until n) {
+                            cell(newParagraph(resultTimes[swimmerIndex][eventIndex]!!), Element.ALIGN_RIGHT) {
+                                setLeading(1f, leading)
+                            }
+                            cell(newParagraph(resultRanks[swimmerIndex][eventIndex]!!)) {
+                                setLeading(1f, leading)
+                            }
+                        }
+                        cell(newParagraph(totals[swimmerIndex], Fonts.bold), Element.ALIGN_RIGHT) {
+                            setLeading(1f, leading)
+                        }
                     }
                 }
             }

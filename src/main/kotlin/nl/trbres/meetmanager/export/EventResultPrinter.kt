@@ -68,6 +68,7 @@ object EventResultPrinter {
 
                 table(5) {
                     widths(3, 20, 20, 10, 6)
+                    val leading = 0.85f
 
                     cell(newParagraph("rang", Fonts.small), Element.ALIGN_RIGHT)
                     cell(newParagraph("naam", Fonts.small))
@@ -76,17 +77,30 @@ object EventResultPrinter {
                     cell(newParagraph("eindtijd", Fonts.small), Element.ALIGN_RIGHT)
 
                     for (i in 0 until names.size) {
-                        cell(newParagraph(ranks[i]), Element.ALIGN_RIGHT)
-                        cell(newParagraph(names[i]))
-                        cell(newParagraph(clubs[i]))
-                        cell(newParagraph(ages[i]))
-                        cell(newParagraph(results[i], Fonts.bold), Element.ALIGN_RIGHT)
+                        cell(newParagraph(ranks[i]), Element.ALIGN_RIGHT) {
+                            setLeading(0f, leading)
+                        }
+                        cell(newParagraph(names[i])) {
+                            setLeading(0f, leading)
+                        }
+                        cell(newParagraph(clubs[i])) {
+                            setLeading(0f, leading)
+                        }
+                        cell(newParagraph(ages[i])) {
+                            setLeading(0f, leading)
+                        }
+                        cell(newParagraph(results[i], Fonts.bold), Element.ALIGN_RIGHT) {
+                            setLeading(0f, leading)
+                        }
 
                         // Special message?
                         val message = messages[i]
                         if (message != null) {
                             cell(newParagraph(""))
-                            cell(newParagraph(message, Fonts.italic)) { colspan = 4 }
+                            cell(newParagraph(message, Fonts.italic)) {
+                                colspan = 4
+                                setLeading(0f, leading)
+                            }
                         }
                     }
                 }

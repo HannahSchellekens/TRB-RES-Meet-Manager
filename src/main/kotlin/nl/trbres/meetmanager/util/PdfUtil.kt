@@ -209,7 +209,6 @@ fun PdfPTable.cell(phrase: Phrase, alignment: Int = Element.ALIGN_LEFT,
     cell.horizontalAlignment = alignment
     cell.paddingRight = 6f
     cell.mutations()
-    cell.mutations()
     addCell(cell)
     return cell
 }

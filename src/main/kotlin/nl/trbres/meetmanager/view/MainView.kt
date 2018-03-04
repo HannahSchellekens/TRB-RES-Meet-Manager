@@ -295,7 +295,10 @@ open class MainView : View() {
             title = "Wedstrijdbestand opslaan..."
             extensionFilters += FileChooser.ExtensionFilter("Wedstrijden", "*.meet")
             UserSettings[lastDirectory].whenNonNull {
-                initialDirectory = it.file()
+                try {
+                    initialDirectory = it.file()
+                }
+                catch (ignored: Exception) {}
             }
         }.showSaveDialog(currentStage) ?: return
         State.saveFile = file
@@ -312,7 +315,10 @@ open class MainView : View() {
             title = "Wedstrijdbestand openen..."
             extensionFilters += FileChooser.ExtensionFilter("Wedstrijden", "*.meet")
             UserSettings[lastDirectory].whenNonNull {
-                initialDirectory = it.file()
+                try {
+                    initialDirectory = it.file()
+                }
+                catch (ignored: Exception) { }
             }
         }.showOpenDialog(currentWindow) ?: return
         UserSettings[lastDirectory] = file.parentFile.absolutePath

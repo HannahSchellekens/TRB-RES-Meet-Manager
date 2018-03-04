@@ -213,7 +213,10 @@ object ResultCardPrinter {
             initialFileName = "ResultCards_$meetName.pdf"
             extensionFilters += FileChooser.ExtensionFilter("PDF Bestanden", "*.pdf")
             UserSettings[UserSettings.Key.lastExportDirectory].whenNonNull {
-                initialDirectory = it.file()
+                try {
+                    initialDirectory = it.file()
+                }
+                catch (ignored: Exception) { }
             }
         }.showSaveDialog(owner) ?: return null
 

@@ -165,7 +165,10 @@ object BookletPrinter {
             initialFileName = "Schedule_$meetName$clubSuffix.pdf"
             extensionFilters += FileChooser.ExtensionFilter("PDF Bestanden", "*.pdf")
             UserSettings[UserSettings.Key.lastScheduleDirectory].whenNonNull {
-                initialDirectory = it.file()
+                try {
+                    initialDirectory = it.file()
+                }
+                catch (ignored: Exception) { }
             }
         }.showSaveDialog(owner) ?: return null
 

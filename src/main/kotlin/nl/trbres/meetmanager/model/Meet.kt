@@ -79,7 +79,7 @@ data class Meet(
         val classes = arrayOfNulls<MutableList<CollectedResult>>(maxDistances + 1)
         for (i in classes.indices) {
             classes[i] = collected.asSequence()
-                    .filter { it.results.values.count { it != null && it.status == null } == i }
+                    .filter { it.results.values.count { it != null && (it.status == null || it.disqualification != null) } == i }
                     .toMutableList()
         }
         classes.forEach { it!!.sort() }

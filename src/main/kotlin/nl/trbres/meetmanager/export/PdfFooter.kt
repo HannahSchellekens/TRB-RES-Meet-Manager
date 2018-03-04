@@ -26,17 +26,17 @@ object PdfFooter : PdfPageEventHelper() {
         separator.drawLine(cb,
                 document.leftMargin(),
                 document.right(),
-                document.bottom() + 8
+                document.bottom() + 8 - 14
         )
         ColumnText.showTextAligned(cb, Element.ALIGN_LEFT,
                 club,
                 document.leftMargin(),
-                document.bottom() - 4, 0f
+                document.bottom() - 4 - 14, 0f
         )
         ColumnText.showTextAligned(cb, Element.ALIGN_RIGHT,
                 timestamp,
                 document.right(),
-                document.bottom() - 4, 0f
+                document.bottom() - 4 - 14, 0f
         )
     }
 }

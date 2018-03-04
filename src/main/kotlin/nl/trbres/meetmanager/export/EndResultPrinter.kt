@@ -32,7 +32,7 @@ object EndResultPrinter {
 
         // Make document.
         document(pdfFile) { writer ->
-            setMargins(64f, 64f, 40f, 40f)
+            setMargins(64f, 64f, 40f, 54f)
             pageSize = PageSize.A4.rotate()
 
             writer.pageEvent = PdfFooter

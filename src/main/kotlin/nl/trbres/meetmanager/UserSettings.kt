@@ -17,6 +17,7 @@ object UserSettings {
         const val lastDirectory = "last-directory"
         const val lastExportDirectory = "last-export-directory"
         const val lastScheduleDirectory = "last-schedule-directory"
+        const val autoOpenPdfFiles = "auto-open-pdf-files"
     }
 
     private val filePath = "$APP_DATA_HOME/user.settings"

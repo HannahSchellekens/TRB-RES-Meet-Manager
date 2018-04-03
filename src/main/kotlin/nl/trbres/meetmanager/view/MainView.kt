@@ -67,6 +67,15 @@ open class MainView : View() {
                     item("Zwemmers importeren").icon(Icons.download).action(::importSwimmers)
                     isDisable = true
                 }
+                menu("Opties") {
+                    checkmenuitem("PDF bestanden automatisch openen") {
+                        isSelected = UserSettings[UserSettings.Key.autoOpenPdfFiles]?.toBoolean() ?: true
+
+                        selectedProperty().addListener { _ ->
+                            UserSettings[UserSettings.Key.autoOpenPdfFiles] = isSelected.toString()
+                        }
+                    }
+                }
                 menu("Help") {
                     item("Documentatie").icon(Icons.textFile).action { DOCUMENTATION_PAGE.openUrl() }
                     item("GitHub pagina").icon(Icons.link).action { GITHUB_PAGE.openUrl() }

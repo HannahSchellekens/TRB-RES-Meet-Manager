@@ -1,6 +1,7 @@
 package nl.trbres.meetmanager.util
 
 import nl.trbres.meetmanager.MeetManagerApp
+import nl.trbres.meetmanager.UserSettings
 import java.awt.Desktop
 import java.io.File
 
@@ -120,7 +121,12 @@ fun Any?.isNull() = this == null
 fun Any?.isNotNull() = this != null
 
 fun String.file() = File(this)
-fun File.open() = Desktop.getDesktop().open(this)
+fun File.open() {
+    val autoOpen = UserSettings[UserSettings.Key.autoOpenPdfFiles]?.toBoolean() ?: true
+    if (autoOpen) {
+        Desktop.getDesktop().open(this)
+    }
+}
 fun Any?.print() = print(this)
 fun Any?.println() = println(this)
 fun Any?.printf(format: String) = println(String.format(format, this))

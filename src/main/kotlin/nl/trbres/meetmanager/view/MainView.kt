@@ -19,7 +19,10 @@ import nl.trbres.meetmanager.model.Meet
 import nl.trbres.meetmanager.util.*
 import nl.trbres.meetmanager.util.fx.icon
 import nl.trbres.meetmanager.util.fx.openEvent
-import nl.trbres.meetmanager.view.dialog.*
+import nl.trbres.meetmanager.view.dialog.ChooseClubDialog
+import nl.trbres.meetmanager.view.dialog.EndResultDialog
+import nl.trbres.meetmanager.view.dialog.ImportClubsDialog
+import nl.trbres.meetmanager.view.dialog.NewMeetDialog
 import tornadofx.*
 
 /**
@@ -172,7 +175,7 @@ open class MainView : View() {
             }
 
             val events = numbers.map { meet.events[it - 1] }
-            EndResultPrinter.printResults(events, numbers, it.convertTo, currentWindow)
+            EndResultPrinter.printResults(events, numbers, it.filter, it.convertTo, currentWindow)
         }
     }
 

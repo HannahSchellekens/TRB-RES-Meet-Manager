@@ -1,12 +1,13 @@
 package nl.trbres.meetmanager.view.dialog
 
 import javafx.scene.Node
-import javafx.scene.control.ButtonType
-import javafx.scene.control.CheckBox
-import javafx.scene.control.Dialog
-import javafx.scene.control.TextField
+import javafx.scene.control.*
 import javafx.stage.Window
 import javafx.util.Callback
+import nl.trbres.meetmanager.State
+import nl.trbres.meetmanager.filter.AgeGroupFilter
+import nl.trbres.meetmanager.filter.SwimmerFilter
+import nl.trbres.meetmanager.model.AgeGroup
 import nl.trbres.meetmanager.util.isNaturalNumber
 import tornadofx.*
 
@@ -17,7 +18,9 @@ open class EndResultDialog(ownerWindow: Window?) : Dialog<EndResultDialogResult>
 
     private lateinit var txtEvents: TextField
     private lateinit var txtConversion: TextField
-    private lateinit var cboxConvert: CheckBox
+    private lateinit var checkConvert: CheckBox
+    private lateinit var cboxAgeFilter: ComboBox<AgeGroup>
+    private lateinit var checkAgeFilter: CheckBox
 
     init {
         title = "Eindresultaat genereren"
@@ -34,12 +37,18 @@ open class EndResultDialog(ownerWindow: Window?) : Dialog<EndResultDialogResult>
                 return@Callback null
             }
 
+            val filter = if (checkAgeFilter.isSelected) {
+                AgeGroupFilter(cboxAgeFilter.selectedItem!!)
+            }
+            else SwimmerFilter.NO_FILTER
+
             EndResultDialogResult(
                     txtEvents.text,
-                    if (cboxConvert.isSelected) {
+                    if (checkConvert.isSelected) {
                         txtConversion.text.toInt()
                     }
-                    else null
+                    else null,
+                    filter
             )
         }
 
@@ -54,7 +63,7 @@ open class EndResultDialog(ownerWindow: Window?) : Dialog<EndResultDialogResult>
                     label("Tijden omzetten: ") {
                         prefHeight = 25.0
                     }
-                    cboxConvert = checkbox {
+                    checkConvert = checkbox {
                         isSelected = false
                         prefHeight = 25.0
                         selectedProperty().addListener { _ -> validate(okButton) }
@@ -66,10 +75,28 @@ open class EndResultDialog(ownerWindow: Window?) : Dialog<EndResultDialogResult>
                         textProperty().addListener { _ -> validate(okButton) }
                     }
                 }
+                hbox {
+                    label("Leeftijd filter: ") {
+                        prefHeight = 25.0
+                    }
+                    checkAgeFilter = checkbox {
+                        isSelected = false
+                        prefHeight = 25.0
+                        selectedProperty().addListener { _ -> validate(okButton) }
+                    }
+                    label("")
+                    cboxAgeFilter = combobox {
+                        prefHeight = 25.0
+                        prefWidth = 250.0
+                        items.addAll(State.meet!!.ageSet.ages)
+                        selectionModel.selectedItemProperty().addListener { _ -> validate(okButton) }
+                    }
+                }
             }
         }
 
-        txtConversion.disableProperty().bind(!cboxConvert.selectedProperty())
+        txtConversion.disableProperty().bind(!checkConvert.selectedProperty())
+        cboxAgeFilter.disableProperty().bind(!checkAgeFilter.selectedProperty())
 
         runLater {
             txtEvents.requestFocus()
@@ -89,7 +116,12 @@ open class EndResultDialog(ownerWindow: Window?) : Dialog<EndResultDialogResult>
             false
         }
 
-        okButton.isDisable = !eventsCorrect || (cboxConvert.isSelected && !conversionCorrect)
+        if (checkAgeFilter.isSelected && cboxAgeFilter.selectionModel.selectedItem == null) {
+            okButton.isDisable = true
+            return
+        }
+
+        okButton.isDisable = !eventsCorrect || (checkConvert.isSelected && !conversionCorrect)
     }
 }
 
@@ -106,5 +138,10 @@ class EndResultDialogResult(
         /**
          * When not null, contains the distance to which the result must be converted to.
          */
-        val convertTo: Int?
+        val convertTo: Int?,
+
+        /**
+         * The filter that select what swimmers will end up in the end result.
+         */
+        val filter: SwimmerFilter = SwimmerFilter.NO_FILTER
 )

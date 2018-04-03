@@ -90,17 +90,11 @@ open class Contestants(val main: MainView) : BorderPane() {
      * Prompts the user for a new relay and adds it to the tableview and data model.
      */
     private fun addRelay() {
-        val selected = tvwContestants.selectedItem as? Relay ?: return
-        NewRelayDialog(main.currentWindow).apply {
-            fillInfo(selected)
-        }.showAndWait().ifPresent {
+        val meet = State.meet ?: return
+        NewRelayDialog(main.currentWindow).showAndWait().ifPresent {
             val result = it as Relay
-            selected.name = result.name
-            selected.club = result.club
-            selected.id = result.id
-            selected.age = result.age
-            selected.members.clear()
-            selected.members.addAll(result.members)
+            meet.swimmers.add(result)
+            tvwContestants.items.add(result)
         }
     }
 

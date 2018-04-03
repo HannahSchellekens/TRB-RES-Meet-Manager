@@ -34,7 +34,7 @@ object BookletPrinter {
 
         // Make document.
         document(pdfFile) { writer ->
-            setMargins(64f, 64f, 50f, 50f)
+            setMargins(64f, 64f, 50f, 42f)
 
             writer.pageEvent = PdfBookletHeaderAndFooter
 

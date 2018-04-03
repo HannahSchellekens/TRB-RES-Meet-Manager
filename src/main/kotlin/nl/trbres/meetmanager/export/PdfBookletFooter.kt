@@ -25,17 +25,17 @@ object PdfBookletFooter : PdfPageEventHelper() {
         separator.drawLine(cb,
                 document.leftMargin(),
                 document.right(),
-                document.bottom() + 8
+                document.bottom() + 6
         )
         ColumnText.showTextAligned(cb, Element.ALIGN_LEFT,
                 club,
                 document.leftMargin(),
-                document.bottom() - 4, 0f
+                document.bottom() - 8, 0f
         )
         ColumnText.showTextAligned(cb, Element.ALIGN_RIGHT,
                 timestamp,
                 document.right(),
-                document.bottom() - 4, 0f
+                document.bottom() - 8, 0f
         )
     }
 }

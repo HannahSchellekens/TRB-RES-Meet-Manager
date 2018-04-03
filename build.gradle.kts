@@ -2,8 +2,8 @@ import org.gradle.jvm.tasks.Jar
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 val applicationName = "TRB-RES Meet Manager"
-val gitHead = "b4efd99"
-version = "1.0"
+val gitHead = "6df5163"
+version = "1.1"
 
 buildscript {
     var kotlin_version: String by extra

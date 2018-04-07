@@ -25,7 +25,7 @@ object PdfBookletFooter : PdfPageEventHelper() {
         separator.drawLine(cb,
                 document.leftMargin(),
                 document.right(),
-                document.bottom() + 6
+                document.bottom() + 2
         )
         ColumnText.showTextAligned(cb, Element.ALIGN_LEFT,
                 club,

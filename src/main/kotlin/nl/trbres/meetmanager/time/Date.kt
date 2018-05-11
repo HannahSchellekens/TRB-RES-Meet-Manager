@@ -28,6 +28,29 @@ data class Date(var year: Int, var month: Int, var day: Int) {
     fun toLocalDate() = LocalDate.of(year, month, day)!!
 
     /**
+     * Converts to a dutch readable name, example: `6 mei 2018`.
+     */
+    fun toDutchName(): String {
+        val month = when (month) {
+            1 -> "januari"
+            2 -> "februari"
+            3 -> "maart"
+            4 -> "april"
+            5 -> "mei"
+            6 -> "juni"
+            7 -> "juli"
+            8 -> "augustus"
+            9 -> "september"
+            10 -> "oktober"
+            11 -> "november"
+            12 -> "december"
+            else -> error("Illegal month: $month")
+        }
+
+        return "$day $month $year"
+    }
+
+    /**
      * See [iso8601].
      */
     override fun toString() = iso8601()

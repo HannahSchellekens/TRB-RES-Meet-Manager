@@ -2,6 +2,7 @@ package nl.trbres.meetmanager.model
 
 import nl.trbres.meetmanager.time.Date
 import nl.trbres.meetmanager.time.Time
+import nl.trbres.meetmanager.util.indexRange
 
 /**
  * @author Ruben Schellekens
@@ -105,4 +106,49 @@ class CollectedResult(
     override fun compareTo(other: CollectedResult): Int {
         return total.compareTo(other.total)
     }
+}
+
+/**
+ * Generates all rank numbers/statusses in order.
+ */
+fun List<CollectedResult>.ranks() = mapIndexed { index, _ -> ((index + 1).toString()) }
+
+/**
+ * Generates all the swimmers that should be put on the event list (in order).
+ */
+fun List<CollectedResult>.swimmers() = map { it.swimmer }
+
+/**
+ * Generates all the names that should be put on the event list (in order).
+ */
+fun List<CollectedResult>.names() = map { it.swimmer.name }
+
+/**
+ * Generates all club names in order.
+ */
+fun List<CollectedResult>.clubs() = map { it.swimmer.club?.name ?: "" }
+
+/**
+ * Generates all total times in order.
+ */
+fun List<CollectedResult>.totals() = map { it.total.toString() }
+
+/**
+ * Generates a list with maps that map event indices (in the events list) numbers to results.
+ */
+fun List<CollectedResult>.resultsTimes(events: List<Event>) = indexRange().map {
+    val result = this[it]
+    events.mapIndexed { index, event ->
+        index to (result.results[event]?.result?.toString() ?: "")
+    }.toMap()
+}
+
+/**
+ * Generates a list with maps that map event indices (in the events list) numbers to ranks.
+ */
+fun List<CollectedResult>.resultRanks(events: List<Event>) = indexRange().map { rankindex ->
+    val result = this[rankindex]
+    events.mapIndexed { index, event ->
+        index to ((event.swimResults().indexOfFirst { it.swimmer.id == result.swimmer.id } + 1).toString())
+    }.toMap()
 }

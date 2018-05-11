@@ -10,9 +10,7 @@ import nl.trbres.meetmanager.Icons
 import nl.trbres.meetmanager.State
 import nl.trbres.meetmanager.UserSettings
 import nl.trbres.meetmanager.UserSettings.Key.lastDirectory
-import nl.trbres.meetmanager.export.BookletPrinter
-import nl.trbres.meetmanager.export.EndResultPrinter
-import nl.trbres.meetmanager.export.ResultCardPrinter
+import nl.trbres.meetmanager.export.*
 import nl.trbres.meetmanager.import.SwimtrackImporter
 import nl.trbres.meetmanager.model.Club
 import nl.trbres.meetmanager.model.Meet
@@ -61,6 +59,7 @@ open class MainView : View() {
                     item("Programmaboekje genereren").icon(Icons.pdf).action(::printBooklet)
                     item("Gepersonaliseerd programma genereren").icon(Icons.pdf).action(::printPersonalisedBooklet)
                     item("Tijdwaarnemingskaartjes genereren").icon(Icons.pdf).action(::printResultCards)
+                    item("Data voor certificaten genereren").icon(Icons.textFile).action(::generateCertificates)
                 }
                 menuImport = menu("Importeren") {
                     item("Verenigingen importeren").icon(Icons.download).action(::importClubs)
@@ -185,6 +184,28 @@ open class MainView : View() {
 
             val events = numbers.map { meet.events[it - 1] }
             EndResultPrinter.printResults(events, numbers, it.filter, it.convertTo, currentWindow)
+        }
+    }
+
+    /**
+     * Generate the certificate data merge file.
+     */
+    fun generateCertificates() {
+        val meet = State.meet ?: return
+        val dialog = EndResultDialog(currentWindow)
+        dialog.showAndWait().ifPresent {
+            val text = it.events
+            val numbers = text.replace(" ", "")
+                    .split(",")
+                    .filter { it.isNaturalNumber() }
+                    .map { it.toInt() }
+                    .filter { it - 1 < meet.events.size }
+            if (numbers.isEmpty()) {
+                return@ifPresent
+            }
+
+            val events = numbers.map { meet.events[it - 1] }
+            CertificateExport.exportTextFile(CertificateExportMeta(events, numbers, it.filter, it.convertTo), currentWindow)
         }
     }
 

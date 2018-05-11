@@ -10,9 +10,7 @@ import nl.trbres.meetmanager.State
 import nl.trbres.meetmanager.UserSettings
 import nl.trbres.meetmanager.filter.AgeGroupFilter
 import nl.trbres.meetmanager.filter.SwimmerFilter
-import nl.trbres.meetmanager.model.Category
-import nl.trbres.meetmanager.model.CollectedResult
-import nl.trbres.meetmanager.model.Event
+import nl.trbres.meetmanager.model.*
 import nl.trbres.meetmanager.util.*
 import java.io.File
 
@@ -109,7 +107,7 @@ object EndResultPrinter {
                     cell(newParagraph("totaal", Fonts.small), Element.ALIGN_RIGHT)
 
                     for (swimmerIndex in 0 until names.size) {
-                        cell(newParagraph(ranks[swimmerIndex]), Element.ALIGN_RIGHT) {
+                        cell(newParagraph(ranks[swimmerIndex] + "."), Element.ALIGN_RIGHT) {
                             setLeading(1f, leading)
                         }
                         cell(newParagraph(names[swimmerIndex])) {
@@ -122,7 +120,7 @@ object EndResultPrinter {
                             cell(newParagraph(resultTimes[swimmerIndex][eventIndex]!!), Element.ALIGN_RIGHT) {
                                 setLeading(1f, leading)
                             }
-                            cell(newParagraph(resultRanks[swimmerIndex][eventIndex]!!)) {
+                            cell(newParagraph(resultRanks[swimmerIndex][eventIndex]!! + ".")) {
                                 setLeading(1f, leading)
                             }
                         }
@@ -164,46 +162,6 @@ object EndResultPrinter {
      */
     private fun timeColumnWidth(columns: Int): Float {
         return (60.07f - columns * 3.37f) / (columns + 1f)
-    }
-
-    /**
-     * Generates all rank numbers/statusses in order.
-     */
-    private fun List<CollectedResult>.ranks() = mapIndexed { index, _ -> ((index + 1).toString() + ".") }
-
-    /**
-     * Generates all the names that should be put on the event list (in order).
-     */
-    private fun List<CollectedResult>.names() = map { it.swimmer.name }
-
-    /**
-     * Generates all club names in order.
-     */
-    private fun List<CollectedResult>.clubs() = map { it.swimmer.club?.name ?: "" }
-
-    /**
-     * Generates all total times in order.
-     */
-    private fun List<CollectedResult>.totals() = map { it.total.toString() }
-
-    /**
-     * Generates a list with maps that map event indices (in the events list) numbers to results.
-     */
-    private fun List<CollectedResult>.resultsTimes(events: List<Event>) = indexRange().map {
-        val result = this[it]
-        events.mapIndexed { index, event ->
-            index to (result.results[event]?.result?.toString() ?: "")
-        }.toMap()
-    }
-
-    /**
-     * Generates a list with maps that map event indices (in the events list) numbers to ranks.
-     */
-    private fun List<CollectedResult>.resultRanks(events: List<Event>) = indexRange().map { rankindex ->
-        val result = this[rankindex]
-        events.mapIndexed { index, event ->
-            index to ((event.swimResults().indexOfFirst { it.swimmer.id == result.swimmer.id } + 1).toString() + ".")
-        }.toMap()
     }
 
     /**

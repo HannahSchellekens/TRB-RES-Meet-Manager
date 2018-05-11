@@ -92,7 +92,7 @@ object CertificateExport {
 
         val result = FileChooser().apply {
             title = "Data mergebestand opslaan..."
-            initialFileName = "MeetData_${meetName}_$fileNameSuffix.txt"
+            initialFileName = "MeetData_$meetName$fileNameSuffix.txt"
             extensionFilters += FileChooser.ExtensionFilter("TXT Bestanden", "*.txt")
             UserSettings[UserSettings.Key.dataMergeFile].whenNonNull {
                 try {

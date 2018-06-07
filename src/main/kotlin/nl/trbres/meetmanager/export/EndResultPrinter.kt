@@ -46,7 +46,7 @@ object EndResultPrinter {
 
         // Make document.
         document(pdfFile) { writer ->
-            setMargins(64f, 64f, 40f, 54f)
+            setMargins(32f, 32f, 40f, 54f)
             pageSize = PageSize.A4.rotate()
 
             writer.pageEvent = PdfFooter
@@ -120,7 +120,8 @@ object EndResultPrinter {
                             cell(newParagraph(resultTimes[swimmerIndex][eventIndex]!!), Element.ALIGN_RIGHT) {
                                 setLeading(1f, leading)
                             }
-                            cell(newParagraph(resultRanks[swimmerIndex][eventIndex]!! + ".")) {
+                            val ranking = resultRanks[swimmerIndex][eventIndex]!! + "."
+                            cell(newParagraph(if (ranking == "0.") "" else ranking)) {
                                 setLeading(1f, leading)
                             }
                         }

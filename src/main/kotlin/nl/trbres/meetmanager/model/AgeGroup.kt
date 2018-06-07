@@ -58,7 +58,7 @@ enum class SimpleAgeGroup(
     override val id = name
 
     override fun isJointCategory(other: AgeGroup) = when (other) {
-        is DefaultAgeGroup -> other.simple == this
+        is SimpleAgeGroup -> other == this
         else -> false
     }
 
@@ -99,7 +99,6 @@ enum class PrimarySchoolGroup(
         GROEP_6_WZ -> other == GROEP_6
         GROEP_7_WZ -> other == GROEP_7
         GROEP_8_WZ -> other == GROEP_8
-        else -> false
     }
 
     override fun toString() = title

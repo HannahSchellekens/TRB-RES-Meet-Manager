@@ -129,12 +129,12 @@ enum class DefaultAgeGroup(
 
 ) : AgeGroup {
 
-    MINIOREN_1("Minioren", 1, SimpleAgeGroup.MINOREN),
-    MINIOREN_2("Minioren", 2, SimpleAgeGroup.MINOREN),
-    MINIOREN_3("Minioren", 3, SimpleAgeGroup.MINOREN),
-    MINIOREN_4("Minioren", 4, SimpleAgeGroup.MINOREN),
-    MINIOREN_5("Minioren", 5, SimpleAgeGroup.MINOREN),
-    MINIOREN_6("Minioren", 6, SimpleAgeGroup.MINOREN),
+    MINIOREN_1("Minioren", 1, SimpleAgeGroup.MINIOREN),
+    MINIOREN_2("Minioren", 2, SimpleAgeGroup.MINIOREN),
+    MINIOREN_3("Minioren", 3, SimpleAgeGroup.MINIOREN),
+    MINIOREN_4("Minioren", 4, SimpleAgeGroup.MINIOREN),
+    MINIOREN_5("Minioren", 5, SimpleAgeGroup.MINIOREN),
+    MINIOREN_6("Minioren", 6, SimpleAgeGroup.MINIOREN),
     JUNIOREN_1("Junioren", 1, SimpleAgeGroup.JUNIOREN),
     JUNIOREN_2("Junioren", 2, SimpleAgeGroup.JUNIOREN),
     JUNIOREN_3("Junioren", 3, SimpleAgeGroup.JUNIOREN),

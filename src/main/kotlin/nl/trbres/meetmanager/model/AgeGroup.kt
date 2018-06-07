@@ -49,7 +49,7 @@ enum class SimpleAgeGroup(
         override val categoryName: (Category) -> String
 ) : AgeGroup {
 
-    MINOREN("Minoren", { it.nameYoung }),
+    MINOREN("Minioren", { it.nameYoung }),
     JUNIOREN("Junioren", { it.nameYoung }),
     JEUGD("Jeugd", { it.nameYoung }),
     SENIOREN("Senioren", { it.nameOld });

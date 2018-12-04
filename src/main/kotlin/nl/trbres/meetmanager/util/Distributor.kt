@@ -1,7 +1,8 @@
 package nl.trbres.meetmanager.util
 
 import nl.trbres.meetmanager.model.*
-import kotlin.math.max
+import java.util.*
+import kotlin.math.floor
 
 /**
  * @author Ruben Schellekens
@@ -10,19 +11,21 @@ open class Distributor(private val meet: Meet) {
 
     private fun laneOrder(): List<Int> {
         val lanes = meet.lanes
-        val middleLane = (lanes.start + lanes.size) / 2
-        val left = (middleLane downTo lanes.start).toList()
-        val right = ((middleLane + 1)..lanes.endInclusive).toList()
+        val pivot = floor((lanes.endInclusive + lanes.start) / 2.0).toInt()
 
-        val result = ArrayList<Int>()
-        for (i in 0 until max(left.size, right.size)) {
-            result += left[i]
-            if (i in right.indices) {
-                result += right[i]
+        val left = ArrayDeque((lanes.start until pivot).reversed().toList())
+        val right = ArrayDeque(((pivot + 1)..lanes.endInclusive).toList())
+
+        return mutableListOf(pivot).also { result ->
+            while (right.isNotEmpty() || left.isNotEmpty()) {
+                if (right.isNotEmpty()) {
+                    result.add(right.pop())
+                }
+                if (left.isNotEmpty()) {
+                    result.add(left.pop())
+                }
             }
         }
-
-        return result
     }
 
     /**
@@ -55,9 +58,9 @@ open class Distributor(private val meet: Meet) {
             val addedHeats = ArrayList<Heat>()
             val eventSwimmers = mapping[event]!!.toMutableList()
             eventSwimmers.shuffle()
-            eventSwimmers.chunked(lanes.endInclusive - lanes.start + 1).reversed().forEach {
+            eventSwimmers.chunked(lanes.endInclusive - lanes.start + 1).reversed().forEach { swimmers ->
                 val heat = Heat()
-                it.zip(availableLanes).forEach {
+                swimmers.zip(availableLanes).forEach {
                     heat.lanes[it.second] = it.first
                 }
                 event.heats.add(heat)

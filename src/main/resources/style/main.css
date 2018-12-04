@@ -15,12 +15,14 @@
 }
 
 /* TextField */
-.text-field {
+.text-field,
+.text-area {
     -fx-border-radius: 0;
     -fx-background-radius: 0;
 }
 
-.text-field:focused {
+.text-field:focused,
+.text-area:focused {
     -fx-border-width: 2;
     -fx-focus-color: #5094D2;
 }

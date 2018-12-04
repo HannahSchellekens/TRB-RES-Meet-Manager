@@ -2,8 +2,10 @@ package nl.trbres.meetmanager.view.dialog
 
 import javafx.scene.control.ComboBox
 import javafx.scene.control.DatePicker
+import javafx.scene.control.TextArea
 import javafx.scene.control.TextField
 import nl.trbres.meetmanager.model.AgeSet
+import nl.trbres.meetmanager.model.CustomAgeGroup
 import nl.trbres.meetmanager.model.Meet
 import nl.trbres.meetmanager.time.toDate
 import nl.trbres.meetmanager.util.FINE
@@ -28,6 +30,7 @@ class NewMeetDialog : Fragment() {
     private lateinit var dateDate: DatePicker
     private lateinit var txtLanes: TextField
     private lateinit var cboxAgeSet: ComboBox<AgeSet>
+    private lateinit var txtaCustomAges: TextArea
 
     override val root = borderpane {
         title = "Nieuwe zwemwedstrijd"
@@ -49,7 +52,20 @@ class NewMeetDialog : Fragment() {
                         txtLanes = textfield { promptText = "vb. 2-5" }
                     }
                     field("Leeftijden") {
-                        cboxAgeSet = combobox(values = AgeSet.values().toList())
+                        cboxAgeSet = combobox(values = AgeSet.values())
+                    }
+                    field("Extra leeftijden") {
+                        txtaCustomAges = textarea {
+                            promptText = """
+                                Een categorie per regel in het volgende formaat:
+                                "<Naam> <Y|O> <Samenvoeging1,Samenvoeging2,...>"
+
+                                Gebruik 'Y' voor Jongens/Meisjes.
+                                Gebruik 'O' voor Heren/Dames.
+                                Samenvoegingen betekent dat de categorie bij de aangegeven samenvoegingen
+                                wordt gevoegd bij het indelen van zwemmers.
+                            """.trimIndent().trim()
+                        }
                     }
                 }
 
@@ -92,6 +108,11 @@ class NewMeetDialog : Fragment() {
             return OOPS
         }
 
+        if (validateCustomAges().not()) {
+            warning("Het formaat van de extra leeftijden is incorrect (<NAAM> <Y|O> per regel).")
+            return OOPS
+        }
+
         val numbers = txtLanes.text.split("-")
         val first = numbers[0].toInt()
         val second = numbers[1].toInt()
@@ -108,6 +129,38 @@ class NewMeetDialog : Fragment() {
     }
 
     /**
+     * Validates the custom ages input.
+     */
+    private fun validateCustomAges(): Boolean {
+        val text = txtaCustomAges.text
+        if (text.isBlank()) return true
+
+        return text.trim().split("\n").all {
+            val split = it.split("""\s+""".toRegex())
+            split.size > 1 && split[1].matches("""^[YOyo]$""".toRegex()) &&
+                    (split.size > 2 && split.subList(2, split.size).joinToString(" ").matches("""([^,]+,)*([^,]+)""".toRegex()))
+        }
+    }
+
+    /**
+     * Parses the extra age groups to a list of `(Name, **Y**oung|**O**ld, JointList)` tuples.
+     */
+    private fun parseExtraAgeGroups(): List<Triple<String, String, Set<String>>> {
+        val ages = txtaCustomAges.text
+        if (ages.isBlank()) return emptyList()
+
+        return ages.split("\n")
+                .map {
+                    val split = it.split("""\s+""".toRegex())
+                    val (name, youngOld) = split
+                    val jointList = if (split.size <= 2) emptySet() else split.subList(2, split.size).joinToString(" ")
+                            .split(",")
+                            .toSet()
+                    Triple(name, youngOld, jointList)
+                }
+    }
+
+    /**
      * Creates the new meet and close the dialog.
      */
     private fun createMeet() {
@@ -115,7 +168,17 @@ class NewMeetDialog : Fragment() {
 
         val numbers = txtLanes.text.split("-")
         val laneRange = numbers[0].toInt()..numbers[1].toInt()
-        meet.value = Meet(txtName.text, dateDate.value.toDate(), laneRange, txtLocation.text, ageSet = cboxAgeSet.selectedItem!!)
+        var ageSet = cboxAgeSet.selectedItem!!
+
+        val extraAges = parseExtraAgeGroups()
+        if (extraAges.isNotEmpty()) {
+            val groups = extraAges.map { (name, ageType, jointCategories) ->
+                CustomAgeGroup(name, CustomAgeGroup.CategoryNameTranslator[ageType], jointCategories)
+            }
+            ageSet += AgeSet("", groups.toTypedArray())
+        }
+
+        meet.value = Meet(txtName.text, dateDate.value.toDate(), laneRange, txtLocation.text, ageSet = ageSet)
 
         currentStage?.close()
     }

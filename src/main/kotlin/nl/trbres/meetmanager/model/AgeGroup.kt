@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName
 /**
  * @author Ruben SChellekens
  */
-enum class AgeSet(
+open class AgeSet(
 
         /**
          * The readable name of the age set.
@@ -22,22 +22,67 @@ enum class AgeSet(
         val ages: Array<out AgeGroup>
 ) {
 
-    /**
-     * [SimpleAgeGroup].
-     */
-    SIMPLE("Minioren/Junioren/Jeugd/Senioren", SimpleAgeGroup.values()),
+    companion object {
 
-    /**
-     * [PrimarySchoolGroup].
-     */
-    PRIMARY_SCHOOL("Basisschool", PrimarySchoolGroup.values()),
+        /**
+         * [SimpleAgeGroup].
+         */
+        val SIMPLE = AgeSet("Minioren/Junioren/Jeugd/Senioren", SimpleAgeGroup.values())
 
-    /**
-     * [DefaultAgeGroup].
-     */
-    COMPETITIVE("Wedstrijdzwemmen", DefaultAgeGroup.values());
+        /**
+         * [PrimarySchoolGroup].
+         */
+        val PRIMARY_SCHOOL = AgeSet("Basisschool", PrimarySchoolGroup.values())
+
+        /**
+         * [DefaultAgeGroup].
+         */
+        val COMPETITIVE = AgeSet("Wedstrijdzwemmen", DefaultAgeGroup.values())
+
+        /**
+         * No age groups.
+         */
+        val EMPTY = AgeSet("Geen leeftijdsgroepen", emptyArray())
+
+        fun values() = listOf(SIMPLE, PRIMARY_SCHOOL, COMPETITIVE, EMPTY)
+    }
 
     override fun toString() = readableName
+
+    operator fun plus(other: AgeSet) = AgeSet(readableName, (ages.toList() + other.ages).toTypedArray())
+}
+
+/**
+ * @author Ruben Schellekens
+ */
+@JsonTypeName("custom")
+data class CustomAgeGroup(
+        override val readableName: String,
+        override val categoryName: CategoryNameTranslator,
+        val jointCategoryWith: Set<String> = emptySet()
+) : AgeGroup {
+
+    override val title = readableName
+    override val id = readableName
+
+    override fun isJointCategory(other: AgeGroup) = other.readableName == readableName || other.readableName in jointCategoryWith
+
+    override fun toString() = title
+
+    /**
+     * @author Ruben Schellekens
+     */
+    enum class CategoryNameTranslator(val identifiedCharacter: Char, val categoryName: (Category) -> String) {
+
+        YOUNG('Y', { it.nameYoung }),
+        OLD('O', { it.nameOld });
+
+        companion object {
+
+            operator fun get(char: Char) = if (char == 'Y') YOUNG else OLD
+            operator fun get(string: String) = if (string == "Y") YOUNG else OLD
+        }
+    }
 }
 
 /**
@@ -46,13 +91,13 @@ enum class AgeSet(
 @JsonTypeName("simple")
 enum class SimpleAgeGroup(
         override val readableName: String,
-        override val categoryName: (Category) -> String
+        override val categoryName: CustomAgeGroup.CategoryNameTranslator
 ) : AgeGroup {
 
-    MINIOREN("Minioren", { it.nameYoung }),
-    JUNIOREN("Junioren", { it.nameYoung }),
-    JEUGD("Jeugd", { it.nameYoung }),
-    SENIOREN("Senioren", { it.nameOld });
+    MINIOREN("Minioren", CustomAgeGroup.CategoryNameTranslator.YOUNG),
+    JUNIOREN("Junioren", CustomAgeGroup.CategoryNameTranslator.YOUNG),
+    JEUGD("Jeugd", CustomAgeGroup.CategoryNameTranslator.YOUNG),
+    SENIOREN("Senioren", CustomAgeGroup.CategoryNameTranslator.OLD);
 
     override val title = readableName
     override val id = name
@@ -71,19 +116,19 @@ enum class SimpleAgeGroup(
 @JsonTypeName("school")
 enum class PrimarySchoolGroup(
         override val readableName: String,
-        override val categoryName: (Category) -> String
+        override val categoryName: CustomAgeGroup.CategoryNameTranslator
 ) : AgeGroup {
 
-    GROEP_4("Groep 4", { it.nameYoung }),
-    GROEP_5("Groep 5", { it.nameYoung }),
-    GROEP_6("Groep 6", { it.nameYoung }),
-    GROEP_7("Groep 7", { it.nameYoung }),
-    GROEP_8("Groep 8", { it.nameYoung }),
-    GROEP_4_WZ("Groep 4 Wz", { it.nameYoung }),
-    GROEP_5_WZ("Groep 5 Wz", { it.nameYoung }),
-    GROEP_6_WZ("Groep 6 Wz", { it.nameYoung }),
-    GROEP_7_WZ("Groep 7 Wz", { it.nameYoung }),
-    GROEP_8_WZ("Groep 8 Wz", { it.nameYoung });
+    GROEP_4("Groep 4", CustomAgeGroup.CategoryNameTranslator.YOUNG),
+    GROEP_5("Groep 5", CustomAgeGroup.CategoryNameTranslator.YOUNG),
+    GROEP_6("Groep 6", CustomAgeGroup.CategoryNameTranslator.YOUNG),
+    GROEP_7("Groep 7", CustomAgeGroup.CategoryNameTranslator.YOUNG),
+    GROEP_8("Groep 8", CustomAgeGroup.CategoryNameTranslator.YOUNG),
+    GROEP_4_WZ("Groep 4 Wz", CustomAgeGroup.CategoryNameTranslator.YOUNG),
+    GROEP_5_WZ("Groep 5 Wz", CustomAgeGroup.CategoryNameTranslator.YOUNG),
+    GROEP_6_WZ("Groep 6 Wz", CustomAgeGroup.CategoryNameTranslator.YOUNG),
+    GROEP_7_WZ("Groep 7 Wz", CustomAgeGroup.CategoryNameTranslator.YOUNG),
+    GROEP_8_WZ("Groep 8 Wz", CustomAgeGroup.CategoryNameTranslator.YOUNG);
 
     override val title = readableName
     override val id = name
@@ -179,7 +224,8 @@ enum class DefaultAgeGroup(
 @JsonSubTypes(
         JsonSubTypes.Type(value = DefaultAgeGroup::class, name = "default"),
         JsonSubTypes.Type(value = SimpleAgeGroup::class, name = "simple"),
-        JsonSubTypes.Type(value = PrimarySchoolGroup::class, name = "school")
+        JsonSubTypes.Type(value = PrimarySchoolGroup::class, name = "school"),
+        JsonSubTypes.Type(value = CustomAgeGroup::class, name = "custom")
 )
 interface AgeGroup {
 
@@ -191,7 +237,7 @@ interface AgeGroup {
     /**
      * Given a category, generatesa human readable name of the category..
      */
-    val categoryName: (Category) -> String
+    val categoryName: CustomAgeGroup.CategoryNameTranslator
 
     /**
      * The total name of the category.
@@ -208,7 +254,7 @@ interface AgeGroup {
     /**
      * See [categoryName].
      */
-    operator fun get(category: Category) = categoryName(category)
+    operator fun get(category: Category) = categoryName.categoryName(category)
 
     /**
      * `true` if both age groups are seen the same, `false` otherwise.

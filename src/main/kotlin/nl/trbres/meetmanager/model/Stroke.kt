@@ -5,11 +5,11 @@ package nl.trbres.meetmanager.model
  */
 enum class Stroke(val strokeName: String) {
 
-    BUTTERFLY("Vlinderslag"),
-    BACKSTROKE("Rugslag"),
-    BREASTSTROKE("Schoolslag"),
-    FREESTYLE("Vrije slag"),
-    MEDLEY("Wisselslag");
+    BUTTERFLY("vlinderslag"),
+    BACKSTROKE("rugslag"),
+    BREASTSTROKE("schoolslag"),
+    FREESTYLE("vrije slag"),
+    MEDLEY("wisselslag");
 
     override fun toString() = strokeName
 }

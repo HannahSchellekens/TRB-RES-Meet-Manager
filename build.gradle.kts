@@ -3,11 +3,11 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 val applicationName = "TRB-RES Meet Manager"
 val gitHead = "33e0b87"
-version = "1.2.2"
+version = "1.2.3"
 
 buildscript {
     var kotlin_version: String by extra
-    kotlin_version = "1.2.31"
+    kotlin_version = "1.3.10"
 
     repositories {
         mavenCentral()
@@ -56,7 +56,7 @@ val fatJar = task("fatJar", type = Jar::class) {
         attributes["Implementation-Version"] = version
         attributes["Main-Class"] = "nl.trbres.meetmanager.MeetManagerKt"
     }
-    from(configurations.runtime.map({ if (it.isDirectory) it else zipTree(it) }))
+    from(configurations.runtime.map { if (it.isDirectory) it else zipTree(it) })
     with(tasks["jar"] as CopySpec)
 }
 

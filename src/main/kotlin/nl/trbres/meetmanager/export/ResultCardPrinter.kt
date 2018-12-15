@@ -26,7 +26,7 @@ object ResultCardPrinter {
     fun printCards(owner: Window? = null) {
         val meet = State.meet ?: error("No meet selected")
         val pdfFile = promptSaveLocation(owner) ?: return
-        DEFAULT_FONT = Fonts.regular
+        DEFAULT_FONT = Fonts.larger
 
         // Make document.
         document(pdfFile) {
@@ -97,7 +97,7 @@ object ResultCardPrinter {
         table(4) {
             widths(3, 18, 18, 3)
 
-            val regular = Fonts.regular
+            val regular = Fonts.larger
             val small = Fonts.small
 
             // Header

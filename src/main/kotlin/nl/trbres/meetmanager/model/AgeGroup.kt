@@ -185,7 +185,7 @@ enum class DefaultAgeGroup(
     JUNIOREN_4("Junioren", 4, SimpleAgeGroup.JUNIOREN),
     JEUGD_1("Jeugd", 1, SimpleAgeGroup.JEUGD),
     JEUGD_2("Jeugd", 2, SimpleAgeGroup.JEUGD),
-    SENIOREN_1("Senioren", 2, SimpleAgeGroup.SENIOREN),
+    SENIOREN_1("Senioren", 1, SimpleAgeGroup.SENIOREN),
     SENIOREN_2("Senioren", 2, SimpleAgeGroup.SENIOREN),
     SENOREN_OPEN("Senioren", 0, SimpleAgeGroup.SENIOREN);
 

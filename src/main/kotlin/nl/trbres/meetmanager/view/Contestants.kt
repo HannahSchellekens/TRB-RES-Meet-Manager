@@ -55,7 +55,7 @@ open class Contestants(val main: MainView) : BorderPane() {
                     prefWidthProperty().bind(this@tableview.widthProperty().multiply(0.1))
                     isResizable = false
                 }.makeEditable({ swimmer, birthYear -> swimmer.birthYear = birthYear; swimmer.nestedUpdate(); }) {
-                    (1900..Calendar.getInstance().get(Calendar.YEAR)).reversed().toList()
+                    (1900..Calendar.getInstance().get(Calendar.YEAR)).plus(listOf(-1)).reversed().toList()
                 }
 
                 column("M/V", Swimmer::category) {

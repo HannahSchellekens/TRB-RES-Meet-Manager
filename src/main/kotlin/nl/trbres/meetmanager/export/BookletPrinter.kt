@@ -34,7 +34,7 @@ object BookletPrinter {
 
         // Make document.
         document(pdfFile) { writer ->
-            setMargins(64f, 64f, 50f, 42f)
+            setMargins(48f, 48f, 50f, 42f)
 
             writer.pageEvent = PdfBookletHeaderAndFooter
 
@@ -99,8 +99,8 @@ object BookletPrinter {
 
         cell(newParagraph("Serie %d van %d".format(heatNumber, heatAmount), Fonts.underline))
 
-        table(5) {
-            widths(.041f, .306f, .306f, .185f, .162f)
+        table(6) {
+            widths(.041f, .286f, .286f, .175f, .06f, .152f)
             val leading = 0.875f
 
             defaultCell.paddingBottom = 0f
@@ -123,7 +123,10 @@ object BookletPrinter {
                 cell(newParagraph(swimmer.age.readableName, font)) {
                     setLeading(0f, leading)
                 }
-                cell(newParagraph("_____________")) {
+                cell(newParagraph(swimmer.birthYearDigits, font)) {
+                    setLeading(0f, leading)
+                }
+                cell(newParagraph("______________")) {
                     setLeading(0f, leading)
                 }
 
@@ -132,9 +135,9 @@ object BookletPrinter {
                     cell(newParagraph("")) {
                         setLeading(0f, leading)
                     }
-                    cell(newParagraph(swimmer.members.joinToString(", ") { it.name }, Fonts.small)) {
+                    cell(newParagraph(swimmer.members.joinToString(", ") { it.nameWithBirthYear }, Fonts.small)) {
                         paddingLeft = 12f
-                        colspan = 4
+                        colspan = 5
                         setLeading(0f, leading)
                     }
                 }

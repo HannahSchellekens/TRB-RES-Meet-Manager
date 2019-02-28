@@ -46,7 +46,7 @@ object EndResultPrinter {
 
         // Make document.
         document(pdfFile) { writer ->
-            setMargins(32f, 32f, 40f, 54f)
+            setMargins(32f, 32f, 20f, 48f)
             pageSize = PageSize.A4.rotate()
 
             writer.pageEvent = PdfFooter
@@ -84,6 +84,7 @@ object EndResultPrinter {
                 val ranks = endResults.ranks()
                 val names = endResults.names()
                 val clubs = endResults.clubs()
+                val birthYears = endResults.birthYears()
 
                 val resultTimes = endResults.resultsTimes(events)
                 val resultRanks = endResults.resultRanks(events)
@@ -93,13 +94,14 @@ object EndResultPrinter {
                 val width = timeColumnWidth(n)
                 val columns = (1..n).flatMap { listOf(width, 3.37f) }.toFloatArray() + width
 
-                table(3 + 2 * n + 1) {
-                    widths(*(floatArrayOf(3.93f, 18f, 18f) + columns))
+                table(4 + 2 * n + 1) {
+                    widths(*(floatArrayOf(3.93f, 16.1f, 16.1f, 3.8f) + columns))
                     val leading = 0.875f
 
                     cell(newParagraph("rang", Fonts.small), Element.ALIGN_RIGHT)
                     cell(newParagraph("naam", Fonts.small))
                     cell(newParagraph("vereniging", Fonts.small))
+                    cell(newParagraph("", Fonts.small))
                     for (i in 0 until n) {
                         cell(newParagraph("${events[i].distance.metres}m ${events[i].stroke.strokeName.toLowerCase()}", Fonts.small), Element.ALIGN_RIGHT)
                         cell(newParagraph("", Fonts.small))
@@ -116,11 +118,14 @@ object EndResultPrinter {
                         cell(newParagraph(clubs[swimmerIndex])) {
                             setLeading(1f, leading)
                         }
+                        cell(newParagraph(birthYears[swimmerIndex])) {
+                            setLeading(1f, leading)
+                        }
                         for (eventIndex in 0 until n) {
-                            cell(newParagraph(resultTimes[swimmerIndex][eventIndex]!!), Element.ALIGN_RIGHT) {
+                            cell(newParagraph(resultTimes[swimmerIndex].getValue(eventIndex)), Element.ALIGN_RIGHT) {
                                 setLeading(1f, leading)
                             }
-                            val ranking = resultRanks[swimmerIndex][eventIndex]!! + "."
+                            val ranking = resultRanks[swimmerIndex].getValue(eventIndex) + "."
                             cell(newParagraph(if (ranking == "0.") "" else ranking)) {
                                 setLeading(1f, leading)
                             }

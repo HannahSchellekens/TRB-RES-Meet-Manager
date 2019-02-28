@@ -124,6 +124,11 @@ fun List<CollectedResult>.swimmers() = map { it.swimmer }
 fun List<CollectedResult>.names() = map { it.swimmer.name }
 
 /**
+ * Generates all the birth years that should be put on the event list (in order).
+ */
+fun List<CollectedResult>.birthYears() = map { it.swimmer.birthYearDigits }
+
+/**
  * Generates all club names in order.
  */
 fun List<CollectedResult>.clubs() = map { it.swimmer.club?.name ?: "" }

@@ -30,7 +30,7 @@ object EventResultPrinter {
 
         // Make document.
         document(pdfFile) { writer ->
-            setMargins(64f, 64f, 40f, 40f)
+            setMargins(48f, 48f, 20f, 40f)
 
             writer.pageEvent = PdfFooter
 
@@ -61,19 +61,21 @@ object EventResultPrinter {
                 val swimResults: List<SwimResult> = event.swimResults()
                 val ranks = swimResults.ranks()
                 val names = swimResults.names()
+                val birthYears = swimResults.birthYears()
                 val clubs = swimResults.clubs()
                 val ages = swimResults.ages()
                 val results = swimResults.results()
                 val messages = swimResults.messages()
 
-                table(5) {
-                    widths(3, 20, 20, 10, 6)
+                table(6) {
+                    widths(.051f, .319f, .319f, .159f, .04f, .112f)
                     val leading = 0.875f
 
                     cell(newParagraph("rang", Fonts.small), Element.ALIGN_RIGHT)
                     cell(newParagraph("naam", Fonts.small))
                     cell(newParagraph("vereniging", Fonts.small))
                     cell(newParagraph("leeftijd", Fonts.small))
+                    cell(newParagraph("", Fonts.small))
                     cell(newParagraph("eindtijd", Fonts.small), Element.ALIGN_RIGHT)
 
                     for (i in 0 until names.size) {
@@ -87,6 +89,9 @@ object EventResultPrinter {
                             setLeading(0f, leading)
                         }
                         cell(newParagraph(ages[i])) {
+                            setLeading(0f, leading)
+                        }
+                        cell(newParagraph(birthYears[i])) {
                             setLeading(0f, leading)
                         }
                         cell(newParagraph(results[i], Fonts.bold), Element.ALIGN_RIGHT) {
@@ -121,6 +126,11 @@ object EventResultPrinter {
      * Generates all the names that should be put on the event list (in order).
      */
     private fun List<SwimResult>.names() = map { it.swimmer.name }
+
+    /**
+     * Generates all the birth years that should be put on the event list (in order).
+     */
+    private fun List<SwimResult>.birthYears() = map { it.swimmer.birthYearDigits }
 
     /**
      * Generates all club names in order.

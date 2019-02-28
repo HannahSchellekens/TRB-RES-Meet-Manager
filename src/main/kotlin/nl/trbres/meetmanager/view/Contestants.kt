@@ -15,6 +15,7 @@ import nl.trbres.meetmanager.util.nestedUpdate
 import nl.trbres.meetmanager.view.dialog.NewRelayDialog
 import nl.trbres.meetmanager.view.dialog.NewSwimmerDialog
 import tornadofx.*
+import java.util.*
 
 /**
  * @author Ruben Schellekens
@@ -29,7 +30,7 @@ open class Contestants(val main: MainView) : BorderPane() {
                 useMaxWidth = true
 
                 column("Naam zwemmer", Swimmer::name) {
-                    prefWidthProperty().bind(this@tableview.widthProperty().multiply(0.4))
+                    prefWidthProperty().bind(this@tableview.widthProperty().multiply(0.35))
                     isResizable = false
                 }.makeEditable().setOnEditCommit {
                     selectedItem?.name = it.newValue
@@ -50,8 +51,15 @@ open class Contestants(val main: MainView) : BorderPane() {
                     State.meet?.ageSet?.ages?.toList() ?: SimpleAgeGroup.values().toList()
                 }
 
+                column("Jaar", Swimmer::birthYear) {
+                    prefWidthProperty().bind(this@tableview.widthProperty().multiply(0.1))
+                    isResizable = false
+                }.makeEditable({ swimmer, birthYear -> swimmer.birthYear = birthYear; swimmer.nestedUpdate(); }) {
+                    (1900..Calendar.getInstance().get(Calendar.YEAR)).reversed().toList()
+                }
+
                 column("M/V", Swimmer::category) {
-                    prefWidthProperty().bind(this@tableview.widthProperty().multiply(0.15))
+                    prefWidthProperty().bind(this@tableview.widthProperty().multiply(0.1))
                     isResizable = false
                 }.makeEditable({ swimmer, category -> swimmer.category = category; swimmer.nestedUpdate() }) {
                     listOf(Category.FEMALE, Category.MALE)

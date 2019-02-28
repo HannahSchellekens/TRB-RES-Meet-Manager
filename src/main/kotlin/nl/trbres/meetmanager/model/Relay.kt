@@ -9,7 +9,7 @@ import kotlin.collections.ArrayList
  */
 @JsonTypeName("relay")
 open class Relay(name: String, age: AgeGroup, category: Category, club: Club?, id: UUID = UUID.randomUUID())
-    : Swimmer(name, age, category, club, id) {
+    : Swimmer(name, age, category, club, null, id) {
 
     /**
      * A list containing all the swimmers who are part of the relay team (in order).

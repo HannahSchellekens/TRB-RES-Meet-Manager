@@ -16,7 +16,14 @@ import java.util.*
         JsonSubTypes.Type(value = Relay::class, name = "relay")
 )
 @JsonTypeName("swimmer")
-open class Swimmer(var name: String, var age: AgeGroup, var category: Category, var club: Club?, var id: UUID = UUID.randomUUID()) {
+open class Swimmer(
+        var name: String,
+        var age: AgeGroup,
+        var category: Category,
+        var club: Club?,
+        var birthYear: Int? = null,
+        var id: UUID = UUID.randomUUID()
+) {
 
     override fun toString() = name
 

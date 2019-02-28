@@ -25,6 +25,7 @@ open class NewSwimmerDialog(protected val ownerWindow: Window?) : Dialog<Swimmer
     protected lateinit var cboxAgeGroup: ComboBox<AgeGroup>
     protected lateinit var cboxCategory: ComboBox<Category>
     protected lateinit var cboxClub: ComboBox<Club>
+    protected lateinit var txtYear: TextField
     protected lateinit var fieldset: Fieldset
 
     protected open val swimmerText: String = "zwemmer"
@@ -48,7 +49,8 @@ open class NewSwimmerDialog(protected val ownerWindow: Window?) : Dialog<Swimmer
                     txtName.text.trim(),
                     cboxAgeGroup.selectedItem!!,
                     cboxCategory.selectedItem!!,
-                    cboxClub.selectedItem?.mapToClub() ?: Club.NO_CLUB
+                    cboxClub.selectedItem?.mapToClub() ?: Club.NO_CLUB,
+                    txtYear.text.toIntOrNull()
             )
         }
 
@@ -76,6 +78,11 @@ open class NewSwimmerDialog(protected val ownerWindow: Window?) : Dialog<Swimmer
                         items = (listOf(Club.NO_CLUB) + (State.meet?.clubs ?: emptyList())).observable()
                     }
                 }
+                field("Geboortejaar (optioneel)") {
+                    txtYear = textfield {
+                        textProperty().addListener { _ -> validate(okButton) }
+                    }
+                }
             }
         }
 
@@ -90,6 +97,7 @@ open class NewSwimmerDialog(protected val ownerWindow: Window?) : Dialog<Swimmer
     private fun validate(okButton: Node) {
         okButton.isDisable = txtName.text.isNullOrBlank() ||
                 cboxAgeGroup.selectedItem.isNull() ||
-                cboxCategory.selectedItem.isNull()
+                cboxCategory.selectedItem.isNull() ||
+                (txtYear.text.isNotEmpty() && txtYear.text.toIntOrNull().isNull())
     }
 }

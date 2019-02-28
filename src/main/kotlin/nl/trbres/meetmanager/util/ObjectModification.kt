@@ -78,6 +78,7 @@ fun Swimmer.nestedUpdate() {
                 it.age = this@nestedUpdate.age
                 it.category = this@nestedUpdate.category
                 it.club = this@nestedUpdate.club
+                it.birthYear = this@nestedUpdate.birthYear
 
                 if (it is Relay && this@nestedUpdate is Relay) {
                     it.members.clear()

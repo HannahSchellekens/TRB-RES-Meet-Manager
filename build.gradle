@@ -1,0 +1,57 @@
+buildscript {
+    ext.kotlinVersion = '1.3.21'
+    ext.applicationName = 'TRB-RES Meet Manager'
+    ext.gitHead = '33e0b87'
+    ext.applicationVersion = '1.3'
+
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'kotlin'
+
+sourceCompatibility = 1.8
+
+compileKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+compileTestKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion"
+    testCompile "org.jetbrains.kotlin:kotlin-test:$kotlinVersion"
+    testCompile "org.jetbrains.kotlin:kotlin-test-junit:$kotlinVersion"
+    compile 'junit:junit:4.12'
+
+    compile "no.tornado:tornadofx:1.7.13"
+    compile "com.fasterxml.jackson.module:jackson-module-kotlin:2.9.0"
+    compile "com.github.librepdf:openpdf:1.0.5"
+}
+
+configure(JavaPluginConvention) {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+}
+
+jar {
+    from { (configurations.runtime).collect { it.isDirectory() ? it : zipTree(it) } } {
+        exclude 'META-INF/*.RSA', 'META-INF/*.SF', 'META-INF/*.DSA'
+    }
+    manifest {
+        attributes 'Implementation-Title': "$applicationName",
+                'Implementation-Version': "$applicationVersion",
+                'Main-Class': 'nl.trbres.meetmanager.MeetManagerKt'
+    }
+}

@@ -1,3 +1,3 @@
 rootProject.name = 'trbres.nl.trbres.meetmanager'
-rootProject.buildFileName = 'build.gradle.kts'
+rootProject.buildFileName = 'build.gradle'
 

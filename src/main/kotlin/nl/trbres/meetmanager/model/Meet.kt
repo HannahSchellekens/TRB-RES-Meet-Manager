@@ -58,8 +58,8 @@ data class Meet(
     fun collectEvents(events: List<Event>, convertTo: Int?): List<CollectedResult> {
         val collected = ArrayList<CollectedResult>()
         val eventResults = events.map { it to it.swimResults(convertTo) }.toMap()
-        val swimmers = eventResults.values
-                .flatMap { it }
+        val swimmers = eventResults.values.asSequence()
+                .flatten()
                 .map { it.swimmer }
                 .distinct()
 

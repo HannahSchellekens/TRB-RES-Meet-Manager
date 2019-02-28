@@ -58,9 +58,9 @@ open class Distributor(private val meet: Meet) {
             val addedHeats = ArrayList<Heat>()
             val eventSwimmers = mapping[event]!!.toMutableList()
             eventSwimmers.shuffle()
-            eventSwimmers.chunked(lanes.endInclusive - lanes.start + 1).reversed().forEach { swimmers ->
+            eventSwimmers.chunked(lanes.endInclusive - lanes.start + 1).reversed().forEach { heatSwimmers ->
                 val heat = Heat()
-                swimmers.zip(availableLanes).forEach {
+                heatSwimmers.zip(availableLanes).forEach {
                     heat.lanes[it.second] = it.first
                 }
                 event.heats.add(heat)

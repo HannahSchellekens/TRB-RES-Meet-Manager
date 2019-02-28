@@ -33,6 +33,7 @@ open class MainView : View() {
     lateinit var viewClubs: Clubs
     lateinit var viewContestants: Contestants
     lateinit var viewSchedule: Schedule
+    lateinit var menuMeet: Menu
     lateinit var menuImport: Menu
 
     override val root = borderpane {
@@ -52,7 +53,7 @@ open class MainView : View() {
                     separator()
                     item("Afsluiten").icon(Icons.exit).action(::exitProgram)
                 }
-                menu("Wedstrijd") {
+                menuMeet = menu("Wedstrijd") {
                     item("Zwemmers verdelen").action(::distributeSwimmers)
                     item("Einduitslag genereren").icon(Icons.report).action(::endResults)
                     separator()
@@ -60,6 +61,7 @@ open class MainView : View() {
                     item("Gepersonaliseerd programma genereren").icon(Icons.pdf).action(::printPersonalisedBooklet)
                     item("Tijdwaarnemingskaartjes genereren").icon(Icons.pdf).action(::printResultCards)
                     item("Data voor certificaten genereren").icon(Icons.textFile).action(::generateCertificates)
+                    isDisable = true
                 }
                 menuImport = menu("Importeren") {
                     item("Verenigingen importeren").icon(Icons.download).action(::importClubs)
@@ -228,11 +230,11 @@ open class MainView : View() {
     fun importClubs() {
         val meet = State.meet ?: return
         ImportClubsDialog(currentWindow).showAndWait().ifPresent {
-            val clubs = meet.clubs.asSequence().map { it.name }.toHashSet()
+            val clubs = meet.clubs.asSequence().map { club -> club.name }.toHashSet()
             var added = 0
-            it.forEach {
-                if (it in clubs) return@forEach
-                meet.clubs += Club(it)
+            it.forEach { clubName ->
+                if (clubName in clubs) return@forEach
+                meet.clubs += Club(clubName)
                 added++
             }
             updateFromState()
@@ -247,6 +249,7 @@ open class MainView : View() {
         // (un)lock controls
         tabWrapper.isVisible = State.meet != null
         menuImport.isDisable = State.meet == null
+        menuMeet.isDisable = State.meet == null
 
         // Update contents.
         updateTitle()

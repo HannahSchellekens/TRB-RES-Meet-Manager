@@ -88,6 +88,7 @@ open class MainView : View() {
                     isDisable = true
                 }
                 menuExport = menu("Exporteren") {
+                    item("Programma exporteren").icon(Icons.upload).action(::exportEvents)
                     item("Vernigingen exporteren").icon(Icons.upload).action(::exportClubs)
                     item("Zwemmers exporteren").icon(Icons.upload).action(::exportSwimmers)
                     isDisable = true
@@ -328,6 +329,35 @@ open class MainView : View() {
         Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK).apply {
             title = "Verenigingen exporteren"
             headerText = "De verenigingen zijn gekopiëerd naar het klembord."
+            initOwner(currentWindow)
+        }.showAndWait()
+    }
+
+    /**
+     * Exports all the events to the clipboard.
+     */
+    fun exportEvents() {
+        val meet = State.meet ?: return
+        val export = meet.events.joinToString("\n") {
+            buildString {
+                append(it.distance.times).append("x").append(it.distance.metres)
+                append("\t")
+                append(it.stroke.name)
+                append("\t")
+                append(it.ages.first().id)
+                append("\t")
+                append(when (it.category) {
+                    Category.MALE -> "m"
+                    Category.FEMALE -> "v"
+                    else -> "x"
+                })
+            }
+        }
+        Clipboard.set(export)
+
+        Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK).apply {
+            title = "Programma exporteren"
+            headerText = "Het programma is gekopiëerd naar het klembord."
             initOwner(currentWindow)
         }.showAndWait()
     }

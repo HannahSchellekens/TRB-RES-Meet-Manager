@@ -37,6 +37,7 @@ open class MainView : View() {
     lateinit var viewSchedule: Schedule
     lateinit var menuMeet: Menu
     lateinit var menuImport: Menu
+    lateinit var menuRecent: Menu
 
     override val root = borderpane {
         prefWidth = 900.0
@@ -49,7 +50,19 @@ open class MainView : View() {
 
                 menu("Bestand") {
                     item("Nieuwe wedstrijd", "Ctrl+N").icon(Icons.new).action(::newMeet)
-                    item("Openen", "Ctrl+O").icon(Icons.folder).action(::loadMeet)
+                    item("Openen", "Ctrl+O").icon(Icons.folder).action { loadMeet() }
+                    menuRecent = menu("Open recent") {
+                        val callback: (List<File>) -> Unit = { files ->
+                            items.clear()
+                            files.forEach { file ->
+                                item(file.absolutePath).action {
+                                    loadMeet(file)
+                                }
+                            }
+                        }
+                        RecentFiles.callbacks += callback
+                        callback(RecentFiles.recentfiles())
+                    }
                     item("Opslaan", "Ctrl+S").icon(Icons.save).action(::saveMeet)
                     item("Opslaan als...", "Ctrl+Shift+S").action(::saveAs)
                     separator()
@@ -364,6 +377,7 @@ open class MainView : View() {
             }
         }.showSaveDialog(currentStage) ?: return
         State.saveFile = file
+        RecentFiles.pushRecentFile(file)
         UserSettings[lastDirectory] = file.parentFile.absolutePath
 
         usefulTry("Kon het wedstrijdbestand niet opslaan naar ${file.name}") { meet serializeTo file }
@@ -371,9 +385,12 @@ open class MainView : View() {
 
     /**
      * Loads a swim meet from a file to the program.
+     *
+     * @param meetFile
+     *          The file to open, or `null` to show a prompt first.
      */
-    private fun loadMeet() {
-        val file = FileChooser().apply {
+    private fun loadMeet(meetFile: File? = null) {
+        val file = meetFile ?: FileChooser().apply {
             title = "Wedstrijdbestand openen..."
             extensionFilters += FileChooser.ExtensionFilter("Wedstrijden", "*.meet")
             UserSettings[lastDirectory].whenNonNull {
@@ -387,6 +404,7 @@ open class MainView : View() {
 
         State.meet = usefulTry("Kon het wedstrijdbestand niet inladen") { file.deserialize() }
         State.saveFile = file
+        RecentFiles.pushRecentFile(file)
         updateFromState()
     }
 

@@ -40,9 +40,28 @@ object RecentFiles {
      * Adds the given file to the recent file list (see [recentfiles]).
      */
     fun pushRecentFile(file: File) {
-        (listOf(file) + (recentfiles())).distinct().take(10).forEachIndexed { index, theFile ->
-            UserSettings["ugly-recent-file-$index"] = theFile.absolutePath
+        (listOf(file) + (recentfiles())).distinct()
+        callCallbacks()
+    }
+
+    /**
+     * Removes the given file from the recent file list.
+     */
+    fun removeFile(file: File) = recentfiles().minus(file).writeFiles()
+
+    /**
+     * Writes all the files to the properties files.
+     */
+    private fun List<File>.writeFiles() {
+        val toSave = take(10)
+        for (i in 0..9) {
+            val filePath = toSave.getOrNull(i)?.absolutePath ?: ""
+            UserSettings["ugly-recent-file-$i"] = filePath
         }
+        callCallbacks()
+    }
+
+    private fun callCallbacks() {
         val files = recentfiles()
         callbacks.forEach { it(files) }
     }

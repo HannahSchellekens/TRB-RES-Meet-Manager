@@ -402,6 +402,16 @@ open class MainView : View() {
         }.showOpenDialog(currentWindow) ?: return
         UserSettings[lastDirectory] = file.parentFile.absolutePath
 
+        if (file.exists().not()) {
+            RecentFiles.removeFile(file)
+            Alert(Alert.AlertType.ERROR, file.absolutePath, ButtonType.OK).apply {
+                title = "Fout"
+                headerText = "Het opgegeven wedstrijdbestand bestaat niet!"
+                initOwner(currentWindow)
+            }.showAndWait()
+            return
+        }
+
         State.meet = usefulTry("Kon het wedstrijdbestand niet inladen") { file.deserialize() }
         State.saveFile = file
         RecentFiles.pushRecentFile(file)

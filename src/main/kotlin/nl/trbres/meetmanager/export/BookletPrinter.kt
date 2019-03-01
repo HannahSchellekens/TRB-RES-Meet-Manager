@@ -24,12 +24,12 @@ object BookletPrinter {
     /**
      * Prints a booklet containing the schedule of the meet.
      *
-     * The user gets prompted with a dialog to save the pdf.
+     * The user gets prompted with a dialog to save the pdf when no `output` file is given.
      */
     @JvmStatic
-    fun printBooklet(owner: Window? = null, highlight: Club? = null) {
+    fun printBooklet(output: File? = null, owner: Window? = null, highlight: Club? = null, openOnFinish: Boolean = true) {
         val meet = State.meet ?: error("No meet selected")
-        val pdfFile = promptSaveLocation(owner, highlight) ?: return
+        val pdfFile = output ?: promptSaveLocation(owner, highlight) ?: return
         DEFAULT_FONT = Fonts.regular
 
         // Make document.
@@ -46,7 +46,9 @@ object BookletPrinter {
             }
         }
 
-        pdfFile.open()
+        if (openOnFinish) {
+            pdfFile.open()
+        }
     }
 
     private fun Document.printEvent(highlight: Club?, event: Event, eventNumber: Int) {
@@ -151,21 +153,10 @@ object BookletPrinter {
     /**
      * Shows a [FileChooser] to pick a saving location.
      */
-    private fun promptSaveLocation(owner: Window? = null, highlight: Club?): File? {
-        val clubSuffix = if (highlight != null) {
-            "_" + highlight.name
-                    .replace(" ", "")
-                    .replace(Regex("[^A-Za-z()\\-0-9&]"), "-")
-        }
-        else ""
-
-        val meetName = State.meet!!.name
-                .replace(" ", "")
-                .replace(Regex("[^A-Za-z()\\-0-9&]"), "-")
-
+    fun promptSaveLocation(owner: Window? = null, highlight: Club?): File? {
         val result = FileChooser().apply {
             title = "Programmaboekje opslaan..."
-            initialFileName = "Schedule_$meetName$clubSuffix.pdf"
+            initialFileName = fileNameOfSchedule(State.meet!!, highlight)
             extensionFilters += FileChooser.ExtensionFilter("PDF Bestanden", "*.pdf")
             UserSettings[UserSettings.Key.lastScheduleDirectory].whenNonNull {
                 try {

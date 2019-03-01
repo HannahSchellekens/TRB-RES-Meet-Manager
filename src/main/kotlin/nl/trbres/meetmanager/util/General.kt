@@ -4,6 +4,7 @@ import nl.trbres.meetmanager.MeetManagerApp
 import nl.trbres.meetmanager.UserSettings
 import java.awt.Desktop
 import java.io.File
+import java.util.*
 
 /**
  * The current program version number.
@@ -119,6 +120,11 @@ fun Any?.isNull() = this == null
  * Returns `true` if the object is not `null`.
  */
 fun Any?.isNotNull() = this != null
+
+/**
+ * Get the value wrapped in the optional, or `null` when the optional is empty.
+ */
+fun <T> Optional<T>.getOrNull(): T? = if (isPresent) get() else null
 
 fun String.file() = File(this)
 fun File.open() {

@@ -17,8 +17,9 @@ import java.util.*
  */
 open class ChooseClubDialog(
         ownerWindow: Window?,
-        customMessage: String = "Kies een vereniging."
-) : Dialog<Club?>() {
+        customMessage: String = "Kies een vereniging.",
+        allowAllClubs: Boolean = false
+) : Dialog<List<Club>>() {
 
     private lateinit var txtSearch: TextField
     private lateinit var tvwClubs: TableView<Club>
@@ -33,9 +34,22 @@ open class ChooseClubDialog(
         val okButton = dialogPane.lookupButton(ButtonType.OK)
         okButton.isDisable = true
 
+        val allClubsButton = ButtonType("Alle verenigingen")
+        if (allowAllClubs) {
+            dialogPane.buttonTypes.add(allClubsButton)
+        }
+
         resultConverter = Callback {
+            // No clubs.
             if (it == ButtonType.CANCEL) return@Callback null
-            tvwClubs.selectedItem
+
+            // All clubs.
+            if (it == allClubsButton) {
+                return@Callback tvwClubs.items.filterNotNull()
+            }
+
+            // One club.
+            listOfNotNull(tvwClubs.selectedItem)
         }
 
         dialogPane.content = borderpane {
@@ -58,7 +72,7 @@ open class ChooseClubDialog(
 
                     onDoubleClick {
                         if (validate(okButton)) {
-                            result = tvwClubs.selectedItem
+                            result = listOfNotNull(tvwClubs.selectedItem)
                             close()
                         }
                     }

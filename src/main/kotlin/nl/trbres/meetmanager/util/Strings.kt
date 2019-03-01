@@ -1,5 +1,7 @@
 package nl.trbres.meetmanager.util
 
+import nl.trbres.meetmanager.model.Club
+import nl.trbres.meetmanager.model.Meet
 import java.awt.Desktop
 import java.net.URI
 
@@ -32,3 +34,17 @@ fun String.firstUpper(): String {
     val first = substring(0, 1)
     return first.toUpperCase() + substring(1)
 }
+
+/**
+ * Returns the name of the club in a file name friendly (read: no illegal characters) format.
+ */
+fun Club.fileNameFriendlyString() = this.name.replace(" ", "")
+        .replace(Regex("[^A-Za-z()\\-0-9&]"), "-")
+
+
+/**
+ * Returns the name of the meet in a file name friendly (read: no illegal characters) format.
+ */
+fun Meet.fileNameFriendlyString() = name
+        .replace(" ", "")
+        .replace(Regex("[^A-Za-z()\\-0-9&]"), "-")

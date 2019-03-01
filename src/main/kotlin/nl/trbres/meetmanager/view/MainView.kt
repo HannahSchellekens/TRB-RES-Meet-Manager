@@ -5,6 +5,7 @@ import javafx.scene.control.Alert
 import javafx.scene.control.ButtonType
 import javafx.scene.control.Menu
 import javafx.scene.control.TabPane
+import javafx.stage.DirectoryChooser
 import javafx.stage.FileChooser
 import nl.trbres.meetmanager.Icons
 import nl.trbres.meetmanager.State
@@ -22,6 +23,7 @@ import nl.trbres.meetmanager.view.dialog.EndResultDialog
 import nl.trbres.meetmanager.view.dialog.ImportClubsDialog
 import nl.trbres.meetmanager.view.dialog.NewMeetDialog
 import tornadofx.*
+import java.io.File
 
 /**
  * @author Ruben Schellekens
@@ -126,7 +128,7 @@ open class MainView : View() {
      */
     fun printBooklet() {
         State.meet ?: return
-        BookletPrinter.printBooklet(currentWindow, highlight = null)
+        BookletPrinter.printBooklet(output = null, owner = currentWindow, highlight = null)
     }
 
     /**
@@ -135,9 +137,33 @@ open class MainView : View() {
     fun printPersonalisedBooklet() {
         State.meet ?: return
 
-        val dialog = ChooseClubDialog(currentWindow)
-        dialog.showAndWait().ifPresent {
-            BookletPrinter.printBooklet(currentWindow, highlight = it)
+        val dialog = ChooseClubDialog(currentWindow, allowAllClubs = true)
+        val clubs = dialog.showAndWait().getOrNull() ?: return
+        when (clubs.size) {
+            1 -> BookletPrinter.printBooklet(output = null, owner = currentWindow, highlight = clubs.firstOrNull())
+            else -> {
+                val directory = DirectoryChooser().apply {
+                    title = "Kies een map om de programmaboekjes in op te slaan..."
+                    UserSettings[UserSettings.Key.lastScheduleDirectory].whenNonNull {
+                        try {
+                            initialDirectory = it.file()
+                        }
+                        catch (ignored: Exception) { }
+                    }
+                }.showDialog(currentWindow) ?: return
+
+                clubs.forEach {
+                    val name = fileNameOfSchedule(State.meet!!, it)
+                    val output = File("${directory.absolutePath}/$name")
+                    BookletPrinter.printBooklet(output = output, owner = currentWindow, highlight = it, openOnFinish = false)
+                }
+
+                Alert(Alert.AlertType.INFORMATION, "${clubs.size} programma's zijn geëxporteerd naar de map $directory", ButtonType.OK).apply {
+                    title = "Programmaboekjes"
+                    headerText = "Opslaan gelukt!"
+                    initOwner(currentWindow)
+                }.showAndWait()
+            }
         }
     }
 

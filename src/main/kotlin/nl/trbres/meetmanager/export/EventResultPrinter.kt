@@ -8,6 +8,7 @@ import javafx.stage.Window
 import nl.trbres.meetmanager.State
 import nl.trbres.meetmanager.UserSettings
 import nl.trbres.meetmanager.model.Event
+import nl.trbres.meetmanager.model.Relay
 import nl.trbres.meetmanager.model.SwimResult
 import nl.trbres.meetmanager.util.*
 import java.io.File
@@ -98,12 +99,23 @@ object EventResultPrinter {
                             setLeading(0f, leading)
                         }
 
+                        // Relay participants.
+                        val swimmer = swimResults[i].swimmer
+                        if (swimmer is Relay) {
+                            cell(newParagraph(""))
+                            cell(newParagraph(swimmer.members.joinToString(", ") { it.nameWithBirthYear }, Fonts.small)) {
+                                paddingLeft = 12f
+                                colspan = 5
+                                setLeading(0f, leading)
+                            }
+                        }
+
                         // Special message?
                         val message = messages[i]
                         if (message != null) {
                             cell(newParagraph(""))
                             cell(newParagraph(message, Fonts.italic)) {
-                                colspan = 4
+                                colspan = 5
                                 setLeading(0f, leading)
                             }
                         }

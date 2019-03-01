@@ -21,6 +21,7 @@ object Icons {
     @JvmField val up = Image("/icons/up.png")
     @JvmField val down = Image("/icons/down.png")
     @JvmField val download = Image("/icons/download.png")
+    @JvmField val upload = Image("/icons/upload.png")
     @JvmField val print = Image("/icons/print.png")
     @JvmField val report = Image("/icons/report.png")
 }

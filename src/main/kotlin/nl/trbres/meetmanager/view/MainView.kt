@@ -7,14 +7,17 @@ import javafx.scene.control.Menu
 import javafx.scene.control.TabPane
 import javafx.stage.DirectoryChooser
 import javafx.stage.FileChooser
+import nl.rubensten.utensils.system.Clipboard
 import nl.trbres.meetmanager.Icons
 import nl.trbres.meetmanager.State
 import nl.trbres.meetmanager.UserSettings
 import nl.trbres.meetmanager.UserSettings.Key.lastDirectory
 import nl.trbres.meetmanager.export.*
 import nl.trbres.meetmanager.import.SwimtrackImporter
+import nl.trbres.meetmanager.model.Category
 import nl.trbres.meetmanager.model.Club
 import nl.trbres.meetmanager.model.Meet
+import nl.trbres.meetmanager.model.Relay
 import nl.trbres.meetmanager.util.*
 import nl.trbres.meetmanager.util.fx.icon
 import nl.trbres.meetmanager.util.fx.openEvent
@@ -37,6 +40,7 @@ open class MainView : View() {
     lateinit var viewSchedule: Schedule
     lateinit var menuMeet: Menu
     lateinit var menuImport: Menu
+    lateinit var menuExport: Menu
     lateinit var menuRecent: Menu
 
     override val root = borderpane {
@@ -81,6 +85,11 @@ open class MainView : View() {
                 menuImport = menu("Importeren") {
                     item("Verenigingen importeren").icon(Icons.download).action(::importClubs)
                     item("Zwemmers importeren").icon(Icons.download).action(::importSwimmers)
+                    isDisable = true
+                }
+                menuExport = menu("Exporteren") {
+                    item("Vernigingen exporteren").icon(Icons.upload).action(::exportClubs)
+                    item("Zwemmers exporteren").icon(Icons.upload).action(::exportSwimmers)
                     isDisable = true
                 }
                 menu("Opties") {
@@ -282,12 +291,55 @@ open class MainView : View() {
     }
 
     /**
+     * Exports the swimmers to the clipboard.
+     */
+    fun exportSwimmers() {
+        val meet = State.meet ?: return
+        val export = meet.swimmers.filter { it !is Relay }.joinToString("\n") {
+            buildString {
+                append(if (it.category == Category.MALE) "m" else "v")
+                append("\t")
+                append(it.name)
+                append("\t")
+                append(it.age.id)
+                append("\t")
+                append(it.club?.name)
+                append("\t")
+                append(it.birthYear ?: "")
+            }
+        }
+        Clipboard.set(export)
+
+        Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK).apply {
+            title = "Zwemmers exporteren"
+            headerText = "De zwemmers zijn gekopiëerd naar het klembord."
+            initOwner(currentWindow)
+        }.showAndWait()
+    }
+
+    /**
+     * Exports the clubs to the clipboard.
+     */
+    fun exportClubs() {
+        val meet = State.meet ?: return
+        val export = meet.clubs.joinToString("\n") { it.name }
+        Clipboard.set(export)
+
+        Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK).apply {
+            title = "Verenigingen exporteren"
+            headerText = "De verenigingen zijn gekopiëerd naar het klembord."
+            initOwner(currentWindow)
+        }.showAndWait()
+    }
+
+    /**
      * Updates all UI elements to line up with the global meet state.
      */
     fun updateFromState() {
         // (un)lock controls
         tabWrapper.isVisible = State.meet != null
         menuImport.isDisable = State.meet == null
+        menuExport.isDisable = State.meet == null
         menuMeet.isDisable = State.meet == null
 
         // Update contents.

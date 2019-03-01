@@ -40,6 +40,11 @@ data class Meet(
         var ageSet: AgeSet = AgeSet.SIMPLE,
 
         /**
+         * The name of the meet organising party.
+         */
+        var organiser: String = "TRB-RES",
+
+        /**
          * All the events of the meet.
          */
         val events: MutableList<Event> = ArrayList(),

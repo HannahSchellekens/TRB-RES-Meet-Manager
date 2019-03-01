@@ -18,7 +18,7 @@ object PdfBookletFooter : PdfPageEventHelper() {
     override fun onEndPage(writer: PdfWriter?, document: Document?) {
         document ?: return
         val cb = writer?.directContent ?: return
-        val club = Phrase("TRB-RES", Fonts.small)
+        val club = Phrase(State.meet?.organiser ?: "TRB-RES", Fonts.small)
         val date = State.meet?.date ?: Date()
         val timestamp = Phrase("$date", Fonts.small)
         val separator = LineSeparator()

@@ -20,6 +20,7 @@ open class General(val main: MainView) : BorderPane() {
     lateinit var dateDate: DatePicker
     lateinit var txtLanes: TextField
     lateinit var txtPenalty: TextField
+    lateinit var txtOrganisation: TextField
 
     init {
         center {
@@ -72,6 +73,14 @@ open class General(val main: MainView) : BorderPane() {
                                 { text = State.meet?.penalty?.toString() ?: "" }
                         )
                     }
+                    field("Naam organisatie") {
+                        txtOrganisation = textfield().validate(
+                                { true },
+                                "",
+                                { State.meet?.organiser = text },
+                                { text = State.meet?.organiser ?: "TRB-RES" }
+                        )
+                    }
                 }
             }
         }
@@ -86,5 +95,6 @@ open class General(val main: MainView) : BorderPane() {
         dateDate.value = meet.date.toLocalDate()
         txtLanes.text = "${meet.lanes.first}-${meet.lanes.endInclusive}"
         txtPenalty.text = "%.2f".format(meet.penalty.toFloat() / 100f)
+        txtOrganisation.text = meet.organiser
     }
 }

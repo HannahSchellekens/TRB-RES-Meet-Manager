@@ -7,6 +7,7 @@ import com.lowagie.text.pdf.ColumnText
 import com.lowagie.text.pdf.PdfPageEventHelper
 import com.lowagie.text.pdf.PdfWriter
 import com.lowagie.text.pdf.draw.LineSeparator
+import nl.trbres.meetmanager.State
 import nl.trbres.meetmanager.time.Date
 import nl.trbres.meetmanager.time.Time
 
@@ -18,7 +19,7 @@ object PdfFooter : PdfPageEventHelper() {
     override fun onEndPage(writer: PdfWriter?, document: Document?) {
         document ?: return
         val cb = writer?.directContent ?: return
-        val club = Phrase("TRB-RES", Fonts.small)
+        val club = Phrase(State.meet?.organiser ?: "TRB-RES", Fonts.small)
         val now = Time()
         val date = Date()
         val timestamp = Phrase("$date, %02du%02d".format(now.hours, now.minutes), Fonts.small)

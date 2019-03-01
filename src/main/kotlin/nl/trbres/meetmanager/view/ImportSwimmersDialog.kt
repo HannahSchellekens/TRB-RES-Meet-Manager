@@ -19,8 +19,8 @@ open class ImportSwimmersDialog(ownerWindow: Window?) : Dialog<String>() {
         title = "Swimtrack importeren"
         headerText = "Voer meerdere nieuwe zwemmers toe door een set spreadsheet cellen\nin de textbox te plakken."
         contentText = """Formaat (per zwemmer een nieuwe regel, [dit is een cel]):
-            |[m/v] [Naam zwemmer 1] [MINIOREN/JUNIOREN/JEUGD/SENIOREN] [Clubnaam]
-            |[m/v] [Naam zwemmer 2] [MINIOREN/JUNIOREN/JEUGD/SENIOREN] [Clubnaam]
+            |[m/v] [Naam zwemmer 1] [LEEFTIJD] [Clubnaam] [Jaar]
+            |[m/v] [Naam zwemmer 2] [LEEFTIJD] [Clubnaam] [Jaar]
             |...
             |
             |Voorbeeld:
@@ -30,8 +30,10 @@ open class ImportSwimmersDialog(ownerWindow: Window?) : Dialog<String>() {
             |Let op dat er een club met de gegeven naam geregistreerd moet zijn voordat
             |de clubs succesvol kunnen worden toegewezen.
             |
+            |Het geboortejaar is optioneel en kan dus weggelaten worden.
+            |
             |""".trimMargin()
-        dialogPane.minWidth = 350.0
+        dialogPane.minWidth = 400.0
         initOwner(ownerWindow)
 
         dialogPane.buttonTypes.addAll(ButtonType.OK, ButtonType.CANCEL)

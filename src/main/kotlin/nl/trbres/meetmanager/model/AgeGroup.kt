@@ -187,7 +187,7 @@ enum class DefaultAgeGroup(
     JEUGD_2("Jeugd", 2, SimpleAgeGroup.JEUGD),
     SENIOREN_1("Senioren", 1, SimpleAgeGroup.SENIOREN),
     SENIOREN_2("Senioren", 2, SimpleAgeGroup.SENIOREN),
-    SENOREN_OPEN("Senioren", 0, SimpleAgeGroup.SENIOREN);
+    SENIOREN_OPEN("Senioren", 0, SimpleAgeGroup.SENIOREN);
 
     companion object {
 
@@ -196,7 +196,7 @@ enum class DefaultAgeGroup(
                 MINIOREN_1, MINIOREN_2, MINIOREN_3, MINIOREN_4, MINIOREN_5, MINIOREN_6,
                 JUNIOREN_1, JUNIOREN_2, JUNIOREN_3, JUNIOREN_4,
                 JEUGD_1, JEUGD_2,
-                SENOREN_OPEN
+                SENIOREN_OPEN
         )
 
         @JvmField
@@ -204,7 +204,7 @@ enum class DefaultAgeGroup(
                 MINIOREN_1, MINIOREN_2, MINIOREN_3, MINIOREN_4, MINIOREN_5,
                 JUNIOREN_1, JUNIOREN_2, JUNIOREN_3,
                 JEUGD_1, JEUGD_2,
-                SENIOREN_1, SENIOREN_2, SENOREN_OPEN
+                SENIOREN_1, SENIOREN_2, SENIOREN_OPEN
         )
     }
 

@@ -32,13 +32,15 @@ open class SwimtrackImporter(val input: String, val meet: Meet) {
                 val category = if (entry[0] == "m") Category.MALE else Category.FEMALE
                 val name = entry[1]
                 val ageGroup = try {
-                    meet.ageSet.ages.find { it.id == entry[2] } ?: return@mapNotNull null
+                    meet.ageSet.ages.find { age -> age.id == entry[2] } ?: return@mapNotNull null
                 }
                 catch (e: IllegalArgumentException) {
                     return@mapNotNull null
                 }
                 val club = clubs[entry[3]]
 
-                Swimmer(name, ageGroup, category, club)
+                val birthYear = entry.getOrNull(4)?.toIntOrNull()
+
+                Swimmer(name, ageGroup, category, club, birthYear)
             }
 }

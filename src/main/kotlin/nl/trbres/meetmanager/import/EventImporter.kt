@@ -1,14 +1,11 @@
 package nl.trbres.meetmanager.import
 
-import nl.trbres.meetmanager.model.Category
-import nl.trbres.meetmanager.model.Club
-import nl.trbres.meetmanager.model.Meet
-import nl.trbres.meetmanager.model.Swimmer
+import nl.trbres.meetmanager.model.*
 
 /**
  * @author Ruben Schellekens
  */
-open class SwimtrackImporter(val input: String, val meet: Meet) {
+open class EventImporter(val input: String, val meet: Meet) {
 
     /**
      * Map mapping all club names to their objects.
@@ -29,18 +26,26 @@ open class SwimtrackImporter(val input: String, val meet: Meet) {
                     return@mapNotNull null
                 }
 
-                val category = if (entry[0] == "m") Category.MALE else Category.FEMALE
-                val name = entry[1]
+                val distance = entry[0].parseDistance() ?: return@mapNotNull null
+                val stroke = Stroke.values().find { stroke -> stroke.name == entry[1] } ?: return@mapNotNull null
                 val ageGroup = try {
                     meet.ageSet.ages.find { age -> age.id == entry[2] } ?: return@mapNotNull null
                 }
                 catch (e: IllegalArgumentException) {
                     return@mapNotNull null
                 }
-                val club = clubs[entry[3]]
+                val category = when (entry[3]) {
+                    "m" -> Category.MALE
+                    "v" -> Category.FEMALE
+                    else -> Category.MIX
+                }
 
-                val birthYear = entry.getOrNull(4)?.toIntOrNull()
-
-                Swimmer(name, ageGroup, category, club, birthYear)
+                Event(distance, stroke, category, mutableListOf(ageGroup))
             }
+
+    private fun String.parseDistance(): Distance? {
+        val numbers = split('x').mapNotNull { it.toIntOrNull() }
+        if (numbers.size != 2) return null
+        return Distance(numbers.last(), numbers.first())
+    }
 }

@@ -13,7 +13,8 @@ import nl.trbres.meetmanager.State
 import nl.trbres.meetmanager.UserSettings
 import nl.trbres.meetmanager.UserSettings.Key.lastDirectory
 import nl.trbres.meetmanager.export.*
-import nl.trbres.meetmanager.import.SwimtrackImporter
+import nl.trbres.meetmanager.import.EventImporter
+import nl.trbres.meetmanager.import.SwimmerImporter
 import nl.trbres.meetmanager.model.Category
 import nl.trbres.meetmanager.model.Club
 import nl.trbres.meetmanager.model.Meet
@@ -21,10 +22,7 @@ import nl.trbres.meetmanager.model.Relay
 import nl.trbres.meetmanager.util.*
 import nl.trbres.meetmanager.util.fx.icon
 import nl.trbres.meetmanager.util.fx.openEvent
-import nl.trbres.meetmanager.view.dialog.ChooseClubDialog
-import nl.trbres.meetmanager.view.dialog.EndResultDialog
-import nl.trbres.meetmanager.view.dialog.ImportClubsDialog
-import nl.trbres.meetmanager.view.dialog.NewMeetDialog
+import nl.trbres.meetmanager.view.dialog.*
 import tornadofx.*
 import java.io.File
 
@@ -83,6 +81,7 @@ open class MainView : View() {
                     isDisable = true
                 }
                 menuImport = menu("Importeren") {
+                    item("Programma importeren").icon(Icons.download).action(::importEvents)
                     item("Verenigingen importeren").icon(Icons.download).action(::importClubs)
                     item("Zwemmers importeren").icon(Icons.download).action(::importSwimmers)
                     isDisable = true
@@ -244,8 +243,8 @@ open class MainView : View() {
     fun generateCertificates() {
         val meet = State.meet ?: return
         val dialog = EndResultDialog(currentWindow)
-        dialog.showAndWait().ifPresent {
-            val text = it.events
+        dialog.showAndWait().ifPresent { result ->
+            val text = result.events
             val numbers = text.replace(" ", "")
                     .split(",")
                     .filter { it.isNaturalNumber() }
@@ -256,7 +255,20 @@ open class MainView : View() {
             }
 
             val events = numbers.map { meet.events[it - 1] }
-            CertificateExport.exportTextFile(CertificateExportMeta(events, numbers, it.filter, it.convertTo), currentWindow)
+            CertificateExport.exportTextFile(CertificateExportMeta(events, numbers, result.filter, result.convertTo), currentWindow)
+        }
+    }
+
+    /**
+     * Imports events from a given (user inputted) list.
+     */
+    fun importEvents() {
+        val meet = State.meet ?: return
+        ImportEventsDialog(currentWindow).showAndWait().ifPresent {
+            val newEvents = EventImporter(it, meet).import()
+            meet.events.addAll(newEvents)
+            updateFromState()
+            information("${newEvents.size} programma's zijn toegevoegd!", owner = currentWindow, title = "Succes!")
         }
     }
 
@@ -266,7 +278,7 @@ open class MainView : View() {
     fun importSwimmers() {
         val meet = State.meet ?: return
         ImportSwimmersDialog(currentWindow).showAndWait().ifPresent {
-            val newSwimmers = SwimtrackImporter(it, meet).import()
+            val newSwimmers = SwimmerImporter(it, meet).import()
             meet.swimmers.addAll(newSwimmers)
             updateFromState()
             information("${newSwimmers.size} zwemmers zijn toegevoegd!", owner = currentWindow, title = "Succes!")
@@ -310,12 +322,7 @@ open class MainView : View() {
             }
         }
         Clipboard.set(export)
-
-        Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK).apply {
-            title = "Zwemmers exporteren"
-            headerText = "De zwemmers zijn gekopiëerd naar het klembord."
-            initOwner(currentWindow)
-        }.showAndWait()
+        information("De zwemmers zijn gekopiëerd naar het klembord.", owner = currentWindow, title = "Zwemmers exporteren")
     }
 
     /**
@@ -325,12 +332,7 @@ open class MainView : View() {
         val meet = State.meet ?: return
         val export = meet.clubs.joinToString("\n") { it.name }
         Clipboard.set(export)
-
-        Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK).apply {
-            title = "Verenigingen exporteren"
-            headerText = "De verenigingen zijn gekopiëerd naar het klembord."
-            initOwner(currentWindow)
-        }.showAndWait()
+        information("De verenigingen zijn gekopiëerd naar het klembord.", owner = currentWindow, title = "Verenigingen exporteren")
     }
 
     /**
@@ -354,12 +356,7 @@ open class MainView : View() {
             }
         }
         Clipboard.set(export)
-
-        Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK).apply {
-            title = "Programma exporteren"
-            headerText = "Het programma is gekopiëerd naar het klembord."
-            initOwner(currentWindow)
-        }.showAndWait()
+        information("Het programma is gekopiëerd naar het klembord.", owner = currentWindow, title = "Programma exporteren")
     }
 
     /**

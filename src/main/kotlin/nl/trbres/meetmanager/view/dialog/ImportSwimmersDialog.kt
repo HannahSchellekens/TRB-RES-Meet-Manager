@@ -33,7 +33,6 @@ open class ImportSwimmersDialog(ownerWindow: Window?) : Dialog<String>() {
             |
             |Mogelijke categorieën zijn:
             |${State.meet?.ageSet?.ages?.joinToString(", ") { it.id }}
-            |
             |""".trimMargin()
         dialogPane.minWidth = 350.0
         initOwner(ownerWindow)

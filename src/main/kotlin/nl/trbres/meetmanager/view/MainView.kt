@@ -448,6 +448,7 @@ open class MainView : View() {
         val file = FileChooser().apply {
             title = "Wedstrijdbestand opslaan..."
             extensionFilters += FileChooser.ExtensionFilter("Wedstrijden", "*.meet")
+            initialFileName = meet.fileNameFriendlyString() + ".meet"
             UserSettings[lastDirectory].whenNonNull {
                 try {
                     initialDirectory = it.file()

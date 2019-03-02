@@ -50,9 +50,9 @@ object CertificateExport {
         append(meet.date.toDutchName()); tab()
         append(meet.location); tab()
 
-        append(results["25m Rugslag"]?.first ?: "NT"); tab(); append(results["25m Rugslag"]?.second ?: "laatst"); tab()
-        append(results["25m Schoolslag"]?.first ?: "NT"); tab(); append(results["25m Schoolslag"]?.second ?: "laatst"); tab()
-        append(results["25m Vrije slag"]?.first ?: "NT"); tab(); append(results["25m Vrije slag"]?.second ?: "laatst"); tab()
+        append(results["25m rugslag"]?.first ?: "NT"); tab(); append(results["25m rugslag"]?.second ?: "laatst"); tab()
+        append(results["25m schoolslag"]?.first ?: "NT"); tab(); append(results["25m schoolslag"]?.second ?: "laatst"); tab()
+        append(results["25m vrije slag"]?.first ?: "NT"); tab(); append(results["25m vrije slag"]?.second ?: "laatst"); tab()
         append(results["total"]?.first ?: "NT"); tab(); append(results["total"]?.second ?: "laatst"); tab()
 
         val relay = meta.relay[swimmer]
@@ -179,13 +179,13 @@ class CertificateExportMeta(
                 val event = events[eventIndex]
                 val eventName = "${event.distance} ${event.stroke}"
 
-                var rank = swimmerRanks[eventIndex]!!.toInt()
+                var rank = swimmerRanks.getValue(eventIndex).toInt()
                 if (rank < 1) continue
 
                 if (swimmer.isWedstrijdzwemmer().not()) {
                     rank -= wedstrijdzwemmersAbove[event]!![rank - 1]
                 }
-                val resultPair = Pair(swimmerTimes[eventIndex]!!, rank.toString())
+                val resultPair = Pair(swimmerTimes.getValue(eventIndex), rank.toString())
 
                 resultMap[eventName] = resultPair
             }

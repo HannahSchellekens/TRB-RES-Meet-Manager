@@ -353,6 +353,10 @@ open class MainView : View() {
                     Category.FEMALE -> "v"
                     else -> "x"
                 })
+                append("\t")
+                append(it.metric.name)
+                append("\t")
+                append(it.modifiers.joinToString(",") { it.name })
             }
         }
         Clipboard.set(export)

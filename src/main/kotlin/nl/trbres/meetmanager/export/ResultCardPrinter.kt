@@ -8,6 +8,7 @@ import javafx.stage.FileChooser
 import javafx.stage.Window
 import nl.trbres.meetmanager.State
 import nl.trbres.meetmanager.UserSettings
+import nl.trbres.meetmanager.model.Event
 import nl.trbres.meetmanager.model.Relay
 import nl.trbres.meetmanager.util.*
 import java.io.File
@@ -59,7 +60,8 @@ object ResultCardPrinter {
                                         eventName,
                                         heatNumber.toString(),
                                         laneNo.toString(),
-                                        members
+                                        members,
+                                        event.metric
                                 )
                             }
                         }
@@ -80,7 +82,7 @@ object ResultCardPrinter {
     /**
      * Prints a card without any information.
      */
-    private fun PdfPTable.emptyCard() = card(" ", " ", " ", " ", "   ", "   ", emptyList())
+    private fun PdfPTable.emptyCard() = card(" ", " ", " ", " ", "   ", "   ", emptyList(), metric = Event.Metric.TIME)
 
     /**
      * Prints a card given raw values.
@@ -92,7 +94,8 @@ object ResultCardPrinter {
             eventName: String,
             heatNumber: String,
             laneNumber: String,
-            members: List<String>
+            members: List<String>,
+            metric: Event.Metric
     ) {
         table(4) {
             widths(3, 18, 18, 3)
@@ -166,14 +169,15 @@ object ResultCardPrinter {
 
             // End Time
             cell(newParagraph())
-            cell(newParagraph("eindtijd", small)) {
+            cell(newParagraph(metric.endResult, small)) {
                 colspan = 2
                 paddingTop = 16f
             }
             cell(newParagraph())
 
             cell(newParagraph())
-            cell(newParagraph("_______ min _______ sec _______ 1/100", regular), alignment = Element.ALIGN_CENTER) {
+            val resultLine = if (metric == Event.Metric.TIME) "_______ min _______ sec _______ 1/100" else "___________ meter"
+            cell(newParagraph(resultLine, regular), alignment = Element.ALIGN_CENTER) {
                 colspan = 2
                 paddingTop = 16f
             }

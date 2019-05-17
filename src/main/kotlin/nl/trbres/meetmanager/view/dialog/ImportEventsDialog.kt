@@ -21,13 +21,14 @@ open class ImportEventsDialog(ownerWindow: Window?) : Dialog<String>() {
         title = "Programma importeren"
         headerText = "Voer nieuwe programma's toe door een set spreadsheet cellen\nin de textbox te plakken."
         contentText = """Formaat (per programma een nieuwe regel, [dit is een cel]):
-            |[NxM] [SLAG] [CATEGORIE] [m/v/x]
+            |[NxM] [SLAG] [CATEGORIE] [m/v/x] [TIME/DISTANCE] [OPTIE1,OPTIE2,...]
             |...
             |
             |Voorbeeld:
-            |1x200  BACKSTROKE  SENIOREN_OPEN   m
+            |1x200  BACKSTROKE  SENIOREN_OPEN   m   TIME    ARMS
             |4x100  MEDLEY      JUNIOREN_2      v
             |4x50   FREESTYLE   SENIOREN_OPEN   x
+            |1x25   BUTTERFLY   SENIOREN_OPEN   v   DISTANCE LEGS,UNDERWATER
             |
             |Mogelijke categorieën zijn:
             |${State.meet?.ageSet?.ages?.toList()?.chunked(6)?.joinToString("\n") { chunk -> chunk.joinToString(", ") { it.id }}}

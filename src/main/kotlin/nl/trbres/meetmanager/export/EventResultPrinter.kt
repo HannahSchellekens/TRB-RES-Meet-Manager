@@ -44,9 +44,10 @@ object EventResultPrinter {
 
                 // Header
                 table(3) {
+                    widths(0.2f, 0.6f, 0.2f)
                     cell(Paragraph(DEFAULT_LEADING, "Programma $eventNumber", DEFAULT_FONT), Rectangle.NO_BORDER)
                     with(event) {
-                        cell(Paragraph(DEFAULT_LEADING, "${ages.first()[category]}, $distance $stroke", DEFAULT_FONT), Rectangle.NO_BORDER) {
+                        cell(Paragraph(DEFAULT_LEADING, toStringNoAges(), DEFAULT_FONT), Rectangle.NO_BORDER) {
                             horizontalAlignment = Rectangle.ALIGN_CENTER
                         }
                     }
@@ -65,7 +66,7 @@ object EventResultPrinter {
                 val birthYears = swimResults.birthYears()
                 val clubs = swimResults.clubs()
                 val ages = swimResults.ages()
-                val results = swimResults.results()
+                val results = swimResults.results(event.metric)
                 val messages = swimResults.messages()
 
                 table(6) {
@@ -77,7 +78,7 @@ object EventResultPrinter {
                     cell(newParagraph("vereniging", Fonts.small))
                     cell(newParagraph("leeftijd", Fonts.small))
                     cell(newParagraph("", Fonts.small))
-                    cell(newParagraph("eindtijd", Fonts.small), Element.ALIGN_RIGHT)
+                    cell(newParagraph(event.metric.endResult, Fonts.small), Element.ALIGN_RIGHT)
 
                     for (i in 0 until names.size) {
                         cell(newParagraph(ranks[i]), Element.ALIGN_RIGHT) {
@@ -157,8 +158,11 @@ object EventResultPrinter {
     /**
      * Generates all results in order.
      */
-    private fun List<SwimResult>.results() = map {
-        if (it.result.isZero()) "" else it.result.toString()
+    private fun List<SwimResult>.results(metric: Event.Metric = Event.Metric.TIME) = map {
+        if (it.result.isZero()) "" else when (metric) {
+            Event.Metric.TIME -> it.result.toString()
+            Event.Metric.DISTANCE -> it.result.toMetresString()
+        }
     }
 
     /**

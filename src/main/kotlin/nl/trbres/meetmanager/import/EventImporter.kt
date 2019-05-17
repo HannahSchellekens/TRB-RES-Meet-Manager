@@ -40,7 +40,19 @@ open class EventImporter(val input: String, val meet: Meet) {
                     else -> Category.MIX
                 }
 
-                Event(distance, stroke, category, mutableListOf(ageGroup))
+                // Import metric.
+                val metric = if (entry.size >= 5) {
+                    Event.Metric.valueOf(entry[4])
+                }
+                else Event.Metric.TIME
+
+                // Import modifiers
+                val modifiers = if (entry.size >= 6) {
+                    entry[5].split(",").map { input -> Event.Modifier.valueOf(input) }.toSet()
+                }
+                else emptySet()
+
+                Event(distance, stroke, category, mutableListOf(ageGroup), metric, modifiers)
             }
 
     private fun String.parseDistance(): Distance? {

@@ -1,10 +1,7 @@
 package nl.trbres.meetmanager.view.dialog
 
 import javafx.scene.Node
-import javafx.scene.control.ButtonType
-import javafx.scene.control.ComboBox
-import javafx.scene.control.Dialog
-import javafx.scene.control.TextField
+import javafx.scene.control.*
 import javafx.stage.Window
 import javafx.util.Callback
 import nl.trbres.meetmanager.State
@@ -23,6 +20,8 @@ open class EventDialog(ownerWindow: Window?, var editEvent: Event? = null) : Dia
     private lateinit var cboxStroke: ComboBox<Stroke>
     private lateinit var cboxCategory: ComboBox<Category>
     private lateinit var cboxAgeGroup: ComboBox<AgeGroup>
+    private lateinit var cboxMetric: ComboBox<Event.Metric>
+    private lateinit var checkModifiers: MutableMap<Event.Modifier, CheckBox>
 
     init {
         title = if (editEvent == null) "Nieuw programma" else "Programma bewerken"
@@ -43,13 +42,17 @@ open class EventDialog(ownerWindow: Window?, var editEvent: Event? = null) : Dia
                     Distance(txtDistance.text.toInt(), txtTimes.text.toInt()),
                     cboxStroke.selectedItem!!,
                     cboxCategory.selectedItem!!,
-                    mutableListOf(cboxAgeGroup.selectedItem!!)
+                    mutableListOf(cboxAgeGroup.selectedItem!!),
+                    cboxMetric.selectedItem ?: kotlin.error("No selected item found"),
+                    extractModifiers()
             )
             else editEvent!!.apply {
                 distance = Distance(txtDistance.text.toInt(), txtTimes.text.toInt())
                 stroke = cboxStroke.selectedItem!!
                 category = cboxCategory.selectedItem!!
                 ages = mutableListOf(cboxAgeGroup.selectedItem!!)
+                metric = cboxMetric.selectedItem ?: Event.Metric.TIME
+                modifiers = extractModifiers()
             }
         }
 
@@ -87,6 +90,19 @@ open class EventDialog(ownerWindow: Window?, var editEvent: Event? = null) : Dia
                         validation(okButton)
                     }
                 }
+                field("Metriek") {
+                    cboxMetric = combobox {
+                        items = Event.Metric.values().toList().observable()
+                        selectionModel.select(Event.Metric.TIME)
+                        validation(okButton)
+                    }
+                }
+                field("Opties") {
+                    checkModifiers = HashMap()
+                    Event.Modifier.values().forEach { modifier ->
+                        checkModifiers[modifier] = checkbox(modifier.title)
+                    }
+                }
             }
         }
 
@@ -109,6 +125,11 @@ open class EventDialog(ownerWindow: Window?, var editEvent: Event? = null) : Dia
         cboxStroke.selectionModel.select(editEvent!!.stroke)
         cboxCategory.selectionModel.select(editEvent!!.category)
         cboxAgeGroup.selectionModel.select(editEvent!!.ages.first())
+        cboxMetric.selectionModel.select(editEvent!!.metric)
+
+        Event.Modifier.values().forEach { modifier ->
+            checkModifiers[modifier]?.isSelected = modifier in editEvent!!.modifiers
+        }
     }
 
     /**
@@ -146,4 +167,8 @@ open class EventDialog(ownerWindow: Window?, var editEvent: Event? = null) : Dia
         selectionModel.selectedItemProperty().addListener { _ -> validate(okButton) }
         return this
     }
+
+    private fun extractModifiers(): Set<Event.Modifier> = checkModifiers
+            .filter { (_, box) -> box.isSelected }
+            .map { (modifier, _) -> modifier }.toSet()
 }

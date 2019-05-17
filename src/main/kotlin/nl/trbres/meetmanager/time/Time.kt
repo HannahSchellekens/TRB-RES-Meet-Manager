@@ -2,6 +2,7 @@ package nl.trbres.meetmanager.time
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import javafx.util.StringConverter
+import nl.trbres.meetmanager.model.Event
 import java.time.LocalTime
 
 /**
@@ -95,6 +96,11 @@ data class Time(var hours: Int, var minutes: Int, var seconds: Int, var hundreth
     else {
         String.format("%2d.%02d", seconds, hundreths)
     }
+
+    fun toMetresString() = if (this == INVALID) {
+        "ND"
+    }
+    else String.format("%.1fm", toHundreths() / 100f)
 }
 
 /**
@@ -102,11 +108,20 @@ data class Time(var hours: Int, var minutes: Int, var seconds: Int, var hundreth
  *
  * @author Hannah Schellekens
  */
-open class TimeConverter : StringConverter<Time>() {
+open class TimeConverter(val metric: Event.Metric) : StringConverter<Time>() {
 
-    override fun toString(time: Time?) = time?.toString() ?: ""
+    override fun toString(time: Time?) = when (metric) {
+        Event.Metric.TIME -> time?.toString() ?: ""
+        Event.Metric.DISTANCE -> time?.toMetresString() ?: ""
+    }
 
     override fun fromString(string: String?): Time {
+        if (metric == Event.Metric.DISTANCE) {
+            val metres = string?.toFloatOrNull() ?: return Time(0, 0)
+            val hundreths = (metres * 100).toInt()
+            return Time(hundreths)
+        }
+
         val time = string?.replace(Regex("[^\\d]"), "") ?: return Time(0, 0)
         return when (time.length) {
             1 -> Time(0, time(0..0))

@@ -26,7 +26,17 @@ data class Event(
         /**
          * What age groups are allowed in the event.
          */
-        var ages: MutableList<AgeGroup>
+        var ages: MutableList<AgeGroup>,
+
+        /**
+         * With what kind of metric the results are measured.
+         */
+        var metric: Metric = Metric.TIME,
+
+        /**
+         * Special features of an event.
+         */
+        var modifiers: Set<Modifier> = emptySet()
 ) {
 
     /**
@@ -57,13 +67,14 @@ data class Event(
             it.swimResults(factor)
         }
 
+        val sortingOrder = if (metric == Metric.TIME) 1 else -1
         val regular = results.asSequence()
                 .filter { it.status == null }
-                .sorted()
+                .sortedBy { it.result.toHundreths() * sortingOrder }
                 .toList()
         val disqualified = results.asSequence()
                 .filter { it.status?.type == SpecialResultType.DISQUALIFIED }
-                .sortedBy { it.result }
+                .sortedBy { it.result.toHundreths() * sortingOrder }
                 .toList()
         val didNotStart = results.asSequence()
                 .filter { it.status?.type == SpecialResultType.DID_NOT_START }
@@ -77,13 +88,43 @@ data class Event(
         return regular + disqualified + didNotStart + didNotStartWithoutCancellation
     }
 
-    override fun toString() = "${ages.first()[category]} ${ages.joinToString(",")}, $distance $stroke"
+    override fun toString(): String {
+        val options = modifiers.sorted().joinToString(" ").trim()
+        return if (metric == Metric.TIME) {
+            "${ages.first()[category]} ${ages.joinToString(",")}, $distance $stroke $options".trimEnd()
+        }
+        else "${ages.first()[category]} ${ages.joinToString(",")}, $stroke $options".trimEnd()
+    }
+
+    fun toStringNoAges(): String {
+        val options = modifiers.sorted().joinToString(" ").trim()
+        return if (metric == Metric.TIME) {
+            "${ages.first()[category]}, $distance $stroke $options".trimEnd()
+        }
+        else "${ages.first()[category]}, $stroke $options".trimEnd()
+    }
 
     /**
      * @author Hannah Schellekens
      */
-    enum class Options {
+    enum class Modifier(val title: String) {
 
+        ARMS("armen"),
+        LEGS("benen"),
+        UNDERWATER("onderwater");
+
+        override fun toString() = title
+    }
+
+    /**
+     * @author Hannah Schellekens
+     */
+    enum class Metric(val description: String, val endResult: String) {
+
+        TIME("tijd", "eindtijd"),
+        DISTANCE("afstand", "afstand");
+
+        override fun toString() = description
     }
 }
 

@@ -10,6 +10,7 @@ import nl.trbres.meetmanager.export.EventResultPrinter
 import nl.trbres.meetmanager.model.*
 import nl.trbres.meetmanager.time.Time
 import nl.trbres.meetmanager.time.TimeConverter
+import nl.trbres.meetmanager.util.firstUpper
 import nl.trbres.meetmanager.util.fx.icon
 import nl.trbres.meetmanager.util.fx.styleClass
 import nl.trbres.meetmanager.util.indexRange
@@ -83,10 +84,10 @@ open class Schedule(val main: MainView) : BorderPane() {
                                         }
 
                                         // Result
-                                        column("Tijd", ScheduleEntry::time) {
+                                        column(event.metric.description.firstUpper(), ScheduleEntry::time) {
                                             prefWidthProperty().bind(this@tableview.widthProperty().multiply(0.1))
                                             isSortable = false
-                                        }.makeEditable(TimeConverter()).setOnEditCommit {
+                                        }.makeEditable(TimeConverter(event.metric)).setOnEditCommit {
                                             updateTime(it.newValue, selectedItem ?: return@setOnEditCommit)
                                         }
 

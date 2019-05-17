@@ -84,9 +84,10 @@ object BookletPrinter {
         defaultCell.paddingBottom = 8f
 
         table(3) {
+            widths(0.2f, 0.6f, 0.2f)
             cell(Paragraph(DEFAULT_LEADING, "Programma $eventNumber", DEFAULT_FONT), Rectangle.NO_BORDER)
             with(event) {
-                cell(Paragraph(DEFAULT_LEADING, "${ages.first()[category]}, $distance $stroke", DEFAULT_FONT), Rectangle.NO_BORDER) {
+                cell(Paragraph(DEFAULT_LEADING, toStringNoAges(), DEFAULT_FONT), Rectangle.NO_BORDER) {
                     horizontalAlignment = Rectangle.ALIGN_CENTER
                 }
             }

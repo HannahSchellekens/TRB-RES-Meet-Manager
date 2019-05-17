@@ -5,7 +5,7 @@ import com.lowagie.text.pdf.PdfPageEventHelper
 import com.lowagie.text.pdf.PdfWriter
 
 /**
- * @author Ruben Schellekens
+ * @author Hannah Schellekens
  */
 object PdfBookletHeaderAndFooter : PdfPageEventHelper() {
 

@@ -8,7 +8,7 @@ import java.io.FileWriter
 import java.util.*
 
 /**
- * @author Ruben Schellekens
+ * @author Hannah Schellekens
  */
 object UserSettings {
 

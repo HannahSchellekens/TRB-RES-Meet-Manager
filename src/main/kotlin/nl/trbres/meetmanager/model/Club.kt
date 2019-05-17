@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import java.util.*
 
 /**
- * @author Ruben Schellekens
+ * @author Hannah Schellekens
  */
 data class Club(var name: String, val id: UUID = UUID.randomUUID()) {
 

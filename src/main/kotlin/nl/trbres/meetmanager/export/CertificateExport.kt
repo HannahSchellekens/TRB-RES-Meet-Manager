@@ -12,7 +12,7 @@ import nl.trbres.meetmanager.util.whenNonNull
 import java.io.File
 
 /**
- * @author Ruben Schellekens
+ * @author Hannah Schellekens
  */
 object CertificateExport {
 
@@ -110,7 +110,7 @@ object CertificateExport {
 /**
  * Data required for the export that is not readily available in the meet data.
  *
- * @author Ruben Schellekens
+ * @author Hannah Schellekens
  */
 class CertificateExportMeta(
         val events: List<Event>,

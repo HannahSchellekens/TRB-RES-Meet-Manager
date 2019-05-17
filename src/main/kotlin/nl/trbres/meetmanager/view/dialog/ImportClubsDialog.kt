@@ -9,7 +9,7 @@ import javafx.util.Callback
 import tornadofx.*
 
 /**
- * @author Ruben Schellekens
+ * @author Hannah Schellekens
  */
 open class ImportClubsDialog(ownerWindow: Window?) : Dialog<Set<String>>() {
 
@@ -28,8 +28,8 @@ open class ImportClubsDialog(ownerWindow: Window?) : Dialog<Set<String>>() {
         val okButton = dialogPane.lookupButton(ButtonType.OK)
         okButton.isDisable = true
 
-        resultConverter = Callback {
-            if (it != ButtonType.OK) {
+        resultConverter = Callback { button ->
+            if (button != ButtonType.OK) {
                 return@Callback null
             }
             return@Callback txtaContent.text.split("\n").asSequence()

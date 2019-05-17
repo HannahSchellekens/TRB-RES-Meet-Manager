@@ -3,7 +3,7 @@ package nl.trbres.meetmanager.import
 import nl.trbres.meetmanager.model.*
 
 /**
- * @author Ruben Schellekens
+ * @author Hannah Schellekens
  */
 open class EventImporter(val input: String, val meet: Meet) {
 

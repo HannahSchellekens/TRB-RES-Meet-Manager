@@ -10,7 +10,7 @@ import com.lowagie.text.pdf.draw.LineSeparator
 import nl.trbres.meetmanager.State
 
 /**
- * @author Ruben Schellekens
+ * @author Hannah Schellekens
  */
 object PdfBookletHeader : PdfPageEventHelper() {
 

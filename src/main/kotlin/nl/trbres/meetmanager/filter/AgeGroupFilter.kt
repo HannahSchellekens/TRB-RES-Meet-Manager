@@ -4,7 +4,7 @@ import nl.trbres.meetmanager.model.AgeGroup
 import nl.trbres.meetmanager.model.Swimmer
 
 /**
- * @author Ruben Schellekens
+ * @author Hannah Schellekens
  */
 open class AgeGroupFilter(val group: AgeGroup) : SwimmerFilter {
 

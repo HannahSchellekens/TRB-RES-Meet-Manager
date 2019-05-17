@@ -1,7 +1,7 @@
 package nl.trbres.meetmanager.model
 
 /**
- * @author Ruben Schellekens
+ * @author Hannah Schellekens
  */
 enum class Category(val nameYoung: String, val nameOld: String) {
 

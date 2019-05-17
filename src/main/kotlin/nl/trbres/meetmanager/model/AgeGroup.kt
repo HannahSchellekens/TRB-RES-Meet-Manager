@@ -53,7 +53,7 @@ open class AgeSet(
 }
 
 /**
- * @author Ruben Schellekens
+ * @author Hannah Schellekens
  */
 @JsonTypeName("custom")
 data class CustomAgeGroup(
@@ -70,7 +70,7 @@ data class CustomAgeGroup(
     override fun toString() = title
 
     /**
-     * @author Ruben Schellekens
+     * @author Hannah Schellekens
      */
     enum class CategoryNameTranslator(val identifiedCharacter: Char, val categoryName: (Category) -> String) {
 
@@ -86,7 +86,7 @@ data class CustomAgeGroup(
 }
 
 /**
- * @author Ruben Schellekens
+ * @author Hannah Schellekens
  */
 @JsonTypeName("simple")
 enum class SimpleAgeGroup(
@@ -111,7 +111,7 @@ enum class SimpleAgeGroup(
 }
 
 /**
- * @author Ruben Schellekens
+ * @author Hannah Schellekens
  */
 @JsonTypeName("school")
 enum class PrimarySchoolGroup(
@@ -150,7 +150,7 @@ enum class PrimarySchoolGroup(
 }
 
 /**
- * @author Ruben Schellekens
+ * @author Hannah Schellekens
  */
 @JsonTypeName("default")
 enum class DefaultAgeGroup(
@@ -164,7 +164,7 @@ enum class DefaultAgeGroup(
          *
          * E.g. `6` for `Minioren 6`.
          */
-        val groupNumber: Int,
+        groupNumber: Int,
 
         /**
          * On what simple age group the default age group is based.
@@ -218,7 +218,7 @@ enum class DefaultAgeGroup(
 }
 
 /**
- * @author Ruben Schellekens
+ * @author Hannah Schellekens
  */
 @JsonTypeInfo(use = NAME, include = WRAPPER_OBJECT, property = "implementation")
 @JsonSubTypes(

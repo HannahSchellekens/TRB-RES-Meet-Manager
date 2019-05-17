@@ -14,7 +14,7 @@ import tornadofx.*
 import java.util.*
 
 /**
- * @author Ruben Schellekens
+ * @author Hannah Schellekens
  */
 open class ChooseSwimmerDialog(
         ownerWindow: Window?,
@@ -127,6 +127,6 @@ open class ChooseSwimmerDialog(
 }
 
 /**
- * @author Ruben Schellekens
+ * @author Hannah Schellekens
  */
 data class ChooseSwimmerDialogResult(val swimmer: Optional<Swimmer>, val removal: Boolean)

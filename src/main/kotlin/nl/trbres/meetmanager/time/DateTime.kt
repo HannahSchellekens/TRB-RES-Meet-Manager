@@ -1,7 +1,7 @@
 package nl.trbres.meetmanager.time
 
 /**
- * @author Ruben Schellekens
+ * @author Hannah Schellekens
  */
 data class DateTime(val date: Date, val time: Time) {
 

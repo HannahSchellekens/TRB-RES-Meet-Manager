@@ -11,7 +11,7 @@ import nl.trbres.meetmanager.model.DisqualificationCode
 import tornadofx.*
 
 /**
- * @author Ruben Schellekens
+ * @author Hannah Schellekens
  */
 open class ChooseDisqualificationCodeDialog(
         ownerWindow: Window?,

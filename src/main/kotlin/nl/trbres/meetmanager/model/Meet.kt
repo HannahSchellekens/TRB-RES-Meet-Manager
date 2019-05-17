@@ -5,7 +5,7 @@ import nl.trbres.meetmanager.time.Time
 import nl.trbres.meetmanager.util.indexRange
 
 /**
- * @author Ruben Schellekens
+ * @author Hannah Schellekens
  */
 data class Meet(
 
@@ -79,13 +79,15 @@ data class Meet(
 
         // Rank people with more distances higher.
         val maxDistances = collected.asSequence()
-                .map { it.results.values.count { it != null && it.status == null } }
+                .map { collectedResult -> collectedResult.results.values.count { it != null && it.status == null } }
                 .max() ?: 0
 
         val classes = arrayOfNulls<MutableList<CollectedResult>>(maxDistances + 1)
         for (i in classes.indices) {
             classes[i] = collected.asSequence()
-                    .filter { it.results.values.count { it != null && (it.status == null || it.disqualification != null) } == i }
+                    .filter { collectedResult ->
+                        collectedResult.results.values.count { it != null && (it.status == null || it.disqualification != null) } == i
+                    }
                     .toMutableList()
         }
         classes.forEach { it!!.sort() }
@@ -99,7 +101,7 @@ data class Meet(
 }
 
 /**
- * @author Ruben Schellekens
+ * @author Hannah Schellekens
  */
 class CollectedResult(
         val swimmer: Swimmer,

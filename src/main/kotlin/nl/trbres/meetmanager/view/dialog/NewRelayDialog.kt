@@ -14,7 +14,7 @@ import nl.trbres.meetmanager.util.fx.icon
 import tornadofx.*
 
 /**
- * @author Ruben Schellekens
+ * @author Hannah Schellekens
  */
 open class NewRelayDialog(currentWindow: Window? = null) : NewSwimmerDialog(currentWindow) {
 
@@ -77,8 +77,8 @@ open class NewRelayDialog(currentWindow: Window? = null) : NewSwimmerDialog(curr
      * Prompt the user to add a swimmer to the list.
      */
     private fun addSwimmer() {
-        ChooseSwimmerDialog(ownerWindow, relay = false).showAndWait().ifPresent {
-            it.swimmer.ifPresent {
+        ChooseSwimmerDialog(ownerWindow, relay = false).showAndWait().ifPresent { result ->
+            result.swimmer.ifPresent {
                 listSwimmers.items.add(it)
             }
         }

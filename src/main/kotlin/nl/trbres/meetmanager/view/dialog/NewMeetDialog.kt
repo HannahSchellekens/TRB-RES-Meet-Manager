@@ -18,7 +18,7 @@ import tornadofx.*
 /**
  * Dialog that prompts the user to create and select a new meet.
  *
- * @author Ruben Schellekens
+ * @author Hannah Schellekens
  */
 class NewMeetDialog : Fragment() {
 

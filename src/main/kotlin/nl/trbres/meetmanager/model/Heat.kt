@@ -5,7 +5,7 @@ import nl.trbres.meetmanager.State
 import nl.trbres.meetmanager.time.Time
 
 /**
- * @author Ruben Schellekens
+ * @author Hannah Schellekens
  */
 data class Heat(
 

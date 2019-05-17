@@ -12,7 +12,7 @@ import nl.trbres.meetmanager.util.isNaturalNumber
 import tornadofx.*
 
 /**
- * @author Ruben Schellekens
+ * @author Hannah Schellekens
  */
 open class EndResultDialog(ownerWindow: Window?) : Dialog<EndResultDialogResult>() {
 
@@ -126,7 +126,7 @@ open class EndResultDialog(ownerWindow: Window?) : Dialog<EndResultDialogResult>
 }
 
 /**
- * @author Ruben Schellekens
+ * @author Hannah Schellekens
  */
 class EndResultDialogResult(
 

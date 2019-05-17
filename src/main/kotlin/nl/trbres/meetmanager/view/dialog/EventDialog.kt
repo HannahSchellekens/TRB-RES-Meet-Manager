@@ -14,7 +14,7 @@ import nl.trbres.meetmanager.util.isNull
 import tornadofx.*
 
 /**
- * @author Ruben Schellekens
+ * @author Hannah Schellekens
  */
 open class EventDialog(ownerWindow: Window?, var editEvent: Event? = null) : Dialog<Event>() {
 

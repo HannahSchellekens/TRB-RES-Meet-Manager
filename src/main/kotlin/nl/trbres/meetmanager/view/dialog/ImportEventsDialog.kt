@@ -11,7 +11,7 @@ import nl.trbres.meetmanager.model.Stroke
 import tornadofx.*
 
 /**
- * @author Ruben Schellekens
+ * @author Hannah Schellekens
  */
 open class ImportEventsDialog(ownerWindow: Window?) : Dialog<String>() {
 

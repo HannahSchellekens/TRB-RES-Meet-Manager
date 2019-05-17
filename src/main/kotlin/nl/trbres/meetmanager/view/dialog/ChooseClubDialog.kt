@@ -13,7 +13,7 @@ import tornadofx.*
 import java.util.*
 
 /**
- * @author Ruben Schellekens
+ * @author Hannah Schellekens
  */
 open class ChooseClubDialog(
         ownerWindow: Window?,

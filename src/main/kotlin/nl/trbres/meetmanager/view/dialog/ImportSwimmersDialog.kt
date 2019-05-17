@@ -10,7 +10,7 @@ import nl.trbres.meetmanager.State
 import tornadofx.*
 
 /**
- * @author Ruben Schellekens
+ * @author Hannah Schellekens
  */
 open class ImportSwimmersDialog(ownerWindow: Window?) : Dialog<String>() {
 

@@ -3,7 +3,7 @@ package nl.trbres.meetmanager.time
 import java.time.LocalDate
 
 /**
- * @author Ruben Schellekens
+ * @author Hannah Schellekens
  */
 data class Date(var year: Int, var month: Int, var day: Int) {
 

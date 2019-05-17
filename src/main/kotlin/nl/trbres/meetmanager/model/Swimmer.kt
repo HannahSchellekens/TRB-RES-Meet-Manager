@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName
 import java.util.*
 
 /**
- * @author Ruben Schellekens
+ * @author Hannah Schellekens
  */
 @JsonTypeInfo(use = NAME, include = WRAPPER_OBJECT, property = "implementation")
 @JsonSubTypes(

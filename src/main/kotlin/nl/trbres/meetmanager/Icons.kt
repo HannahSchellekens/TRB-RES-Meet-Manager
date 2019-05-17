@@ -3,7 +3,7 @@ package nl.trbres.meetmanager
 import javafx.scene.image.Image
 
 /**
- * @author Ruben Schellekens
+ * @author Hannah Schellekens
  */
 object Icons {
 

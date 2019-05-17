@@ -7,7 +7,7 @@ import tornadofx.importStylesheet
 import tornadofx.setStageIcon
 
 /**
- * @author Ruben Schellekens
+ * @author Hannah Schellekens
  */
 class MeetManagerApp : App(MainView::class) {
 

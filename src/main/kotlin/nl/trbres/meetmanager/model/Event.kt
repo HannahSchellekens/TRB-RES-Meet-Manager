@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import nl.trbres.meetmanager.time.Time
 
 /**
- * @author Ruben Schellekens
+ * @author Hannah Schellekens
  */
 data class Event(
 
@@ -78,10 +78,17 @@ data class Event(
     }
 
     override fun toString() = "${ages.first()[category]} ${ages.joinToString(",")}, $distance $stroke"
+
+    /**
+     * @author Hannah Schellekens
+     */
+    enum class Options {
+
+    }
 }
 
 /**
- * @author Ruben Schellekens
+ * @author Hannah Schellekens
  */
 data class SwimResult(
         val swimmer: Swimmer,

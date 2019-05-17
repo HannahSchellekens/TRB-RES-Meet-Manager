@@ -5,7 +5,7 @@ import java.util.*
 import kotlin.math.floor
 
 /**
- * @author Ruben Schellekens
+ * @author Hannah Schellekens
  */
 open class Distributor(private val meet: Meet) {
 

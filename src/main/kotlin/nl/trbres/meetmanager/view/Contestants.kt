@@ -18,7 +18,7 @@ import tornadofx.*
 import java.util.*
 
 /**
- * @author Ruben Schellekens
+ * @author Hannah Schellekens
  */
 open class Contestants(val main: MainView) : BorderPane() {
 

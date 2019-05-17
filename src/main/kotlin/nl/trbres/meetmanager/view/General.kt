@@ -11,7 +11,7 @@ import nl.trbres.meetmanager.util.toIntRange
 import tornadofx.*
 
 /**
- * @author Ruben Schellekens
+ * @author Hannah Schellekens
  */
 open class General(val main: MainView) : BorderPane() {
 

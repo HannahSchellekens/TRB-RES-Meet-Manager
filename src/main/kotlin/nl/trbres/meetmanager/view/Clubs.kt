@@ -12,7 +12,7 @@ import nl.trbres.meetmanager.util.nestedUpdate
 import tornadofx.*
 
 /**
- * @author Ruben Schellekens
+ * @author Hannah Schellekens
  */
 open class Clubs(val main: MainView) : BorderPane() {
 

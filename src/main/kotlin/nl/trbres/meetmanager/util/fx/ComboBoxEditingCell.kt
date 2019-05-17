@@ -6,7 +6,7 @@ import tornadofx.observable
 import tornadofx.rowItem
 
 /**
- * @author Ruben Schellekens
+ * @author Hannah Schellekens
  */
 open class ComboBoxEditingCell<S, T>(
 

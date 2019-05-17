@@ -19,22 +19,22 @@ val APPLICATION_NAME = MeetManagerApp::class.java.`package`.implementationTitle 
 /**
  * The github URL of the program.
  */
-val GITHUB_PAGE = "https://github.com/RubenSchellekens/TRB-RES-Meet-Manager"
+const val GITHUB_PAGE = "https://github.com/RubenSchellekens/TRB-RES-Meet-Manager"
 
 /**
  * The URL where the documentation of the software is located.
  */
-val DOCUMENTATION_PAGE = "$GITHUB_PAGE/wiki"
+const val DOCUMENTATION_PAGE = "$GITHUB_PAGE/wiki"
 
 /**
  * The URL pointing to the program's license.
  */
-val LICENSE = "$GITHUB_PAGE/blob/master/LICENSE"
+const val LICENSE = "$GITHUB_PAGE/blob/master/LICENSE"
 
 /**
  * The URL of the homepage of the software's author.
  */
-val AUTHOR_HOME = "https://rubenschellekens.github.io"
+const val AUTHOR_HOME = "https://hannahschellekens.nl"
 
 /**
  * Folder where all the application data will be stored.

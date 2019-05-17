@@ -1,9 +1,9 @@
 package nl.trbres.meetmanager.model
 
 /**
- * @author Ruben Schellekens
+ * @author Hannah Schellekens
  */
-enum class DisqualificationCode(val letter: String, val message: String, val type: Type) {
+enum class DisqualificationCode(letter: String, val message: String, type: Type) {
 
     // General
     AA("A", "Gestart voor het startsignaal (en wel gezwommen).", Type.GENERAL),
@@ -101,10 +101,10 @@ enum class DisqualificationCode(val letter: String, val message: String, val typ
      */
     val code: String = type.prefix + letter
 
-    override fun toString() = code + " - " + message
+    override fun toString() = "$code - $message"
 
     /**
-     * @author Ruben Schellekens
+     * @author Hannah Schellekens
      */
     enum class Type(val typeName: String, val prefix: String) {
 

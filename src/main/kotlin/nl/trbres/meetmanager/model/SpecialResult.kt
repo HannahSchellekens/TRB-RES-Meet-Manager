@@ -1,7 +1,7 @@
 package nl.trbres.meetmanager.model
 
 /**
- * @author Ruben Schellekens
+ * @author Hannah Schellekens
  */
 data class SpecialResult(val type: SpecialResultType, val reason: String? = null) {
 
@@ -9,7 +9,7 @@ data class SpecialResult(val type: SpecialResultType, val reason: String? = null
 }
 
 /**
- * @author Ruben Schellekens
+ * @author Hannah Schellekens
  */
 enum class SpecialResultType(val abbreviation: String) {
 

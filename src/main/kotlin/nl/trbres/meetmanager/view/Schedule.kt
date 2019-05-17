@@ -19,7 +19,7 @@ import nl.trbres.meetmanager.view.dialog.EventDialog
 import tornadofx.*
 
 /**
- * @author Ruben Schellekens
+ * @author Hannah Schellekens
  */
 open class Schedule(val main: MainView) : BorderPane() {
 
@@ -478,7 +478,7 @@ open class Schedule(val main: MainView) : BorderPane() {
 }
 
 /**
- * @author Ruben Schellekens
+ * @author Hannah Schellekens
  */
 data class ScheduleEntry(
         var lane: Int,

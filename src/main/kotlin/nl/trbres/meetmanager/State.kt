@@ -4,7 +4,7 @@ import nl.trbres.meetmanager.model.Meet
 import java.io.File
 
 /**
- * @author Ruben Schellekens
+ * @author Hannah Schellekens
  */
 object State {
 

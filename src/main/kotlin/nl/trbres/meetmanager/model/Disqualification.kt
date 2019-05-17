@@ -3,7 +3,7 @@ package nl.trbres.meetmanager.model
 import java.util.*
 
 /**
- * @author Ruben Schellekens
+ * @author Hannah Schellekens
  */
 class Disqualification(val code: DisqualificationCode, val swimmerId: UUID?) {
 

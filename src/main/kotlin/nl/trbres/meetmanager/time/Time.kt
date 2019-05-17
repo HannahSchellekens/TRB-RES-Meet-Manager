@@ -5,7 +5,7 @@ import javafx.util.StringConverter
 import java.time.LocalTime
 
 /**
- * @author Ruben Schellekens
+ * @author Hannah Schellekens
  */
 data class Time(var hours: Int, var minutes: Int, var seconds: Int, var hundreths: Int) : Comparable<Time> {
 
@@ -100,7 +100,7 @@ data class Time(var hours: Int, var minutes: Int, var seconds: Int, var hundreth
 /**
  * Converts strings to [Time] objects and vice versa.
  *
- * @author Ruben Schellekens
+ * @author Hannah Schellekens
  */
 open class TimeConverter : StringConverter<Time>() {
 

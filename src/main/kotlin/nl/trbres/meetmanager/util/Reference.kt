@@ -1,7 +1,7 @@
 package nl.trbres.meetmanager.util
 
 /**
- * @author Ruben Schellekens
+ * @author Hannah Schellekens
  */
 open class Reference<T>(var value: T?) {
 

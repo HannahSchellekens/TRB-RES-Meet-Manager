@@ -27,7 +27,7 @@ import tornadofx.*
 import java.io.File
 
 /**
- * @author Ruben Schellekens
+ * @author Hannah Schellekens
  */
 open class MainView : View() {
 
@@ -221,8 +221,8 @@ open class MainView : View() {
     fun endResults() {
         val meet = State.meet ?: return
         val dialog = EndResultDialog(currentWindow)
-        dialog.showAndWait().ifPresent {
-            val text = it.events
+        dialog.showAndWait().ifPresent { result ->
+            val text = result.events
             val numbers = text.replace(" ", "")
                     .split(",")
                     .filter { it.isNaturalNumber() }
@@ -233,7 +233,7 @@ open class MainView : View() {
             }
 
             val events = numbers.map { meet.events[it - 1] }
-            EndResultPrinter.printResults(events, numbers, it.filter, it.convertTo, currentWindow)
+            EndResultPrinter.printResults(events, numbers, result.filter, result.convertTo, currentWindow)
         }
     }
 
@@ -521,12 +521,11 @@ open class MainView : View() {
                 buttonLicense
         ).apply {
             title = "Over"
-            headerText = "Gemaakt door Ruben Schellekens\nhttps://rubenschellekens.github.io\nGepubliceerd onder de GPLv3 licentie"
+            headerText = "Gemaakt door Hannah Schellekens\nhttps://hannahschellekens.nl\nGepubliceerd onder de GPLv3 licentie"
             initOwner(currentWindow)
         }
 
-        val result = alert.showAndWait().orElse(null)
-        when (result) {
+        when (alert.showAndWait().orElse(null)) {
             buttonWebsite -> AUTHOR_HOME.openUrl()
             buttonLicense -> LICENSE.openUrl()
         }

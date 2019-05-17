@@ -14,7 +14,7 @@ import nl.trbres.meetmanager.util.*
 import java.io.File
 
 /**
- * @author Ruben Schellekens
+ * @author Hannah Schellekens
  */
 object EventResultPrinter {
 

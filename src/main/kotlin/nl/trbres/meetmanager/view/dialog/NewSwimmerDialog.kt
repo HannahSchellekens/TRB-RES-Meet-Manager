@@ -17,7 +17,7 @@ import nl.trbres.meetmanager.util.isNull
 import tornadofx.*
 
 /**
- * @author Ruben Schellekens
+ * @author Hannah Schellekens
  */
 open class NewSwimmerDialog(protected val ownerWindow: Window?) : Dialog<Swimmer>() {
 

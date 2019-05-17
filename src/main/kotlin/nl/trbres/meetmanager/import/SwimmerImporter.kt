@@ -6,7 +6,7 @@ import nl.trbres.meetmanager.model.Meet
 import nl.trbres.meetmanager.model.Swimmer
 
 /**
- * @author Ruben Schellekens
+ * @author Hannah Schellekens
  */
 open class SwimmerImporter(val input: String, val meet: Meet) {
 

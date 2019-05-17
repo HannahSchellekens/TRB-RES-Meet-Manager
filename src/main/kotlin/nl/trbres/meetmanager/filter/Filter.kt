@@ -1,7 +1,7 @@
 package nl.trbres.meetmanager.filter
 
 /**
- * @author Ruben Schellekens
+ * @author Hannah Schellekens
  */
 interface Filter<in T> {
 

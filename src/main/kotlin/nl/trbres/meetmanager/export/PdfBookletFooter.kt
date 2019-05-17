@@ -11,7 +11,7 @@ import nl.trbres.meetmanager.State
 import nl.trbres.meetmanager.time.Date
 
 /**
- * @author Ruben Schellekens
+ * @author Hannah Schellekens
  */
 object PdfBookletFooter : PdfPageEventHelper() {
 

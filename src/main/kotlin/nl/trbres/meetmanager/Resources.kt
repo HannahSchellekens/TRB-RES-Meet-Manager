@@ -6,7 +6,7 @@ import java.io.File
 import java.io.FileOutputStream
 
 /**
- * @author Ruben Schellekens
+ * @author Hannah Schellekens
  */
 object Resources {
 

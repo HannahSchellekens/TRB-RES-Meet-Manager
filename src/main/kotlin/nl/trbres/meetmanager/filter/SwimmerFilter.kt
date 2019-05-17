@@ -3,7 +3,7 @@ package nl.trbres.meetmanager.filter
 import nl.trbres.meetmanager.model.Swimmer
 
 /**
- * @author Ruben Schellekens
+ * @author Hannah Schellekens
  */
 interface SwimmerFilter : Filter<Swimmer> {
 

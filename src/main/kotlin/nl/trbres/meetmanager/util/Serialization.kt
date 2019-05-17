@@ -5,7 +5,7 @@ import java.io.*
 import java.net.URL
 
 /**
- * @author Ruben Schellekens
+ * @author Hannah Schellekens
  */
 object Serialization {
 

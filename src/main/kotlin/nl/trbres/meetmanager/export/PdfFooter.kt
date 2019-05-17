@@ -12,7 +12,7 @@ import nl.trbres.meetmanager.time.Date
 import nl.trbres.meetmanager.time.Time
 
 /**
- * @author Ruben Schellekens
+ * @author Hannah Schellekens
  */
 object PdfFooter : PdfPageEventHelper() {
 

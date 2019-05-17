@@ -5,7 +5,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 /**
- * @author Ruben Schellekens
+ * @author Hannah Schellekens
  */
 @JsonTypeName("relay")
 open class Relay(name: String, age: AgeGroup, category: Category, club: Club?, id: UUID = UUID.randomUUID())

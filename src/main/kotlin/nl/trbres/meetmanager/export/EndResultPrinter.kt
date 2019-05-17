@@ -15,7 +15,7 @@ import nl.trbres.meetmanager.util.*
 import java.io.File
 
 /**
- * @author Ruben Schellekens
+ * @author Hannah Schellekens
  */
 object EndResultPrinter {
 
@@ -150,8 +150,7 @@ object EndResultPrinter {
             return events.first().ages.first()[base]
         }
         for (i in 1 until events.size) {
-            val cat = events[i].category
-            when (cat) {
+            when (val cat = events[i].category) {
                 Category.MIX -> return events[i].ages.first()[cat]
                 else -> {
                     if (cat != base) {

@@ -5,7 +5,7 @@ import com.lowagie.text.FontFactory
 import nl.trbres.meetmanager.Resources
 
 /**
- * @author Ruben Schellekens
+ * @author Hannah Schellekens
  */
 object Fonts {
 

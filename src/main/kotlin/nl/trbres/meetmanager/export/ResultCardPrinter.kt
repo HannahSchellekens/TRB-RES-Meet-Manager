@@ -26,6 +26,7 @@ object ResultCardPrinter {
     @JvmStatic
     fun printCards(owner: Window? = null) {
         val meet = State.meet ?: error("No meet selected")
+        if (meet.events.all { it.heats.isEmpty() }) return
         val pdfFile = promptSaveLocation(owner) ?: return
         DEFAULT_FONT = Fonts.larger
 
@@ -133,17 +134,15 @@ object ResultCardPrinter {
             }
             cell(newParagraph())
 
-            cell(newParagraph())
-            cell(newParagraph(eventName, regular), alignment = Element.ALIGN_CENTER, border = Rectangle.BOTTOM) {
-                colspan = 2
+            cell(newParagraph(eventName, regular), alignment = Element.ALIGN_CENTER) {
+                colspan = 4
                 paddingBottom = 12f
             }
-            cell(newParagraph())
 
             // Relay members
             if (members.isNotEmpty()) {
                 cell(newParagraph())
-                cell(newParagraph(members.joinToString("\n"), small), alignment = Element.ALIGN_CENTER, border = Rectangle.BOTTOM) {
+                cell(newParagraph(members.joinToString("\n"), small), alignment = Element.ALIGN_CENTER, border = Rectangle.BOTTOM or Rectangle.TOP) {
                     colspan = 2
                     paddingBottom = 6f
                     setLeading(0f, 1.2f)
@@ -153,7 +152,7 @@ object ResultCardPrinter {
 
             // Heat/Lane
             cell(newParagraph())
-            cell(newParagraph("Serie $heatNumber      Baan $laneNumber", regular), alignment = Element.ALIGN_CENTER) {
+            cell(newParagraph("Serie $heatNumber      Baan $laneNumber", regular), alignment = Element.ALIGN_CENTER, border = Rectangle.TOP) {
                 colspan = 2
                 paddingTop = 6f
                 paddingBottom = 5f

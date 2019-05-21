@@ -41,13 +41,13 @@ open class EventImporter(val input: String, val meet: Meet) {
                 }
 
                 // Import metric.
-                val metric = if (entry.size >= 5) {
+                val metric = if (entry.size >= 5 && entry[4].isNotBlank()) {
                     Event.Metric.valueOf(entry[4])
                 }
                 else Event.Metric.TIME
 
                 // Import modifiers
-                val modifiers = if (entry.size >= 6) {
+                val modifiers = if (entry.size >= 6 && entry[5].isNotBlank()) {
                     entry[5].split(",").map { input -> Event.Modifier.valueOf(input) }.toSet()
                 }
                 else emptySet()

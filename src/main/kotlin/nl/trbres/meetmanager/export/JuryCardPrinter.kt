@@ -11,7 +11,6 @@ import nl.trbres.meetmanager.UserSettings
 import nl.trbres.meetmanager.model.Event
 import nl.trbres.meetmanager.util.*
 import java.io.File
-import kotlin.math.ceil
 
 /**
  * @author Hannah Schellekens
@@ -26,6 +25,7 @@ object JuryCardPrinter {
     @JvmStatic
     fun printCards(owner: Window? = null) {
         val meet = State.meet ?: error("No meet selected")
+        if (meet.events.all { it.heats.isEmpty() }) return
         val pdfFile = promptSaveLocation(owner) ?: return
         DEFAULT_FONT = Fonts.larger
 
@@ -112,17 +112,15 @@ object JuryCardPrinter {
             cell(newParagraph())
 
             // Name & Event
-            cell(newParagraph())
-            cell(newParagraph(eventName, regular), alignment = Element.ALIGN_CENTER, border = Rectangle.BOTTOM) {
-                colspan = 2
+            cell(newParagraph(eventName, regular), alignment = Element.ALIGN_CENTER) {
+                colspan = 4
                 paddingBottom = 12f
                 paddingTop = 10f
             }
-            cell(newParagraph())
 
             // End Time
             cell(newParagraph())
-            cell(newParagraph("volgorde " + if (metric == Event.Metric.TIME) "van aankomst" else "", small), border = Rectangle.BOTTOM) {
+            cell(newParagraph("volgorde " + if (metric == Event.Metric.TIME) "van aankomst" else "", small), border = Rectangle.BOTTOM or Rectangle.TOP) {
                 colspan = 2
                 paddingTop = 8f
                 paddingBottom = 32f
@@ -156,12 +154,13 @@ object JuryCardPrinter {
                 }
                 cell(newParagraph())
 
-                val laneNumbers = lanes.toMutableList()
-                val n = laneNumbers.size
-                for (i in 0 until ceil(laneNumbers.size / 2f).toInt()) {
-                    val firstLane = "Baan ${laneNumbers[i]}: ________ meter"
-                    val secondLane = laneNumbers.getOrNull(i + ceil(n / 2f).toInt())?.let { "Baan $it: ________ meter" }
-                            ?: ""
+                val laneNumbers = lanes.toMutableList<Int?>()
+                for (i in laneNumbers.size..10) {
+                    laneNumbers.add(null)
+                }
+                for (i in 0 until laneNumbers.size / 2) {
+                    val firstLane = laneNumbers.getOrNull(i)?.let { "Baan $it: ________ meter" } ?: " "
+                    val secondLane = laneNumbers.getOrNull(i + laneNumbers.size / 2)?.let { "Baan $it: ________ meter" } ?: " "
 
                     cell(newParagraph())
                     cell(newParagraph(firstLane, regular)) {
@@ -180,8 +179,11 @@ object JuryCardPrinter {
 
             // Footer
             cell(newParagraph())
+            cell(newParagraph(if (metric == Event.Metric.DISTANCE) "diskwalificaties: ja/nee\nbanen/redenen: zie ommezijde" else "", small), alignment = Element.ALIGN_LEFT) {
+                fixedHeight = 48f
+                paddingTop = 12f
+            }
             cell(newParagraph("paraaf", small), alignment = Element.ALIGN_RIGHT) {
-                colspan = 2
                 fixedHeight = 48f
                 paddingTop = 12f
             }

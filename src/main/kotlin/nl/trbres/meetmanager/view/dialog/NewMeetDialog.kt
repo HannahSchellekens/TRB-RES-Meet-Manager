@@ -62,6 +62,7 @@ class NewMeetDialog : Fragment() {
 
                                 Gebruik 'Y' voor Jongens/Meisjes.
                                 Gebruik 'O' voor Heren/Dames.
+                                Gebruik '~' voor spaties.
                                 Samenvoegingen betekent dat de categorie bij de aangegeven samenvoegingen
                                 wordt gevoegd bij het indelen van zwemmers.
                             """.trimIndent().trim()
@@ -151,7 +152,7 @@ class NewMeetDialog : Fragment() {
 
         return ages.split("\n")
                 .map {
-                    val split = it.split("""\s+""".toRegex())
+                    val split = it.split("""\s+""".toRegex()).map { part -> part.replace("~", " ") }
                     val (name, youngOld) = split
                     val jointList = if (split.size <= 2) emptySet() else split.subList(2, split.size).joinToString(" ")
                             .split(",")

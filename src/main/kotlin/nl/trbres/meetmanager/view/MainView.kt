@@ -77,6 +77,7 @@ open class MainView : View() {
                     item("Programmaboekje genereren").icon(Icons.pdf).action(::printBooklet)
                     item("Gepersonaliseerd programma genereren").icon(Icons.pdf).action(::printPersonalisedBooklet)
                     item("Tijdwaarnemingskaartjes genereren").icon(Icons.pdf).action(::printResultCards)
+                    item("Jurykaartjes genereren").icon(Icons.pdf).action(::printJuryCards)
                     item("Data voor certificaten genereren").icon(Icons.textFile).action(::generateCertificates)
                     isDisable = true
                 }
@@ -195,6 +196,14 @@ open class MainView : View() {
     fun printResultCards() {
         State.meet ?: return
         ResultCardPrinter.printCards(currentWindow)
+    }
+
+    /**
+     * Generates a PDF of all jury cards.
+     */
+    fun printJuryCards() {
+        State.meet ?: return
+        JuryCardPrinter.printCards(currentWindow)
     }
 
     /**

@@ -40,7 +40,7 @@ object RecentFiles {
      * Adds the given file to the recent file list (see [recentfiles]).
      */
     fun pushRecentFile(file: File) {
-        (listOf(file) + (recentfiles())).distinct()
+        (listOf(file) + (recentfiles())).distinct().writeFiles()
         callCallbacks()
     }
 

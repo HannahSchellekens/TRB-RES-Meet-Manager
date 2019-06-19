@@ -9,5 +9,7 @@ enum class Category(val nameYoung: String, val nameOld: String) {
     FEMALE("Meisjes", "Dames"),
     MIX("Gemengd", "Gemengd");
 
+    fun isInCategory(category: Category) = this == category || this == MIX
+
     override fun toString() = nameOld
 }

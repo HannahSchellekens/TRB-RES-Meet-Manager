@@ -45,8 +45,8 @@ open class Distributor(private val meet: Meet) {
         for (event in events) {
             swimmers.asSequence()
                     .filter { swimmer ->
-                        swimmer.category == event.category &&
-                                event.ages.any { swimmer.age.isJointCategory(it) } &&
+                        event.category.isInCategory(swimmer.category) &&
+                                event.ages.any { swimmer.age.isJointAgeGroup(it) } &&
                                 swimmer is Relay == event.isRelay()
                     }
                     .forEach { mapping[event]!!.add(it) }
